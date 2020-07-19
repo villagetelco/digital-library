@@ -24,14 +24,20 @@
 		uci set network.wwan.dns="$FORM_WWAN_DNS"
 
 		uci commit network
+
+		# Update dhcp config
+		netmask="255.255.255.0"
+		dns1="8.8.8.8"; dns2="8.8.4.4"
+		uci set dhcp.lan.dhcp_option="1,$netmask  3,$FORM_IPADDR  6,$dns1,$dns2"
+		uci commit dhcp
+		
 	fi
 
 	if [ $FORM_BUTTON == "Save&Apply" ]; then
 
     # Run in background    
 		(sleep 1; /etc/init.d/network restart) &
-		(sleep 20; /etc/init.d/fallbackip start) &
-    #/etc/init.d/DR_wifi_wan start &  # Check that WiFi WAN is operating correctly, else disable after 30 seconds.
+		(sleep 20; /etc/init.d/fallback-ip start) &
   fi
 
 %>
