@@ -10,7 +10,7 @@ MEMSTR="Free Memory: "$MEMFREE" / Total Memory: "$MEMTOT
 
 # Check Internet connectivity
 host="1.1.1.1"
-ping -w2 $host1 1>/dev/null 2>/dev/null; SUCCESS=$?
+ping -c2 $host 1>/dev/null 2>/dev/null; SUCCESS=$?
 if [ $SUCCESS -eq "0" ]; then
   internet="1"
   connection="<span class="impactOK"> Internet Connection OK </span>"
