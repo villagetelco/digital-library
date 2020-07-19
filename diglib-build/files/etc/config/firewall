@@ -115,7 +115,7 @@ config redirect			https
 config redirect			ssh
 	option src				wan                     
 	option src_dport	2222                    
-	option dest				DISABLE                     
+	option dest				'lan'                     
 	option dest_port	22                      
 	option proto			tcp
 	option 'target'		'DNAT'

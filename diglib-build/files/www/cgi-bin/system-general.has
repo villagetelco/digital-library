@@ -23,9 +23,9 @@
 		uci commit system
 		
 		if [ "$FORM_HTTP_ENABLE" == "checked" ]; then
-			uci set firewall.http.dest="lan"
+			uci set firewall.https.dest="lan"
 		else
-			uci set firewall.http.dest="DISABLE"
+			uci set firewall.https.dest="DISABLE"
 		fi
 
 		if [ "$FORM_SSH_ENABLE" == "checked" ]; then
@@ -33,7 +33,8 @@
 		else
 			uci set firewall.ssh.dest="DISABLE"
 		fi
-		uci commit firewall restart
+		uci commit firewall
+		/etc/init.d/firewall restart > /dev/null
 	fi
 %>
 
@@ -49,7 +50,7 @@
     ssh_tick="0"
   fi
 
-	http_enabled="$(uci -q get firewall.http.dest)"
+	http_enabled="$(uci -q get firewall.https.dest)"
   if [ $http_enabled == "lan" ]; then
   	http_tick="checked"
   else
@@ -150,11 +151,11 @@
 	</tr>	
 
 	<tr><td colspan="20"><h3>Port Forwarding</h3></td></tr>
-	<tr>
+<!--	<tr>
 		<td colspan="1"></td>
-		<td colspan="4"><label for="HTTP">Enable HTTP Forward</label></td>
+		<td colspan="4"><label for="HTTP">Enable HTTPS Forward</label></td>
 		<td colspan="1"><input type="checkbox" name="HTTP_ENABLE" value="checked" <% echo -n $http_tick %> ></td>
-	</tr>
+	</tr> -->
 	<tr>
 		<td colspan="1"></td>
 		<td colspan="4"><label for="SSH">Enable SSH Forward</label></td>
