@@ -28,8 +28,7 @@ config dhcp 'lan'
 	option start '101'
 	option limit '100'
 # Options: 1 - netmask, 3 - default route, 6 - dns
-#	option dhcp_option '1,255.255.255.0  3,10.130.1.254  6,8.8.8.8,8.8.4.4'
-	option dhcp_option '1,255.255.255.0  6,8.8.8.8,8.8.4.4'
+	option dhcp_option '1,255.255.255.0  3,10.10.10.1  6,8.8.8.8,8.8.4.4'
 
 config 'dhcp' 'guest'
 	option 'interface' 'guest'
