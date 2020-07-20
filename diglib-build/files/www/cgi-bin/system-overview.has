@@ -35,8 +35,8 @@ fi
 <table class="configTable">
 	<tr><td colspan="20"></td></tr> <!--Determines column widths-->
 	<tr class="rowSpacer"></tr>
-	<tr><td colspan="3">Firmware:</td><td colspan="17">                                                                                   
-					<% cat /etc/banner | grep Version | cut -d : -f 2 %> <% cat /etc/banner | grep Build %> </td></tr>
+	<tr><td colspan="3">Firmware:</td><td colspan="17"><% cat /etc/banner | grep Version | cut -d : -f 2 %> </td></tr>
+	<tr><td colspan="3"> </td><td colspan="17"><% cat /etc/banner | grep Build %> <% cat /etc/banner | grep Git %> </td></tr>
 	<tr class="rowSpacer"></tr>
 	<tr><td colspan="3">System:</td><td colspan="17"><% cat /etc/os-release | grep _RELEASE | cut -d = -f2 %></td></tr>
 	<tr class="rowSpacer"></tr>
