@@ -63,7 +63,6 @@ else
   echo ""
 fi
 
-
 #########################
 
 echo "Start build process"
@@ -73,6 +72,8 @@ BUILDDIR="./Builds/ar71xx"
 
 ###########################
 echo "Copy files from Git repo into build folder"
+echo "Source repo details: "$REPO $REPOID
+
 rm -rf ./diglib-build/
 
 cp -rp $GITREPO/$REPO/diglib-build/ .
@@ -80,13 +81,11 @@ cp -rp $GITREPO/$REPO/diglib-build/ .
 cp -fp $GITREPO/$REPO/Build-scripts/FactoryRestore.sh  .
 cp -fp $GITREPO/$REPO/Build-scripts/GetGitVersions.sh  .
 
-##echo "Overlay RACHEL files"
-##cp -rfp $GITREPO/$REPO/RACHEL-build/* ./SECN-build/
-
 ###########################
 
 BUILDPWD=`pwd`
 cd  $GITREPO/$REPO
+echo "Get repo ID string"
 REPOID=`git describe --long --dirty --abbrev=10 --tags`
 cd $BUILDPWD
 echo "Source repo details: "$REPO $REPOID
@@ -112,7 +111,7 @@ echo $DIR > $BUILDDIR/builds/build-$DIR/md5sums-$VER.txt
 function build_ms14() {
 
 echo "Set up .config for "$1 $2
-rm ./.config
+rm -f ./.config
 
 if [ $2 ]; then
 	echo "Config file: config-"$1-$2
@@ -139,8 +138,8 @@ rm -r ./files
 echo "Copy base files"
 cp -rf ./diglib-build/files     .  
 
-echo "Copy additional files"
-cp -rf ./diglib-build/files-2/* ./files  
+#echo "Copy additional files"
+#cp -rf ./diglib-build/files-2/* ./files  
 
 echo "Overlay device specific files"
 cp -rf ./diglib-build/$1/files  .  
@@ -159,7 +158,7 @@ echo "Date stamp: " $DATE
 
 echo "Version:    " $VER $TARGET $2        > ./files/etc/secn_version
 echo "Build date: " $DATE                 >> ./files/etc/secn_version
-echo "GitHub:     " $REPO $REPOID         >> ./files/etc/secn_version
+echo "Git:        " $REPO $REPOID         >> ./files/etc/secn_version
 echo " "                                  >> ./files/etc/secn_version
 echo ""
 
