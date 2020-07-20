@@ -2,6 +2,7 @@
 
 # SYUN set up Fallback IP for single Ethernet port
 sleep 5  # make sure bridge is up
-ifconfig br-lan:9 172.31.255.254 netmask 255.255.255.252
 
+# Fallback on wan for single Eth port (eth0)
+ifconfig eth0:9 172.31.255.254 netmask 255.255.255.252
 

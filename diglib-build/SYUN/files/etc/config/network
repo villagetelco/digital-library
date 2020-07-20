@@ -7,20 +7,20 @@ config interface 'loopback'
 
 config interface 'lan'
 	option type 'bridge'
-	option ifname 'eth0'
+	option ifname 'eth1'
 	option proto 'static'
-	option ipaddr '10.130.1.254'
+	option ipaddr '10.10.10.1'
 	option netmask '255.255.255.0'
 	option gateway '255.255.255.255'
 	option dns '8.8.8.8'
 
 config interface 'guest'
 	option proto 'static'
-	option ipaddr '10.130.10.254'
+	option ipaddr '10.10.11.1'
 	option netmask '255.255.255.0'
 
 config interface 'wan'
 	option proto 'dhcp'
-	option ifname 'eth1'
+	option ifname 'eth0'
 
 
