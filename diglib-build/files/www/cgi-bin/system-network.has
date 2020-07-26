@@ -23,13 +23,26 @@
 		uci set network.wwan.gateway="$FORM_WWAN_GATEWAY"
 		uci set network.wwan.dns="$FORM_WWAN_DNS"
 
-		uci commit network
+		wanport="$(uci -q get board.eth.wanport)"
+		lanport="$(uci -q get board.eth.lanport)"
+		if [ "$FORM_ENABLE_WAN" == "checked" ]; then
+			uci set board.eth.enable_wan="1"
+			uci set network.wan.ifname="$wanport"
+			uci set network.lan.ifname="$lanport"
+		else
+			uci set board.eth.enable_wan="0"
+			uci set network.wan.ifname=" "
+			uci set network.lan.ifname="$lanport $wanport"
+		fi
 
 		# Update dhcp config
 		netmask="255.255.255.0"
 		dns1="8.8.8.8"; dns2="8.8.4.4"
 		uci set dhcp.lan.dhcp_option="1,$netmask  3,$FORM_IPADDR  6,$dns1,$dns2"
+		
+		uci commit network
 		uci commit dhcp
+		uci commit board
 		
 	fi
 
@@ -60,6 +73,11 @@
   wwan_netmask="$(uci -q get network.wwan.netmask)"
   wwan_gateway="$(uci -q get network.wwan.gateway)"
   wwan_dns="$(uci -q get network.wwan.dns)"
+
+  wan_enable="$(uci -q get board.eth.enable_wan)"
+  if [ $wan_enable == "1" ]; then
+  	enable_wan="checked"
+  fi
 
 %>
 
@@ -107,10 +125,18 @@
 			<td colspan="1"></td>
 			<td colspan="19"><h3>WAN Settings</h3></td>
 		</tr>
+
+		<tr>
+			<td colspan="1"></td>
+			<td colspan="4"> Enable WAN port &nbsp;
+			<input type="checkbox" name="ENABLE_WAN" value="checked" <% echo -n $enable_wan %> ></td>
+			<td colspan="15"> Note: If WAN port is not enabled, the port will be assigned to LAN
+		</tr>
+		<tr class="rowSpacer" ></tr>
 		
 		<tr>
 			<td colspan="1"></td>
-			<td colspan="2"><label for="WAN_PROTO">Enable DHCP</label></td>
+			<td colspan="2"><label for="WAN_PROTO">IP Address</label></td>
 	  	<td colspan="4"><SELECT name="WAN_PROTO" id="wan_proto" onchange="displayWAN()">
 			<option value="dhcp">DHCP</option>
 			<option value="static">Static</option>
