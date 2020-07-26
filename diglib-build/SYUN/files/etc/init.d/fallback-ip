@@ -3,6 +3,12 @@
 # SYUN set up Fallback IP for single Ethernet port
 sleep 5  # make sure bridge is up
 
-# Fallback on wan for single Eth port (eth0)
-ifconfig eth0:9 172.31.255.254 netmask 255.255.255.252
+enable_wan=$(uci -q get board.eth.enable_wan)
+if [ $enable_wan == "1" ]; then
+	# Fallback IP on wan for single Eth port (eth0)
+	ifconfig eth0:9 172.31.255.254 netmask 255.255.255.252
+else
+	# Fallback IP on br-lan if wan is not enabled
+	ifconfig br-lan:9 172.31.255.254 netmask 255.255.255.252
+fi
 
