@@ -1,0 +1,112 @@
+#!/usr/bin/haserl 
+
+<%  echo -en "content-type: text/html\r\n\r\n"  # RF2616 Compliance %>
+
+<%# --- Process the form submission --- %>
+    <%
+    	if [ $FORM_BUTTON == "Cancel" ]; then
+    		killall rsync  # Terminate the copy process
+    	fi
+    %>
+
+
+<%# --- Present the HTML page --- %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%inc /www/cgi-bin/inc/head.inc %>
+</head>
+
+<body>
+<%inc /www/cgi-bin/inc/menu.inc %>
+<div class="page-container">
+<h2>Library Management - Duplicate Library</h2>
+
+<form action="<% echo -n $SCRIPT_NAME %>" method=POST enctype="multipart/form-data" >
+  <table class="configTable">  
+    <tr><td colspan="20"></td></tr> <!--Determines column widths-->
+    <tr>
+      <td colspan="20">
+	    <br>Notes:
+  	  <br>- This screen allows you to duplicate the primary Library memory device to a Target memory device.
+  	  <br>- You will need to connect a USB hub to accommodate the primary Library and Target memory devices.
+  	  <br>- Power up the Digital Library unit with only the primary Library memory device installed in the hub.
+  	  <br>- Check that the primary Library is detected correctly, then plug in the Target memory device.
+  	  <br>
+  	  <br>- Click on the Format button to format the Target device before copying.
+  	  <br>- The Target memory device will be formatted to Flash Friendly File System (F2FS).
+  	  <br>- Caution: The Target memory device will be completely erased when formatted.
+  	  <br>
+  	  <br>- Click on the Duplicate button to start the copy process, which may take several hours. 
+  	  <br>- If the copy process is interrupted, you can restart to resume copying from the point where it was stopped. 
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="10"><h3> Format / Duplicate Library Device</h3></td>
+    </tr>
+    <%
+    if [ -e /www/rachel/##LIBRARY## ]; then
+    	echo "<p class="impact">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*** Primary Library memory device found OK.</p>"
+    	lib_present="1"
+    else
+    	echo "<p class="impact">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*** Primary Library memory device NOT found.</p>"
+    	lib_present="0"
+    fi
+    %>
+    <tr>
+      <td colspan="1"></td>
+      <td colspan="10">
+      	<br>
+      	<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Format">
+      	<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Duplicate">
+        <INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Cancel">
+        <INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Refresh">
+      </td>
+    </tr>
+
+    <%
+    	if [ $FORM_BUTTON == "Format" ]; then
+    %>
+    		<p class="impact"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*** Formatting Target memory device.</p> 
+    <% 
+    		umount    /dev/sdb1
+				mkfs.f2fs /dev/sdb1 > /dev/null; SUCCESS=$?
+	    	if [ $SUCCESS == "0" ]; then
+					echo "<p class="impact"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*** Format successful. </p>"
+					mount /dev/sdb1 /mnt/sdb1
+	   		else
+					echo "<p class="impact"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;***Format failed. Error Code: $SUCCESS </p>"
+	   		fi
+	   	fi 		
+		%>
+		
+    <%
+    	if [ $FORM_BUTTON == "Duplicate" ] && [ $lib_present == "1" ]; then
+    %>
+    		<p class="impact"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*** Copying Primary memory contents to Target memory.</p>
+    <% 
+	    	#rsync -ra --info=progress2 /mnt/sda1/*   /mnt/sdb1 | sed 's/\r/<br>/g'; SUCCESS=$? 
+	    	#rsync -ra  /mnt/sda1/*   /mnt/sdb1 > /dev/null; SUCCESS=$? 
+	    	rsync -ra --info=progress2 /mnt/sda1/art  /mnt/sdb1 | sed 's/\r/<br>/g' > /dev/null; SUCCESS=$? 
+	    	
+	    	if [ $SUCCESS == "0" ]; then
+					echo "<p class="impact"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*** Copy successful. </p>"
+	   		else
+					echo "<p class="impact"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*** Copy failed. Error: $SUCCESS </p>"
+	   		fi
+    	fi
+	   	if [ $lib_present == "0" ]; then
+	   		echo "<p class="impact">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*** Primary Library memory device NOT found.</p>"
+	   		echo "<p class="impact">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*** Copy will not proceed.</p>"
+	   	fi
+		%>
+
+  </table>
+      
+</form>
+</div>
+</body>
+</html>
+
+

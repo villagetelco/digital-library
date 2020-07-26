@@ -1,0 +1,80 @@
+#!/usr/bin/haserl 
+
+<%  echo -en "content-type: text/html\r\n\r\n"  # RF2616 Compliance %>
+
+<%# --- Process the form submission --- %>
+
+<%# --- Present the HTML page --- %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%inc /www/cgi-bin/inc/head.inc %>
+</head>
+
+<body>
+<%inc /www/cgi-bin/inc/menu.inc %>
+<div class="page-container">
+<h2>Library Management - Copy from USB </h2>
+
+<form action="<% echo -n $SCRIPT_NAME %>" method=POST enctype="multipart/form-data" >
+  <table class="configTable">  
+    <tr><td colspan="20"></td></tr> <!--Determines column widths-->
+    <tr>
+      <td colspan="10"><h3> Copy Files to Local Library </h3></td>
+    </tr>
+    
+    <tr>
+      <td colspan="4"><label for="ADD_FILE">Directory/File to Copy</label></td>
+      <td colspan="8"><input type="text" name="ADD_FILE" ></td>
+    </tr>
+
+    <tr>
+      <td colspan="1"></td>
+      <td colspan="10">
+      	<br>
+      	<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Copy">
+        <INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Cancel">
+        <INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Refresh">
+      </td>
+    </tr>
+  </table>
+  
+	<table>  
+  <div><tr>
+  <td colspan="1"></td> 
+  <br>
+    <%
+    	if [ $FORM_BUTTON == "Copy" ]; then
+				rsync -rav /www/rachel-local2/$FORM_ADD_FILE  /www/rachel/local  > /tmp/copy.txt; SUCCESS=$?
+				if [ $SUCCESS == "0" ]; then
+					echo "Copy successful. "
+					cat /tmp/copy.txt | sed 's/s/S/' | grep "Sent" | cut -d " " -f1,2,3
+				else
+					echo "Copy failed. Error: $SUCCESS"
+					if [ ! -e /www/rachel-local2/$FORM_ADD_FILE ]; then
+						echo "Directory/File not found"
+					fi
+				fi
+				rm -f /tmp/copy.txt
+    	fi
+		%>
+	</tr>
+  </div>
+  </table>
+  
+	<div>
+	<table>
+		<% ls -1 -p /www/rachel-local2 > /tmp/usb_files.txt %>
+		<br>
+    <tr><td colspan="4"><label for="LOCAL_FILE_LIST">USB Contents</label></td></tr>
+   </table>
+    <td colspan="4"><iframe id="LOCAL_FILE_LIST" src="/tmp/usb_files.txt"  width="60%" height="100" ></iframe></td>
+    <br><br>
+	</div> 
+    
+</form>
+</div>
+</body>
+</html>
+
+

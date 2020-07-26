@@ -3,7 +3,6 @@
   <div class="loaderSpinner"><span class="fas fa-spinner fa-spin"></span></div>
 </div>
 
-
 <div class="logo-container">
   <a href="www.dragino.com">  <!-- Set the URL link for the logo -->
     <img class="logoImage" src="/static/img/logo.png">
@@ -17,6 +16,15 @@
 	<a href="/cgi-bin/system-overview.has">System Overview</a>
 
 	<a href="/cgi-bin/system-general.has">General</a>
+ 
+	<div class="dropdown"> <!-- Library -->
+   <button class="dropbtn">Library <span class="fas fa-caret-down"></span></button>
+    <div class="dropdown-content">
+      <a href="/cgi-bin/library-add.has">Add/Delete</a>
+      <a href="/cgi-bin/library-copy.has">Copy</a>
+      <a href="/cgi-bin/library-dup.has">Duplicate</a>
+    </div>
+  </div> 
  
 	<a href="/cgi-bin/system-network.has">Network</a>
 
