@@ -5,46 +5,48 @@ sleep 10
 
 # ------------------------------
 
-# Mount the Digital Library memory device in case auto mount did not work.
-# Make dirs in case it is first boot
-mkdir /mnt/sda1
-mkdir /mnt/sda2
-mkdir /mnt/sdb1
-mkdir /mnt/sdb2
+# Mount the memory device in case auto mount did not work.
+# /dev/sda is primary USB and /dev/sdb is secondary USB 
 
+# Make dirs in case it is first boot
+mkdir -p /mnt/sda1
+mkdir -p /mnt/sdb1
+mkdir -p /mnt/sdc1
+mkdir -p /mnt/sdd1
+
+if [ -e "/dev/sda1" ]; then
 mount -rw /dev/sda1  /mnt/sda1
-mount -rw /dev/sda2  /mnt/sda2
+fi
+if [ -e "/dev/sdb1" ]; then
 mount -rw /dev/sdb1  /mnt/sdb1
-mount -rw /dev/sdb2  /mnt/sdb2
+fi
+if [ -e "/dev/sdc1" ]; then
+mount -rw /dev/sdc1  /mnt/sdc1
+fi
+if [ -e "/dev/sdd1" ]; then
+mount -rw /dev/sdd1  /mnt/sdd1
+fi
 
 # Remove old links
-rm /www/rachel/modules
-rm /www/rachel/local
-rm /www/rachel/logs
+rm /www/rachel
+rm /www/rachel-local2
 
-# Set up default home page
-ln -s -f /www/rachel/rachel.index.html   /www/rachel/index.html
+#Set up default Rachel directory in case there are no memory devices installed
+ln -s -f /www/rachel-x /www/rachel
 
-# Find modules etc directories and force link
+# Find library memory device and link to it
+# Check for primary USB library on "sda1"
+if [ -e "/mnt/sda1/##LIBRARY##" ]; then
+	rm /www/rachel
+	ln -s -f /mnt/sda1	/www/rachel
 
-# Check for first Digital Library SD/USB
-if [ -e "/mnt/sda1/modules" ]; then
-	ln -s -f /mnt/sda1/modules /www/rachel/modules
-	ln -s -f /mnt/sda1/art     /www/rachel/art
-	ln -s -f /mnt/sda1/css     /www/rachel/css
-	ln -s -f /mnt/sda1/local   /www/rachel/local
-	ln -s -f /mnt/sda1/index.html   /www/rachel/index.html # Set up VT-RACHEL home page
+	if [ -e "/dev/sdb1" ]; then # Check for secondary USB device to use for additional local content
+		ln -s -f /mnt/sdb1 /www/rachel-local2
+	fi
 fi
 
-# Check for alternate Digital Library SD/USB
-if [ -e "/mnt/sdb1/modules" ]; then
-	ln -s -f /mnt/sdb1/modules /www/rachel/modules
-	ln -s -f /mnt/sdb1/art     /www/rachel/art
-	ln -s -f /mnt/sdb1/css     /www/rachel/css
-	ln -s -f /mnt/sdb1/local   /www/rachel/local
-	ln -s -f /mnt/sdb1/index.html   /www/rachel/index.html # Set up Digital Library home page
-fi
-
-
+exit
 # -----------------------------
+
+
 
