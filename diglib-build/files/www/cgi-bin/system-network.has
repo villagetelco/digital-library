@@ -5,7 +5,7 @@
 <%# --- Process the form submission --- %>
 <%
 
-	if [ $FORM_BUTTON == "Save" ] || [ $FORM_BUTTON == "Save&Apply" ]; then
+	if [ "$FORM_BUTTON" == "Save" ] || [ "$FORM_BUTTON" == "Save&Apply" ]; then
 		uci set network.lan.ipaddr="$FORM_IPADDR"
 		uci set network.lan.netmask="$FORM_NETMASK"
 		uci set network.lan.gateway="$FORM_GATEWAY"
@@ -46,7 +46,7 @@
 		
 	fi
 
-	if [ $FORM_BUTTON == "Save&Apply" ]; then
+	if [ "$FORM_BUTTON" == "Save&Apply" ]; then
 
     # Run in background    
 		(sleep 1; /etc/init.d/network restart) &
@@ -75,7 +75,7 @@
   wwan_dns="$(uci -q get network.wwan.dns)"
 
   wan_enable="$(uci -q get board.eth.enable_wan)"
-  if [ $wan_enable == "1" ]; then
+  if [ "$wan_enable" == "1" ]; then
   	enable_wan="checked"
   fi
 
