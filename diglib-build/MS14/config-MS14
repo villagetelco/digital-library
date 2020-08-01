@@ -4637,7 +4637,10 @@ CONFIG_POSTFIX_PCRE=y
 # CONFIG_PACKAGE_gnurl is not set
 # CONFIG_PACKAGE_lftp is not set
 # CONFIG_PACKAGE_rosy-file-server is not set
-# CONFIG_PACKAGE_rsync is not set
+CONFIG_PACKAGE_rsync=y
+# CONFIG_RSYNC_xattr is not set
+# CONFIG_RSYNC_acl is not set
+CONFIG_RSYNC_zlib=y
 # CONFIG_PACKAGE_rsyncd is not set
 # CONFIG_PACKAGE_vsftpd is not set
 # CONFIG_PACKAGE_vsftpd-tls is not set
