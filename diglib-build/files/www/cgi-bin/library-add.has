@@ -4,7 +4,7 @@
 
 <%# --- Process the form submission --- %>
 <%
-	if [ $FORM_BUTTON == "Upload" ]; then
+	if [ "$FORM_BUTTON" == "Upload" ]; then
 		if test -n "$HASERL_uploadfile_path"; then 
 		  filename=$FORM_uploadfile_name
 		  savedfile=$HASERL_uploadfile_path
@@ -42,7 +42,7 @@
       <td colspan="2"><INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Upload"></td>
       <td colspan="17">
 
-    <% if [ $FORM_BUTTON == "Upload" ]; then %>
+    <% if [ "$FORM_BUTTON" == "Upload" ]; then %>
       <p>
       You uploaded a file named <b><% echo -n $filename; echo "$filename" > /tmp/filename.txt %></b><br>
       The file size is <% cat /tmp/tempfile | wc -c %> bytes.<br>
@@ -60,7 +60,7 @@
       <td colspan="1"></td>
       <td colspan="19">
     <%
-    	if [ $FORM_BUTTON == "Store" ]; then 
+    	if [ "$FORM_BUTTON" == "Store" ]; then 
 				filename=$(cat /tmp/filename.txt)              # Get original filename
 				chmod +rwx /tmp/tempfile
     		mv /tmp/tempfile /www/rachel/local/$filename   # Use $filename to save file with original name
@@ -99,9 +99,9 @@
     </tr>
 
     <%
-    	if [ $FORM_BUTTON == "Delete" ]; then
+    	if [ "$FORM_BUTTON" == "Delete" ]; then
     		rm -rf /www/rachel/local/"$FORM_DEL_FILE"; SUCCESS=$?
-    		if [ $SUCCESS == "0" ]; then
+    		if [ "$SUCCESS" == "0" ]; then
     			#echo "<p class="impact">*** Local File/Dir: \" $FORM_DEL_FILE \"  deleted.</p>"
     			%>
 			    <tr>
