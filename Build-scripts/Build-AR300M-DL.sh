@@ -11,12 +11,12 @@ BRANCH="master"
 echo "Set up version strings"
 #DIRVER="GA01.1"
 DIRVER="VER-0.1.01"
-VER="Digital-Library-01-SYUN-"$DIRVER
+VER="Digital-Library-01-AR300M-"$DIRVER
 
 
 echo "************************************"
 echo ""
-echo "Build script for Digital library SEEED YUN device"
+echo "Build script for Digital library GLiNet AR300M device"
 
 echo "Git directory: "$GITREPO
 echo "Repo: "$REPO
@@ -211,10 +211,10 @@ echo "Start Device builds"
 echo " "
 echo '----------------------------'
 
-build SYUN 
+build AR300M 
 
 echo " "
-echo " Build script SYUN Digital Library complete"
+echo " Build script AR300M Digital Library complete"
 echo " "
 echo '----------------------------'
 

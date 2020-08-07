@@ -9,7 +9,8 @@ REPO="digital-library"
 BRANCH="master"
 
 echo "Set up version strings"
-DIRVER="GA01.1"
+#DIRVER="GA01.1"
+DIRVER="VER-0.1.01"
 VER="Digital-Library-01-MS14-"$DIRVER
 
 
