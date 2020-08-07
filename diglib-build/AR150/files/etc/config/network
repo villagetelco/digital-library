@@ -11,8 +11,6 @@ config interface 'lan'
 	option proto 'static'
 	option ipaddr '10.10.10.1'
 	option netmask '255.255.255.0'
-	#option gateway '255.255.255.255'
-	#option dns '8.8.8.8'
 
 config interface 'guest'
 	option proto 'static'
