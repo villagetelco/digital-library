@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Make sure all network services are updated
+
+# Make sure wifi is started
+wifi
+
+# Update DHCP
+/etc/init.d/dnsmasq restart
+
+# Restart network
+/etc/init.d/network restart
+
+
