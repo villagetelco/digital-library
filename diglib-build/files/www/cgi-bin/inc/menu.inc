@@ -23,6 +23,7 @@
       <a href="/cgi-bin/library-add.has">Add/Delete</a>
       <a href="/cgi-bin/library-copy.has">Copy</a>
       <a href="/cgi-bin/library-dup.has">Duplicate</a>
+      <a href="/index.html">Home Page</a>
     </div>
   </div> 
  
