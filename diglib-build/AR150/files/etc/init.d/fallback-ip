@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# MS14 set up Fallback IP
+# AR150 set up Fallback IP
 sleep 5  # make sure bridge is up
 
 # Fallback on br-lan for multi eth port devices.
@@ -8,5 +8,4 @@ ifconfig br-lan:9 172.31.255.254 netmask 255.255.255.252
 
 # Make sure wifi is started
 wifi
-
 

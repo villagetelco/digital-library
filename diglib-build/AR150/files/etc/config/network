@@ -22,4 +22,3 @@ config interface 'wan'
 	option ifname 'eth0'
 
 
-
