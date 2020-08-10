@@ -13,4 +13,6 @@ uci commit uhttpd
 # Set the system hostname
 echo $(uci get system.@system[0].hostname) > /proc/sys/kernel/hostname
 
+# Restart dnsmasq to get hostname
+/etc/init.d/dnsmasq restart
 
