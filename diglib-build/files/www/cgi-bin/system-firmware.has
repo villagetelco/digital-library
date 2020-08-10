@@ -79,10 +79,10 @@
 				fi 
 			%> 
 			
-				<p class="impact">*** Please allow 3 minutes to complete flash operation. </p>
+				<p class="impact">*** Please allow 4 minutes to complete flash operation. </p>
   			<p>Time remaining:	<span id="seconds"> Starting </span>.</p>
 				<script>
-	  			var seconds = 180; /* Set time (secs) to reload */
+	  			var seconds = 240; /* Set time (secs) to reload */
     			setInterval(
       			function(){
         			if (seconds<=0){
