@@ -29,11 +29,4 @@ config led 'led_wan'
 	option dev 'eth1'      
 	option mode 'link tx rx'
 
-# Restore firmware 10 - 20 sec button press
-config button
-	option button   wps
-	option action   released
-	option handler  "/bin/firmware-restore.sh && reboot"
-	option min      10
-	option max      20
 
