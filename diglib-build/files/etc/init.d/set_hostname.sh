@@ -1,6 +1,6 @@
 #!/bin/sh
 
-HOST="Digital_Library"
+HOST="Digital-Library"
 
 # Set the hostname
 uci set system.@system[0].hostname=$HOST
