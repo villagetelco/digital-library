@@ -10,7 +10,7 @@ BRANCH="master"
 
 echo "Set up version strings"
 #DIRVER="GA01.1"
-DIRVER="VER-0.1.01"
+DIRVER="VER-0.1.02"
 VER="Digital-Library-01-AR300M-"$DIRVER
 
 
@@ -95,7 +95,7 @@ echo "Source repo details: "$REPO $REPOID
 
 # Set up new directory name with date and version
 DATE=`date +%Y-%m-%d-%H:%M`
-DIR=$DATE"-SYUN-Digital-Library-"$DIRVER
+DIR=$DATE"-AR300M-Digital-Library-"$DIRVER
 
 ###########################
 # Set up build directory
