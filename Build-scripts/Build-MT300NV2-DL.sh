@@ -11,12 +11,12 @@ BRANCH="master"
 echo "Set up version strings"
 #DIRVER="GA01.1"
 DIRVER="VER-1.0-RC1"
-VER="Digital-Library-01-AR150-"$DIRVER
+VER="Digital-Library-01-MT300N-V2-"$DIRVER
 
 
 echo "************************************"
 echo ""
-echo "Build script for Digital library GLiNet AR150 device"
+echo "Build script for Digital library GLiNet MT300N-V2 device"
 
 echo "Git directory: "$GITREPO
 echo "Repo: "$REPO
@@ -50,26 +50,26 @@ pwd
 ##############################
 
 # Check to see if setup has already run
-if [ ! -f ./already_configured ]; then 
+#if [ ! -f ./already_configured ]; then 
   # make sure it only executes once
-  touch ./already_configured  
+#  touch ./already_configured  
   echo "Make builds directory"
   mkdir ./Builds/
-  mkdir ./Builds/ar71xx/
-  mkdir ./Builds/ar71xx/builds
+  mkdir ./Builds/ramips/
+  mkdir ./Builds/ramips/builds
   echo "Initial set up completed. Continuing with build"
   echo ""
-else
-  echo "Build environment is configured. Continuing with build"
-  echo ""
-fi
+#else
+#  echo "Build environment is configured. Continuing with build"
+#  echo ""
+#fi
 
 #########################
 
 echo "Start build process"
 
-BINDIR="./bin/targets/ar71xx/generic"
-BUILDDIR="./Builds/ar71xx"
+BINDIR="./bin/targets/ramips/mt76x8"
+BUILDDIR="./Builds/ramips"
 
 ###########################
 echo "Copy files from Git repo into build folder"
@@ -95,7 +95,7 @@ echo "Source repo details: "$REPO $REPOID
 
 # Set up new directory name with date and version
 DATE=`date +%Y-%m-%d-%H:%M`
-DIR=$DATE"-AR150-Digital-Library-"$DIRVER
+DIR=$DATE"-MT300N-V2-Digital-Library-"$DIRVER
 
 ###########################
 # Set up build directory
@@ -211,10 +211,10 @@ echo "Start Device builds"
 echo " "
 echo '----------------------------'
 
-build AR150 
+build MT300N-V2 
 
 echo " "
-echo " Build script AR150 Digital Library complete"
+echo " Build script MT300N-V2 Digital Library complete"
 echo " "
 echo '----------------------------'
 

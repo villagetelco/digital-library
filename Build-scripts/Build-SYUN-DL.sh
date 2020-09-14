@@ -10,7 +10,7 @@ BRANCH="master"
 
 echo "Set up version strings"
 #DIRVER="GA01.1"
-DIRVER="VER-0.1.02"
+DIRVER="VER-1.0-RC1"
 VER="Digital-Library-01-SYUN-"$DIRVER
 
 
