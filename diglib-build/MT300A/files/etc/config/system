@@ -1,0 +1,34 @@
+
+config system
+	option timezone 'UTC'
+	option hostname 'MT300A'
+
+config timeserver 'ntp'
+	list server '0.openwrt.pool.ntp.org'
+	list server '1.openwrt.pool.ntp.org'
+	list server '2.openwrt.pool.ntp.org'
+	list server '3.openwrt.pool.ntp.org'
+	option enable_server '0'
+
+# Configure LEDs
+config led 'led_wifi_led'
+	option name 'wifi'
+	option sysfs 'gl-mt300a:wlan'
+	option trigger 'netdev'
+	option mode 'link tx rx'
+	option dev 'wlan0'
+
+config led 'led_lan'
+	option name 'LAN'
+	option sysfs 'gl-mt300a:lan'
+	option trigger 'netdev'
+	option dev 'eth0.1'
+	option mode 'link tx rx'
+
+config led 'led_wan'
+	option name 'WAN'
+	option sysfs 'gl-mt300a:wan'
+	option trigger 'netdev'
+	option dev 'eth0.2'
+	option mode 'link tx rx'
+
