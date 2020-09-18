@@ -4,7 +4,7 @@
 </div>
 
 <div class="logo-container">
-  <a href="www.dragino.com">  <!-- Set the URL link for the logo -->
+  <a href="www.villagetelco.org">  <!-- Set the URL link for the logo -->
     <img class="logoImage" src="/static/img/logo.png">
   </a>
 </div>
@@ -22,7 +22,7 @@
     <div class="dropdown-content">
       <a href="/cgi-bin/library-add.has">Add/Delete</a>
       <a href="/cgi-bin/library-copy.has">Copy</a>
-      <a href="/cgi-bin/library-dup.has">Duplicate</a>
+      <!-- <a href="/cgi-bin/library-dup.has">Duplicate</a> -->
       <a href="/index.html">Home Page</a>
     </div>
   </div> 
