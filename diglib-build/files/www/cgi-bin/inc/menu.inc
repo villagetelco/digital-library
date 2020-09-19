@@ -17,7 +17,7 @@
 	<a href="/cgi-bin/system-general.has">General</a>
  
 	<div class="dropdown"> <!-- Library -->
-   <button class="dropbtn">Library </button>
+   <button class="dropbtn"><strong>Library</strong></button>
     <div class="dropdown-content">
       <a href="/cgi-bin/library-add.has">Add/Delete</a>
       <a href="/cgi-bin/library-copy.has">Copy</a>
