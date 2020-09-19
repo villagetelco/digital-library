@@ -1,6 +1,5 @@
 <div id="pageLoader" class="pageLoader">
   Please wait...<br><br>
-  <div class="loaderSpinner"><span class="fas fa-spinner fa-spin"></span></div>
 </div>
 
 <div class="logo-container">
@@ -18,7 +17,7 @@
 	<a href="/cgi-bin/system-general.has">General</a>
  
 	<div class="dropdown"> <!-- Library -->
-   <button class="dropbtn">Library <span class="fas fa-caret-down"></span></button>
+   <button class="dropbtn">Library </button>
     <div class="dropdown-content">
       <a href="/cgi-bin/library-add.has">Add/Delete</a>
       <a href="/cgi-bin/library-copy.has">Copy</a>
