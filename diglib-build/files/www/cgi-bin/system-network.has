@@ -65,6 +65,7 @@
 
     # Run network restart in background    
 		(sleep 1; /etc/init.d/network restart; /etc/init.d/fallback-ip start) &
+		(sleep 10; /etc/init.d/chk-wifi-wan start start) &
   fi
 
 %>

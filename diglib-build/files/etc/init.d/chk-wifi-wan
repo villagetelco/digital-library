@@ -5,6 +5,8 @@ start()
 {	
 sta_disabled=$(uci -q get wireless.sta_0.disabled)
 ap_disabled=$(uci -q get wireless.ap_0.disabled)
+wanport=$(uci -q get board.eth.wanport)
+lanport=$(uci -q get board.eth.lanport)
 
 # If sta iface is not enabled, exit
 if [ $sta_disabled != "0" ]; then
@@ -35,10 +37,15 @@ if [ $sta_disabled == "0" ] && [ $ap_disabled == "0" ] && [ $ssid_count == "2" ]
   # All ok, exit
   exit
 else
-  # Still not connected; disable sta interface and restart networking
-  uci set wireless.sta_0.disabled=1
+  # Still not connected; disable sta interface and restart networking in Ethernet WAN mode
+  uci set wireless.sta_0.disabled="1"
   uci commit wireless
-  logger "[WiFi.WAN]: WiFi WAN did not connect; disabled"
+  uci set board.eth.select_wan="ethwan"
+  uci commit board
+  uci set network.wan.ifname="$wanport"
+  uci set network.lan.ifname="$lanport"
+  uci commit network
+
   /etc/init.d/network restart
   sleep 5
   /etc/init.d/fallback-ip
