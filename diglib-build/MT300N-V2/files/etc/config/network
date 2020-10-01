@@ -18,6 +18,9 @@ config interface 'wan'
 	option ifname 'eth0.2'
 	option proto 'dhcp'
 
+config interface 'wwan'
+	option proto 'dhcp'
+
 config switch
 	option name 'switch0'
 	option reset '1'

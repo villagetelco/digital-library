@@ -23,30 +23,24 @@
 		uci set network.wwan.gateway="$FORM_WWAN_GATEWAY"
 		uci set network.wwan.dns="$FORM_WWAN_DNS"
 
-		# Set up WAN selection
+		# Set up Ethernet ports as LAN, WAN
 		wanport="$(uci -q get board.eth.wanport)"
 		lanport="$(uci -q get board.eth.lanport)"
-		ethports="$(uci -q get board.eth.ethports)"
-
-		if [ "$FORM_SELECT_WAN" == "ethwan" ]; then
-			uci set board.eth.select_wan="ethwan"
+		disable_wwan="$(uci -q get wireless.sta_0.disabled)"
+		
+		if [ "$FORM_ENABLE_WAN" == "checked" ]; then
+			uci set board.eth.enable_wan="1"
 			uci set network.wan.ifname="$wanport"
-			uci set network.lan.ifname="$lanport"
-			uci set wireless.sta_0.disabled="1"
-		elif [ "$FORM_SELECT_WAN" == "wifiwan" ]; then
-			uci set board.eth.select_wan="wifiwan"
-			uci set network.wan.ifname=" "
-			uci set wireless.sta_0.disabled="0"			
-			if [ $ethports == "1" ]; then
-				uci set network.lan.ifname="$lanport $wanport" # For board with single eth port, make it LAN
-			else
-				uci set network.lan.ifname="$lanport" 
-			fi
+			uci set network.lan.ifname="$lanport" # Just to be sure
 		else
-			uci set board.eth.select_wan="disablewan"
+			uci set board.eth.enable_wan="0"
 			uci set network.wan.ifname=" "
-			uci set wireless.sta_0.disabled="1"
-			uci set network.lan.ifname="$lanport"
+		fi
+		
+		if [ $disable_wwan == "0" ]; then # Check if WWAN is enabled
+			uci set board.eth.enable_wan="0"
+			uci set network.wan.ifname=" "
+			uci set network.lan.ifname="$lanport" # Just to be sure
 		fi
 
 		# Update dhcp config
@@ -55,7 +49,6 @@
 		uci set dhcp.lan.dhcp_option="1,$netmask  3,$FORM_IPADDR  6,$dns1,$dns2"
 		
 		uci commit network
-		uci commit wireless
 		uci commit dhcp
 		uci commit board
 		
@@ -88,16 +81,11 @@
   wwan_gateway="$(uci -q get network.wwan.gateway)"
   wwan_dns="$(uci -q get network.wwan.dns)"
 
-# Select WAN control
-	select_wan="$(uci -q get board.eth.select_wan)"
-	if [ "$select_wan" == "wifiwan" ];then
-		eth_wan=""; wifi_wan="checked"; disable_wan=""
-	elif [ "$select_wan" == "ethwan" ];then
-		eth_wan="checked"; wifi_wan=""; disable_wan=""
-	else
-		eth_wan=""; wifi_wan=""; disable_wan="checked"
-	fi
-	
+  wan_enable="$(uci -q get board.eth.enable_wan)"
+  if [ "$wan_enable" == "1" ]; then
+  	enable_wan="checked"
+  fi
+
 %>
 
 <%# --- Present the HTML page --- %>
@@ -142,32 +130,17 @@
 		
 		<tr>
 			<td colspan="1"></td>
-			<td colspan="20"> <h3>Select WAN port</h3> &nbsp;
-			  <input type="radio" id="ETH_WAN" name="SELECT_WAN" value="ethwan" <% echo -n $eth_wan %> >
-				<label for="ETH_WAN">Ethernet WAN</label> 
-				<input type="radio" id="WIFI_WAN" name="SELECT_WAN" value="wifiwan" <% echo -n $wifi_wan %> >
-				<label for="WIFI_WAN">WiFi WAN</label> 
-				<input type="radio" id="DISABLE_WAN" name="SELECT_WAN" value="disablewan" <% echo -n $disable_wan %> >
-				<label for="DISABLE_WAN">Disable WAN</label>
-				<br> 
-			</td>
+			<td colspan="19"><h3>WAN Settings</h3></td>
+		</tr>
+
+		<tr>
+			<td colspan="1"></td>
+			<td colspan="4"> Enable WAN port &nbsp;
+			<input type="checkbox" name="ENABLE_WAN" value="checked" <% echo -n $enable_wan %> ></td>
+			<td colspan="15"> Note: If WAN port is not enabled, the port will be assigned to LAN
 		</tr>
 		<tr class="rowSpacer" ></tr>
 		
-		<tr>
-			<td colspan="1"></td>
-			<td colspan="19"><h3>Ethernet WAN Settings</h3></td>
-		</tr>
-
-<!-- 
-		<tr>
-			<td colspan="1"></td>
-			<td colspan="4"> Enable WAN port &nbsp;	<input type="checkbox" name="ENABLE_WAN" value="checked" <% echo -n $enable_wan %> ></td>
-			<td colspan="15"> Note: If WAN port is not enabled, the port will be assigned to LAN 
-		</tr>
-		<tr class="rowSpacer" ></tr>
--->		
-
 		<tr>
 			<td colspan="1"></td>
 			<td colspan="2"><label for="WAN_PROTO">IP Address</label></td>

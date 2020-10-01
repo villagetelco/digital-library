@@ -33,7 +33,24 @@
 		else
 			uci set wireless.ap_0.disabled="1"
 		fi
-				
+		
+		# Set up WiFi WAN Client
+		wanport=$(uci -q get board.eth.wanport)
+		lanport=$(uci -q get board.eth.lanport)
+		enable_wan=$(uci -q get board.eth.enable_wan)
+		ethports=$(uci -q get board.eth.ethports)
+		
+		if [ "$FORM_WIFI_WAN_ENABLE" != "checked" ]; then  # Wifi-WAN is DISABLED
+			uci set wireless.sta_0.disabled="1"
+		else																							 # Wifi-WAN is ENABLED
+			uci set wireless.sta_0.disabled="0"
+			uci set board.eth.enable_wan="0"								 # Set WAN port to DISABLED
+			uci set network.wan.ifname=" "
+			if [ $ethports == '1' ]; then                    # For single Eth port boards
+				uci set network.lan.ifname="$wanport" 				 # Make WAN port act as LAN port.
+			fi
+		fi
+		
     uci commit wireless
     uci commit network
     uci commit board 
@@ -50,8 +67,8 @@
   key="$(uci -q get wireless.ap_0.key)"
   
   txpower="$(uci -q get wireless.radio0.txpower)"
-	channel="$(uci -q get wireless.radio0.channel)"
-	
+	channel=$(uci -q get wireless.radio0.channel)
+
   host_ssid="$(uci -q get wireless.sta_0.ssid)"
   host_encryption="$(uci -q get wireless.sta_0.encryption)"
   host_key="$(uci -q get wireless.sta_0.key)"
@@ -59,20 +76,19 @@
   ap_disabled="$(uci -q get wireless.ap_0.disabled)"
   if [ "$ap_disabled" == "0" ]; then
   	ap_enable="checked"
+  	#channel=$(iw dev |grep -A 1 AP | grep channel | cut -d " " -f2)
   else
     ap_enable="0"
+  	#channel=$(uci -q get wireless.radio0.channel)
   fi
   
   wifi_wan_enable="0"
-  wan_str="<span id="wan_str" style="color:red">WiFi WAN is <strong>DISABLED</strong></span>"
   sta_disabled="$(uci -q get wireless.sta_0.disabled)"
   if [ "$sta_disabled" == "0" ]; then
-  	wifi_wan_enable="1"
-	  wan_str="<span id="wan_str" style="color:green">WiFi WAN is <strong>ENABLED</strong></span>"
-#  	wan_str="&nbsp; &nbsp; WiFi WAN is Enabled"
+  	wifi_wan_enable="checked"
+  	wan_str="&nbsp; &nbsp; Note: Ethernet WAN port will be disabled "
   	channel=$(iw dev |grep -A 1 managed | grep channel | cut -d " " -f2)
   fi
-  
 %>
 
   
@@ -140,9 +156,11 @@
 		<script>document.getElementById("encryption").value="<% echo -n $encryption %>";</script>
 	</tr>	
 
-
 	<tr><td colspan="20"><h3>WiFi WAN Client Settings</h3></td></tr>
-	<tr><td colspan="20"><% echo -n  $wan_str %></td></tr>
+	<tr><td colspan="20"><font size="4"> Enable WiFi WAN Client &nbsp;</font>
+		<input type="checkbox" name="WIFI_WAN_ENABLE" value="checked" <% echo -n $wifi_wan_enable %> > 
+	</tr>
+
 	<tr>
 		<td colspan="1"></td>
 		<td colspan="4"><label for="HOST_SSID">Host WiFi SSID</label></td>
@@ -175,9 +193,7 @@
 			<td colspan="2"></td>
 	</tr>	
 	<script>document.getElementById("host_encryption").value="<% echo -n $host_encryption %>";</script>
-
-  <tr class="rowSpacer"></tr>
-
+  
 <!-- WiFi Diagnostics -->
 	<tr>
 		<td colspan="20"><span id="wifi_str" class="impact" style="visibility:hidden; display:none;">
@@ -186,7 +202,7 @@
 	</tr>
 	<tr>
 		<td colspan="20"><span id="wifi_str2" style="visibility:hidden; display:none; color:green">
-		 	WiFi status: <strong>OK.</strong>   Click Refresh to check status.
+		 	WiFi status: OK.   Click Refresh to check status.
 		 	</span></td>
 	</tr>
 	<tr>
@@ -199,8 +215,8 @@
   
 	<tr>
 		<td colspan="10">
-<!--			<INPUT class="hiddenKey" TYPE="SUBMIT" name="BUTTON" VALUE="Save" accesskey="s">  -->
-			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save" onclick="showPageLoaderIcon()"> 
+			<INPUT class="hiddenKey" TYPE="SUBMIT" name="BUTTON" VALUE="Save" accesskey="s">  
+<!--		<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save" onclick="showPageLoaderIcon()"> -->
 			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save&Apply" onclick="showPageLoaderIcon()">
 			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Cancel" onclick="showPageLoaderIcon()">
 			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Refresh" onclick="showPageLoaderIcon()">
@@ -216,10 +232,10 @@
 	# Check wifi operation
 	wifi_op=$(iw dev | grep -c channel)
 %>
-<%	if [ "$wifi_wan_enable" == "1" ] && [ "$wifi_op" == "0" ]; then %>
+<%	if [ "$wifi_wan_enable" == "checked" ] && [ "$wifi_op" == "0" ]; then %>
 	<script>document.getElementById("wifi_str").style.visibility="visible";</script>
 	<script>document.getElementById("wifi_str").style.display="inline";</script>
-<% elif [ "$wifi_wan_enable" == "1" ] && [ $wifi_op -gt "0" ]; then %>
+<% elif [ "$wifi_wan_enable" == "checked" ] && [ $wifi_op -gt "0" ]; then %>
 	<script>document.getElementById("wifi_str2").style.visibility="visible";</script>
 	<script>document.getElementById("wifi_str2").style.display="inline";</script>
 <% fi %>	

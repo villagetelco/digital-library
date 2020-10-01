@@ -36,3 +36,13 @@ config wifi-iface 'ap_1'
 	option ssid 'Public-Digital-Library'
 	option encryption 'psk'
 
+config wifi-iface 'sta_0'
+	option device 'radio0'
+	option ifname 'wlan0-2'
+	option mode 'sta'
+	option network 'wwan'
+	option encryption 'psk2'
+	option ssid 'Host-SSID'
+	option key 'Host-Passphrase'
+	option disabled '1'
+

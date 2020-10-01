@@ -21,5 +21,9 @@ config interface 'wan'
 	option proto 'dhcp'
 	option ifname 'eth1'
 
+config interface 'wwan'
+	option proto 'dhcp'
+
+
 
 
