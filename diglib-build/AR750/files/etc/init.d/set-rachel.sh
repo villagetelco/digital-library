@@ -22,7 +22,7 @@ rm /www/rachel-local2
 
 # Mount MMC/SD and USB memory devices and check for library flag
 SDA=0
-# Mount the RACHEL memory devices and check for 'modules' dir.                                     
+# Mount the memory devices and check for Library flag.                                     
 if mount -rw /dev/sda1 /mnt/sda1; then
   if [ -e "/mnt/sda1/##LIBRARY##" ]; then
     SDA=1
