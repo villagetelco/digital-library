@@ -1,6 +1,6 @@
 
 config board 'eth'
-	option enable_wan '1'
+	option select_wan 'ethwan'
 	option wanport 'eth1'
 	option lanport 'eth0'	
 	option ethports '2'
