@@ -10,11 +10,11 @@ BRANCH="master"
 
 echo "Set up version strings"
 DIRVER="VER-1.0-RC1.2"
-VER="Digital-Library-01-WR842-"$DIRVER
+VER="Digital-Library-01-MT300A-"$DIRVER
 
 echo "************************************"
 echo ""
-echo "Build script for Digital library WR842 device"
+echo "Build script for Digital library GLiNet MT300A device"
 
 echo "Git directory: "$GITREPO
 echo "Repo: "$REPO
@@ -35,26 +35,26 @@ pwd
 ##############################
 
 # Check to see if setup has already run
-if [ ! -f ./already_configured ]; then 
+#if [ ! -f ./already_configured ]; then 
   # make sure it only executes once
-  touch ./already_configured  
+#  touch ./already_configured  
   echo "Make builds directory"
   mkdir ./Builds/
-  mkdir ./Builds/ar71xx/
-  mkdir ./Builds/ar71xx/builds
+  mkdir ./Builds/ramips/
+  mkdir ./Builds/ramips/builds
   echo "Initial set up completed. Continuing with build"
   echo ""
-else
-  echo "Build environment is configured. Continuing with build"
-  echo ""
-fi
+#else
+#  echo "Build environment is configured. Continuing with build"
+#  echo ""
+#fi
 
 #########################
 
 echo "Start build process"
 
-BINDIR="./bin/targets/ar71xx/generic"
-BUILDDIR="./Builds/ar71xx"
+BINDIR="./bin/targets/ramips/mt7620"
+BUILDDIR="./Builds/ramips"
 
 ###########################
 echo "Copy files from Git repo into build folder"
@@ -79,7 +79,7 @@ echo "Source repo details: "$REPO $REPOID
 
 # Set up new directory name with date and version
 DATE=`date +%Y-%m-%d-%H:%M`
-DIR=$DATE"-WR842-Digital-Library-"$DIRVER
+DIR=$DATE"-MT300A-Digital-Library-"$DIRVER
 
 ###########################
 # Set up build directory
@@ -171,11 +171,9 @@ fi
 
 echo "Update md5sums file"
 md5sum $BINDIR/*-squash*sysupgrade.bin >> $BUILDDIR/builds/build-$DIR/md5sums-$VER.txt
-md5sum $BINDIR/*-squash*factory.bin >> $BUILDDIR/builds/build-$DIR/md5sums-$VER.txt
 
 echo  "Move files to build folder"
 mv $BINDIR/openwrt*-squash*sysupgrade.bin $BUILDDIR/builds/build-$DIR
-mv $BINDIR/openwrt*-squash*factory.bin $BUILDDIR/builds/build-$DIR
 echo ""
 
 echo "Clean up unused files"
@@ -197,10 +195,10 @@ echo "Start Device builds"
 echo " "
 echo '----------------------------'
 
-build WR842 
+build MT300A 
 
 echo " "
-echo " Build script WR842 Digital Library complete"
+echo " Build script MT300A Digital Library complete"
 echo " "
 echo '----------------------------'
 

@@ -9,10 +9,8 @@ REPO="digital-library"
 BRANCH="master"
 
 echo "Set up version strings"
-#DIRVER="GA01.1"
-DIRVER="VER-1.0-RC1"
+DIRVER="VER-1.0-RC1.2"
 VER="Digital-Library-01-MR3020-"$DIRVER
-
 
 echo "************************************"
 echo ""
@@ -28,22 +26,9 @@ if [ ! -d $GITREPO"/"$REPO ]; then
 	exit
 fi
 
-
 echo "Check out the correct vt-firmware branch - $BRANCH"
 
 BUILD_DIR=$(pwd)
-cd $GITREPO"/"$REPO
-###git checkout $BRANCH > /dev/null
-# Make sure checkout worked
-###CHK_BR=`git branch | grep "*" | cut -d " " -f2`
-###if [ $CHK_BR != $BRANCH ]; then
-###	echo "Branch checkout failed"
-###	echo "*****"
-###	exit
-###else
-###	echo "Branch checkout successful"
-###fi
-###git branch | grep "*"
 cd $BUILD_DIR
 pwd
 
@@ -80,7 +65,6 @@ rm -rf ./diglib-build/
 cp -rp $GITREPO/$REPO/diglib-build/ .
 
 cp -fp $GITREPO/$REPO/Build-scripts/FactoryRestore.sh  .
-cp -fp $GITREPO/$REPO/Build-scripts/GetGitVersions.sh  .
 
 ###########################
 
