@@ -14,7 +14,7 @@ VER="Digital-Library-01-WR842-"$DIRVER
 
 echo "************************************"
 echo ""
-echo "Build script for Digital library WR842 device"
+echo "Build script for Digital library TP-Link WR842 device"
 
 echo "Git directory: "$GITREPO
 echo "Repo: "$REPO
@@ -122,9 +122,6 @@ rm -r ./files
 
 echo "Copy base files"
 cp -rf ./diglib-build/files     .  
-
-#echo "Copy additional files"
-#cp -rf ./diglib-build/files-2/* ./files  
 
 echo "Overlay device specific files"
 cp -rf ./diglib-build/$1/files  .  

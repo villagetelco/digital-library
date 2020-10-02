@@ -123,9 +123,6 @@ rm -r ./files
 echo "Copy base files"
 cp -rf ./diglib-build/files     .  
 
-#echo "Copy additional files"
-#cp -rf ./diglib-build/files-2/* ./files  
-
 echo "Overlay device specific files"
 cp -rf ./diglib-build/$1/files  .  
 echo ""

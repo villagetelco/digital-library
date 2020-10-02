@@ -14,7 +14,7 @@ VER="Digital-Library-01-WR703-"$DIRVER
 
 echo "************************************"
 echo ""
-echo "Build script for Digital library SEEED YUN device"
+echo "Build script for Digital library TP-Link WR703 device"
 
 echo "Git directory: "$GITREPO
 echo "Repo: "$REPO
