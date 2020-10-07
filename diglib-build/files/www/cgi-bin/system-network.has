@@ -52,7 +52,8 @@
 		# Update dhcp config
 		netmask="255.255.255.0"
 		dns1="8.8.8.8"; dns2="8.8.4.4"
-		uci set dhcp.lan.dhcp_option="1,$netmask  3,$FORM_IPADDR  6,$dns1,$dns2"
+		# Removed to allow host name resolution to work.
+		#uci set dhcp.lan.dhcp_option="1,$netmask  3,$FORM_IPADDR  6,$dns1,$dns2"
 		
 		uci commit network
 		uci commit wireless
