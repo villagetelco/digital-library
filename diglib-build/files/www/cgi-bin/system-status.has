@@ -8,6 +8,9 @@
 		ethport1="$(uci -q get board.eth.wanport)"
 		ethport2="$(uci -q get board.eth.lanport)"
 		
+		ap_connections="$(iw dev wlan0 station dump | grep -c Station)"
+		guest_ap_connections="$(iw dev wlan0-3 station dump | grep -c Station)"
+		
 		echo "Network"                             > /tmp/net_wifi_status.txt
 		echo "-------"                            >> /tmp/net_wifi_status.txt
 		echo "Lan IP Address:"                    >> /tmp/net_wifi_status.txt
@@ -24,10 +27,11 @@
 
 		echo "WiFi WAN IP Address:"               >> /tmp/net_wifi_status.txt
 		ifconfig wlan0-2|grep "inet addr:"        >> /tmp/net_wifi_status.txt
+		echo ""                                   >> /tmp/net_wifi_status.txt
 
 #		echo "Cellular:"                    			>> /tmp/net_wifi_status.txt
 #		ifconfig 3g-cellular|grep "inet addr:"    >> /tmp/net_wifi_status.txt
-		echo ""                                   >> /tmp/net_wifi_status.txt
+#		echo ""                                   >> /tmp/net_wifi_status.txt
 
 		echo "Bridge:"                            >> /tmp/net_wifi_status.txt
 		brctl show                                >> /tmp/net_wifi_status.txt
@@ -35,6 +39,9 @@
 
 		echo "WiFi"                               >> /tmp/net_wifi_status.txt
 		echo "----"                               >> /tmp/net_wifi_status.txt
+		echo Main  AP Connections: $ap_connections        >> /tmp/net_wifi_status.txt
+		echo Guest AP Connections: $guest_ap_connections  >> /tmp/net_wifi_status.txt
+		echo ""                                   >> /tmp/net_wifi_status.txt
 		iwinfo | grep -A 7 SSID                   >> /tmp/net_wifi_status.txt
 	%>
 

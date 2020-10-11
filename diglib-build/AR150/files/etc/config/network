@@ -21,3 +21,8 @@ config interface 'wan'
 config interface 'wwan'
 	option proto 'dhcp'
 
+config interface 'guest'
+	option proto 'static'
+	option ipaddr '10.10.11.1'
+	option netmask '255.255.255.0'
+
