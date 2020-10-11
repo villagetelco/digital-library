@@ -10,7 +10,7 @@ BRANCH="master"
 
 echo "Set up version strings"
 #DIRVER="GA01.1"
-DIRVER="VER-1.0-RC1"
+DIRVER="VER-1.0-RC2.1"
 VER="Digital-Library-01-MT300N-V2-"$DIRVER
 
 
@@ -80,7 +80,6 @@ rm -rf ./diglib-build/
 cp -rp $GITREPO/$REPO/diglib-build/ .
 
 cp -fp $GITREPO/$REPO/Build-scripts/FactoryRestore.sh  .
-cp -fp $GITREPO/$REPO/Build-scripts/GetGitVersions.sh  .
 
 ###########################
 
