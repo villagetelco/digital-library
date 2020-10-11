@@ -8,20 +8,24 @@
 	if [ "$FORM_BUTTON" == "Save" ] || [ "$FORM_BUTTON" == "Save&Apply" ]; then
 		uci set network.lan.ipaddr="$FORM_IPADDR"
 		uci set network.lan.netmask="$FORM_NETMASK"
-		uci set network.lan.gateway="$FORM_GATEWAY"
-		uci set network.lan.dns="$FORM_DNS"
+		#uci set network.lan.gateway="$FORM_GATEWAY"
+		#uci set network.lan.dns="$FORM_DNS"
+		uci set diglib.lan.dns1="$FORM_DNS1"
+		uci set diglib.lan.dns2="$FORM_DNS2"
+		uci set diglib.lan.dns_filt_addr1="$FORM_DNS_FILT_ADDR1"
+		uci set diglib.lan.dns_filt_addr2="$FORM_DNS_FILT_ADDR2"
 
 		uci set network.wan.proto="$FORM_WAN_PROTO"
 		uci set network.wan.ipaddr="$FORM_WAN_IPADDR"
 		uci set network.wan.netmask="$FORM_WAN_NETMASK"
 		uci set network.wan.gateway="$FORM_WAN_GATEWAY"
-		uci set network.wan.dns="$FORM_WAN_DNS"
+		#uci set network.wan.dns="$FORM_WAN_DNS"
 
 		uci set network.wwan.proto="$FORM_WWAN_PROTO"
 		uci set network.wwan.ipaddr="$FORM_WWAN_IPADDR"
 		uci set network.wwan.netmask="$FORM_WWAN_NETMASK"
 		uci set network.wwan.gateway="$FORM_WWAN_GATEWAY"
-		uci set network.wwan.dns="$FORM_WWAN_DNS"
+		#uci set network.wwan.dns="$FORM_WWAN_DNS"
 
 		# Set up WAN selection
 		wanport="$(uci -q get board.eth.wanport)"
@@ -29,12 +33,12 @@
 		ethports="$(uci -q get board.eth.ethports)"
 
 		if [ "$FORM_SELECT_WAN" == "ethwan" ]; then
-			uci set board.eth.select_wan="ethwan"
+			uci set diglib.wan.select_wan="ethwan"
 			uci set network.wan.ifname="$wanport"
 			uci set network.lan.ifname="$lanport"
 			uci set wireless.sta_0.disabled="1"
 		elif [ "$FORM_SELECT_WAN" == "wifiwan" ]; then
-			uci set board.eth.select_wan="wifiwan"
+			uci set diglib.wan.select_wan="wifiwan"
 			uci set network.wan.ifname=" "
 			uci set wireless.sta_0.disabled="0"			
 			if [ $ethports == "1" ]; then
@@ -43,30 +47,44 @@
 				uci set network.lan.ifname="$lanport" 
 			fi
 		else
-			uci set board.eth.select_wan="disablewan"
+			uci set diglib.wan.select_wan="disablewan"
 			uci set network.wan.ifname=" "
 			uci set wireless.sta_0.disabled="1"
 			uci set network.lan.ifname="$lanport"
 		fi
 
-		# Update dhcp config
-		netmask="255.255.255.0"
-		dns1="8.8.8.8"; dns2="8.8.4.4"
-		# Removed to allow host name resolution to work.
-		#uci set dhcp.lan.dhcp_option="1,$netmask  3,$FORM_IPADDR  6,$dns1,$dns2"
+		# Set up DNS Filter
+		if [ "$FORM_DNS_FILTER_ENABLE" == "checked" ]; then
+			uci set diglib.dnsfilter.enable="1"
+			uci set network.lan.gateway="255.255.255.255"
+			uci set network.lan.dns="$FORM_DNS_FILT_ADDR1, $FORM_DNS_FILT_ADDR2"
+			uci set network.wan.dns="$FORM_DNS_FILT_ADDR1"
+			uci set network.wwan.dns="$FORM_DNS_FILT_ADDR1"			
+			uci -q delete dhcp.setup.server
+			uci add_list dhcp.setup.server="$FORM_DNS_FILT_ADDR1"
+			uci add_list dhcp.setup.server="$FORM_DNS_FILT_ADDR2"	
+		else
+			uci set diglib.dnsfilter.enable="0"
+			uci set network.lan.gateway="$FORM_GATEWAY"
+			uci set network.lan.dns="$FORM_DNS1, $FORM_DNS2"
+			uci set network.wan.dns="$FORM_WAN_DNS"
+			uci set network.wwan.dns="$FORM_WWAN_DNS"			
+			uci -q delete dhcp.setup.server
+		fi
 		
 		uci commit network
 		uci commit wireless
-		uci commit dhcp
 		uci commit board
+		uci commit dhcp
+		uci commit diglib
 		
 	fi
 
 	if [ "$FORM_BUTTON" == "Save&Apply" ]; then
 
     # Run network restart in background    
-		(sleep 1; /etc/init.d/network restart; /etc/init.d/fallback-ip start) &
-		(sleep 10; /etc/init.d/chk-wifi-wan start start) &
+		(sleep 1;	/etc/init.d/dnsmasq restart; /etc/init.d/network restart; /etc/init.d/fallback-ip start) &
+		(sleep 10; /etc/init.d/chk-wifi-wan start) &
   fi
 
 %>
@@ -76,8 +94,11 @@
   ipaddr="$(uci -q get network.lan.ipaddr)"
   netmask="$(uci -q get network.lan.netmask)"
   gateway="$(uci -q get network.lan.gateway)"
-  dns="$(uci -q get network.lan.dns)"
-
+  dns1="$(uci -q get diglib.lan.dns1)"
+  dns2="$(uci -q get diglib.lan.dns2)"
+  dns_filt_addr1="$(uci -q get diglib.lan.dns_filt_addr1)"
+  dns_filt_addr2="$(uci -q get diglib.lan.dns_filt_addr2)"
+	
   wan_proto="$(uci -q get network.wan.proto)"
   wan_ipaddr="$(uci -q get network.wan.ipaddr)"
   wan_netmask="$(uci -q get network.wan.netmask)"
@@ -90,8 +111,16 @@
   wwan_gateway="$(uci -q get network.wwan.gateway)"
   wwan_dns="$(uci -q get network.wwan.dns)"
 
+# DNS Filter
+	dns_filter_enable=$(uci -q get diglib.dnsfilter.enable)
+	if [ $dns_filter_enable == "1" ]; then
+		dns_filter_enable="checked"
+	else
+		dns_filter_enable="0"
+	fi
+
 # Select WAN control
-	select_wan="$(uci -q get board.eth.select_wan)"
+	select_wan="$(uci -q get diglib.wan.select_wan)"
 	if [ "$select_wan" == "wifiwan" ];then
 		eth_wan=""; wifi_wan="checked"; disable_wan=""
 	elif [ "$select_wan" == "ethwan" ];then
@@ -111,16 +140,14 @@
 
 <body>
 <%inc /www/cgi-bin/inc/menu.inc %>
+
 <div class="page-container">
 <h2>Network</h2>
-
 <form name="NETWORK" id="NETWORK" action="<% echo -n $SCRIPT_NAME %>" method="POST">
+
 	<table class="configTable">
-		<tr><td colspan="20"></td></tr> <!--Determines column widths-->
-		<tr>
-			<td colspan="1"></td>
-			<td colspan="19"><h3>LAN Settings</h3></td>
-		</tr>
+		<tr><td colspan="20"><h3>LAN Settings</h3></td></tr> <!--Determines column widths-->
+
 		<tr>
 			<td colspan="1"></td>
 			<td colspan="2"><label for="IPADDR">IP Address</label></td>
@@ -135,9 +162,25 @@
 			<td colspan="2"><label for="NETMASK">Netmask</label></td>
 			<td colspan="3"><input type="text" name="NETMASK" VALUE="<% echo -n $netmask %>" required pattern="(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$"></td>
 			<td colspan="1"></td>
-			<td colspan="2"><label for="DNS">DNS</label></td>
-			<td colspan="3"><input type="text" name="DNS" VALUE="<% echo -n $dns %>"  pattern="(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$"></td>
+			<td colspan="2"><label for="DNS">DNS 1</label></td>
+			<td colspan="3"><input type="text" name="DNS1" VALUE="<% echo -n $dns1 %>"  pattern="(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$"></td>
+			<td colspan="1"></td>
+			<td colspan="2"><label for="DNS">DNS 2</label></td>
+			<td colspan="3"><input type="text" name="DNS2" VALUE="<% echo -n $dns2 %>"  pattern="(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$"></td>
 		</tr>
+		
+		<tr class="rowSpacer"></tr>
+		<tr>
+			<td colspan="7"><font size="4"> Enable DNS Filter &nbsp;</font>
+			<input type="checkbox" name="DNS_FILTER_ENABLE" value="checked" <% echo -n $dns_filter_enable %> ></td>
+		
+			<td colspan="2"><label for="DNS_FILT_ADDR1"> Addr 1</label></td>
+			<td colspan="3"><input type="text" name="DNS_FILT_ADDR1" VALUE="<% echo -n $dns_filt_addr1 %>"  pattern="(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$"></td>
+			<td colspan="1"></td>
+			<td colspan="2"><label for="DNS_FILT_ADDR2"> Addr 2</label></td>
+			<td colspan="3"><input type="text" name="DNS_FILT_ADDR2" VALUE="<% echo -n $dns_filt_addr2 %>"  pattern="(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|		</tr>
+
+
 
 		<tr class="rowSpacer"></tr>
 		<tr class="rowSpacer"></tr>

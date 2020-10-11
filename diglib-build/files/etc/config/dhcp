@@ -17,6 +17,8 @@ config dnsmasq 'setup'
 	option nonwildcard '1'
 	option localservice '1'
 	option dhcpleasemax '80'
+	list server '208.67.222.123'
+	list server '208.67.220.123'
 
 config dhcp 'lan'
 	option interface 'lan'

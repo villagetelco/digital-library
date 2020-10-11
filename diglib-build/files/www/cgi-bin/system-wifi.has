@@ -36,7 +36,6 @@
 				
     uci commit wireless
     uci commit network
-    uci commit board 
 
     # Run network restart in background, and check that wifi is operating correctly    
 		(sleep 1; /etc/init.d/network restart; /etc/init.d/fallback-ip start; /etc/init.d/chk-wifi-wan start) &

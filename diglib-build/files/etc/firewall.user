@@ -8,11 +8,12 @@
 
 
 # Set up DNS Filter capture for DNS requests
-###DNSFILTER_ENABLE=`uci get ???.dnsfilter.enable`
-DNSFILTER_ENABLE="0"  # Temp patch
-if [ $DNSFILTER_ENABLE = "checked" ]; then
+DNSFILTER_ENABLE=$(uci -q get diglib.dnsfilter.enable)
+
+if [ $DNSFILTER_ENABLE = "1" ]; then
 	iptables -t nat -A PREROUTING	-i br-lan -p udp --dport 53 -j REDIRECT --to-port 53
 	iptables -t nat -A PREROUTING	-i br-lan -p tcp --dport 53 -j REDIRECT --to-port 53
 fi
+
 
 
