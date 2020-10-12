@@ -74,7 +74,6 @@
 		
 		uci commit network
 		uci commit wireless
-		uci commit board
 		uci commit dhcp
 		uci commit diglib
 		
