@@ -4,7 +4,7 @@
 sleep 5  # make sure bridge is up
 
 wanport=$(uci -q get board.eth.wanport)
-select_wan=$(uci -q get board.eth.enable_wan)
+select_wan=$(uci -q get diglib.wan.select_wan)
 
 if [ $select_wan == "ethwan" ]; then
 	# Fallback IP on wan for single Eth port 
