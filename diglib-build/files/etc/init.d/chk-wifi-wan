@@ -15,7 +15,7 @@ fi
 
 # Check if sta and ap interfaces are both enabled and working 
 ssid_count=$(iw dev | grep -c ssid)
-if [ $sta_disabled == "0" ] && [ $ap_disabled == "0" ] && [ $ssid_count == "2" ]; then
+if [ $sta_disabled == "0" ] && [ $ap_disabled == "0" ] && [ $ssid_count -ge "2" ]; then
   # All ok, exit
   exit
 else
@@ -24,7 +24,7 @@ fi
 
 # Check if sta and ap interfaces are both enabled and working 
 ssid_count=$(iw dev | grep -c ssid)
-if [ $sta_disabled == "0" ] && [ $ap_disabled == "0" ] && [ $ssid_count == "2" ]; then
+if [ $sta_disabled == "0" ] && [ $ap_disabled == "0" ] && [ $ssid_count -ge "2" ]; then
   # All ok, exit
   exit
 else
@@ -33,7 +33,7 @@ fi
 
 # Check again
 ssid_count=$(iw dev | grep -c ssid)
-if [ $sta_disabled == "0" ] && [ $ap_disabled == "0" ] && [ $ssid_count == "2" ]; then
+if [ $sta_disabled == "0" ] && [ $ap_disabled == "0" ] && [ $ssid_count -ge "2" ]; then
   # All ok, exit
   exit
 else
