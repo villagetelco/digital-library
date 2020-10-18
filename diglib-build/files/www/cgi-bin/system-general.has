@@ -36,6 +36,15 @@
 		uci commit firewall
 		/etc/init.d/firewall restart > /dev/null
 	fi
+	
+	# Restore Default settings
+		restore_defaults="0"
+		if [ "$FORM_BUTTON" == "Restore Defaults" ]; then
+			restore_defaults="1"
+			cd /etc
+			tar -xzf conf-default.tar.gz >> /dev/null
+			cd
+		fi
 %>
 
 <%# --- Get the variables for the HTML page --- %>
@@ -74,6 +83,25 @@
 <h2 class="pageTitle">System General</h2>
 
 <form name="SYSTEM-GENERAL" id="SYSTEM-GENERAL" action="<% echo -n $SCRIPT_NAME %>" method="POST">
+
+<% 
+	# Restore default settings
+	if [ $restore_defaults == "1" ];then
+		echo "<div><strong>"
+		echo "<br>&nbsp;&nbsp;&nbsp;Configuration settings restored to defaults."
+		echo "<br>&nbsp;&nbsp;&nbsp;Screen will change to Overview, then the device will reboot."
+		echo "<br>&nbsp;&nbsp;&nbsp;Please wait until restart is complete, then reload the screen."
+		echo "</strong></div>"
+		sleep 2
+		(sleep 2; reboot) &
+%>
+<script>
+  window.location.href = "/cgi-bin/system-overview.has";
+</script>
+<%
+		sleep 1
+	fi
+%>
 
 <table  class="configTable">
 	<tr><td colspan="20"></td></tr> <!--Determines column widths-->
@@ -169,6 +197,7 @@
 	<INPUT class="hiddenKey" TYPE="SUBMIT" name="BUTTON" VALUE="Save" accesskey="s"> 
 			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save&Apply">
 			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Cancel">
+			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Restore Defaults">
 		</td>
 	</tr>
 </table>
