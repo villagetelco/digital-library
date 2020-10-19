@@ -14,8 +14,6 @@
   
 	<a href="/cgi-bin/system-overview.has">System Overview</a>
 
-	<a href="/cgi-bin/system-general.has">General</a>
- 
 	<div class="dropdown"> <!-- Library -->
    <button class="dropbtn"><strong>Library</strong></button>
     <div class="dropdown-content">
@@ -26,9 +24,11 @@
     </div>
   </div> 
  
-	<a href="/cgi-bin/system-network.has">Network</a>
-
+	<a href="/cgi-bin/system-general.has">General</a>
+ 
 	<a href="/cgi-bin/system-wifi.has">WiFi</a>
+
+	<a href="/cgi-bin/system-network.has">Network</a>
 
 	<a href="/cgi-bin/system-status.has">Network Status</a>
 
