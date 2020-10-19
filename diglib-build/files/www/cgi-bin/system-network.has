@@ -169,47 +169,41 @@
 		
 		<tr class="rowSpacer"></tr>
 		<tr>
-			<td colspan="7"><font size="4"> Enable DNS Filter &nbsp;</font>
+			<td colspan="7"><font size="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Enable DNS Filter &nbsp;</font>
 			<input type="checkbox" name="DNS_FILTER_ENABLE" value="checked" <% echo -n $dns_filter_enable %> ></td>
 		
 			<td colspan="2"><label for="DNS_FILT_ADDR1"> Addr 1</label></td>
 			<td colspan="3"><input type="text" name="DNS_FILT_ADDR1" VALUE="<% echo -n $dns_filt_addr1 %>"  pattern="(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$"></td>
 			<td colspan="1"></td>
 			<td colspan="2"><label for="DNS_FILT_ADDR2"> Addr 2</label></td>
-			<td colspan="3"><input type="text" name="DNS_FILT_ADDR2" VALUE="<% echo -n $dns_filt_addr2 %>"  pattern="(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|		</tr>
-
-
-
-		<tr class="rowSpacer"></tr>
-		<tr class="rowSpacer"></tr>
+			<td colspan="3"><input type="text" name="DNS_FILT_ADDR2" VALUE="<% echo -n $dns_filt_addr2 %>"  pattern="(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$"></td>
+		</tr>
 		
+		<tr><td colspan="20"><h3>WAN Settings</h3></td></tr> 
 		<tr>
 			<td colspan="1"></td>
-			<td colspan="20"> <h3>Select WAN port</h3> &nbsp;
-			  <input type="radio" id="ETH_WAN" name="SELECT_WAN" value="ethwan" <% echo -n $eth_wan %> >
+			<td colspan="20"> <h4>Select WAN port</h4> &nbsp;
+			  <input type="radio" id="ETH_WAN" name="SELECT_WAN" onchange="hide_Message();" value="ethwan" <% echo -n $eth_wan %> >
 				<label for="ETH_WAN">Ethernet WAN</label> 
-				<input type="radio" id="WIFI_WAN" name="SELECT_WAN" value="wifiwan" <% echo -n $wifi_wan %> >
+				<input type="radio" id="WIFI_WAN" name="SELECT_WAN" onchange="display_Message();" value="wifiwan" <% echo -n $wifi_wan %> >
 				<label for="WIFI_WAN">WiFi WAN</label> 
-				<input type="radio" id="DISABLE_WAN" name="SELECT_WAN" value="disablewan" <% echo -n $disable_wan %> >
+				<input type="radio" id="DISABLE_WAN" name="SELECT_WAN" onchange="hide_Message();" value="disablewan" <% echo -n $disable_wan %> >
 				<label for="DISABLE_WAN">Disable WAN</label>
 				<br> 
+				<div id="wifi_wan_messg" style="color:red; visibility:hidden; display:none">
+					<br>CAUTION: Ensure that WiFi WAN settings are correct before Applying. 
+					<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			 		   If WiFi WAN settings are incorrect, all WiFi will be disabled.
+				</div>
 			</td>
 		</tr>
+		
 		<tr class="rowSpacer" ></tr>
 		
 		<tr>
 			<td colspan="1"></td>
-			<td colspan="19"><h3>Ethernet WAN Settings</h3></td>
+			<td colspan="19"><h4>Ethernet WAN Settings</h4></td>
 		</tr>
-
-<!-- 
-		<tr>
-			<td colspan="1"></td>
-			<td colspan="4"> Enable WAN port &nbsp;	<input type="checkbox" name="ENABLE_WAN" value="checked" <% echo -n $enable_wan %> ></td>
-			<td colspan="15"> Note: If WAN port is not enabled, the port will be assigned to LAN 
-		</tr>
-		<tr class="rowSpacer" ></tr>
--->		
 
 		<tr>
 			<td colspan="1"></td>
@@ -253,16 +247,8 @@
 	<table class="configTable">
 		<tr>
 			<td colspan="1"></td>
-			<td colspan="19"><h3>WiFi WAN Settings</h3></td>
+			<td colspan="19"><h4>WiFi WAN Settings</h4></td>
 		</tr>
-<!--
-		<tr>
-			<td colspan="1"></td>
-			<td colspan="4"> Enable WWAN port &nbsp;
-			<input type="checkbox" name="ENABLE_WWAN" value="checked" <% echo -n $enable_wwan %> ></td>
-		</tr>
-		<tr class="rowSpacer" ></tr>
--->
 		
 		<tr>
 			<td colspan="1"></td>
@@ -318,6 +304,15 @@
 </form>
 
 <script>  
+	function display_Message(){
+		document.getElementById("wifi_wan_messg").style.visibility = "visible";
+		document.getElementById("wifi_wan_messg").style.display = "inline";
+	}
+	
+	function hide_Message(){
+		document.getElementById("wifi_wan_messg").style.visibility = "hidden";
+		document.getElementById("wifi_wan_messg").style.display = "none";
+	}
 
 	document.getElementById("div_wan").style.display = "inline"; 
 	var x = document.getElementById("wan_proto").value;
