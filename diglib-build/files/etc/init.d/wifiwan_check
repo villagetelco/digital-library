@@ -19,8 +19,9 @@ ethports=$(uci -q get board.eth.ethports)
 sleep 10
 
 # Check if WiFi WAN sta interface is working 
-sta_check=$(ifconfig wlan0-2 | grep -c "inet")
-if [ $sta_check != "0" ]; then
+sta_check=$(iwinfo wlan0-2 info | grep "Channel" | grep -c "unknown")
+sta_inet_check=$(ifconfig wlan0-2 | grep -c "inet")
+if [ $sta_check == "0" ] && [ $sta_inet_check != "0" ]; then
 	# All ok, exit
 	exit
 else
@@ -28,8 +29,9 @@ else
 fi
 
 # Check again if WiFi WAN sta interface is working 
-sta_check=$(ifconfig wlan0-2 | grep -c "inet")
-if [ $sta_check != "0" ]; then
+sta_check=$(iwinfo wlan0-2 info | grep "Channel" | grep -c "unknown")
+sta_inet_check=$(ifconfig wlan0-2 | grep -c "inet")
+if [ $sta_check == "0" ] && [ $sta_inet_check != "0" ]; then
 	# All ok, exit
 	exit
 else
@@ -37,8 +39,9 @@ else
 fi
 
 # Check again if WiFi WAN sta interface is working 
-sta_check=$(ifconfig wlan0-2 | grep -c "inet")
-if [ $sta_check != "0" ]; then
+sta_check=$(iwinfo wlan0-2 info | grep "Channel" | grep -c "unknown")
+sta_inet_check=$(ifconfig wlan0-2 | grep -c "inet")
+if [ $sta_check == "0" ] && [ $sta_inet_check != "0" ]; then
 	# All ok, exit
 	exit
 fi
