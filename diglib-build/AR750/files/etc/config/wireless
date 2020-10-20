@@ -71,7 +71,7 @@ config wifi-iface 'ap5_0'
 
 config wifi-iface 'ap5_1'
 	option device 'radio0'
-	option ifname 'wlan0-3'
+	option ifname 'wlan1-3'
 	option mode 'ap'
 	option network 'guest'
 	option isolate '1'
