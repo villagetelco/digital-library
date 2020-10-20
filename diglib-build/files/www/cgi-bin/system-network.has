@@ -8,8 +8,6 @@
 	if [ "$FORM_BUTTON" == "Save" ] || [ "$FORM_BUTTON" == "Save&Apply" ]; then
 		uci set network.lan.ipaddr="$FORM_IPADDR"
 		uci set network.lan.netmask="$FORM_NETMASK"
-		#uci set network.lan.gateway="$FORM_GATEWAY"
-		#uci set network.lan.dns="$FORM_DNS"
 		uci set diglib.lan.dns1="$FORM_DNS1"
 		uci set diglib.lan.dns2="$FORM_DNS2"
 		uci set diglib.lan.dns_filt_addr1="$FORM_DNS_FILT_ADDR1"
@@ -25,7 +23,6 @@
 		uci set network.wwan.ipaddr="$FORM_WWAN_IPADDR"
 		uci set network.wwan.netmask="$FORM_WWAN_NETMASK"
 		uci set network.wwan.gateway="$FORM_WWAN_GATEWAY"
-		#uci set network.wwan.dns="$FORM_WWAN_DNS"
 
 		# Set up WAN selection
 		wanport="$(uci -q get board.eth.wanport)"
