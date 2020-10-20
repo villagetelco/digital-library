@@ -82,7 +82,7 @@
 	if [ "$FORM_BUTTON" == "Save&Apply" ]; then
 
     # Run network restart in background    
-		(sleep 1;	/etc/init.d/dnsmasq restart; /etc/init.d/network restart; /etc/init.d/fallback-ip start) &
+		(sleep 1;	/etc/init.d/dnsmasq restart; /etc/init.d/network restart; /etc/init.d/fallback-ip start; /etc/init.d/wifiwan_check start) &
   fi
 
 %>

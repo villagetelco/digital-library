@@ -1,0 +1,69 @@
+#!/bin/sh /etc/rc.common
+
+# /etc/init.d/wifiwan_check
+
+START=99
+
+start()
+{	
+# If WiFi WAN sta iface is not enabled, exit
+sta_disabled=$(uci -q get wireless.sta_0.disabled)
+if [ $sta_disabled != "0" ]; then
+  exit
+fi
+
+wanport=$(uci -q get board.eth.wanport)
+lanport=$(uci -q get board.eth.lanport)
+ethports=$(uci -q get board.eth.ethports)
+
+# Check if WiFi WAN sta interface is working 
+sta_check=$(iw dev wlan0-2 info | grep -c "channel")
+if [ $sta_check != "0" ]; then
+  # All ok, exit
+  exit
+else
+  sleep 10 # Wait to see if it will connect
+fi
+
+# Check again if WiFi WAN sta interface is working 
+sta_check=$(iw dev wlan0-2 info | grep -c "channel")
+if [ $sta_check != "0" ]; then
+  # All ok, exit
+  exit
+else
+  sleep 10 # Wait to see if it will connect
+fi
+
+# Check again if WiFi WAN sta interface is working 
+sta_check=$(iw dev wlan0-2 info | grep -c "channel")
+if [ $sta_check != "0" ]; then
+  # All ok, exit
+  exit
+else
+  # Still not connected
+  # Disable sta interface
+  uci set wireless.sta_0.disabled="1"
+  uci commit wireless
+  
+  # Set WAN mode to Disabled
+  uci set diglib.wan.select_wan="disablewan"
+  uci commit diglib
+  
+  # Disable WAN port port
+  uci set network.wan.ifname=" "
+
+  # Enable LAN port
+  if [ $ethports == "1" ]; then
+  	uci set network.lan.ifname="$wanport $lanport" # For board with single eth port, make it LAN
+  else
+		uci set network.lan.ifname="$lanport"
+  fi
+  uci commit network
+
+	# Restart WiFi and Networking
+  wifi
+  /etc/init.d/network restart
+  sleep 1
+  /etc/init.d/fallback-ip
+fi
+}
