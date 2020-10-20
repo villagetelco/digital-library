@@ -16,30 +16,33 @@ wanport=$(uci -q get board.eth.wanport)
 lanport=$(uci -q get board.eth.lanport)
 ethports=$(uci -q get board.eth.ethports)
 
+sleep 10
+
 # Check if WiFi WAN sta interface is working 
-sta_check=$(iw dev wlan0-2 info | grep -c "channel")
+sta_check=$(ifconfig wlan0-2 | grep -c "inet")
 if [ $sta_check != "0" ]; then
-  # All ok, exit
-  exit
+	# All ok, exit
+	exit
 else
-  sleep 10 # Wait to see if it will connect
+	sleep 10
 fi
 
 # Check again if WiFi WAN sta interface is working 
-sta_check=$(iw dev wlan0-2 info | grep -c "channel")
+sta_check=$(ifconfig wlan0-2 | grep -c "inet")
 if [ $sta_check != "0" ]; then
-  # All ok, exit
-  exit
+	# All ok, exit
+	exit
 else
-  sleep 10 # Wait to see if it will connect
+	sleep 10
 fi
 
 # Check again if WiFi WAN sta interface is working 
-sta_check=$(iw dev wlan0-2 info | grep -c "channel")
+sta_check=$(ifconfig wlan0-2 | grep -c "inet")
 if [ $sta_check != "0" ]; then
-  # All ok, exit
-  exit
-else
+	# All ok, exit
+	exit
+fi
+
   # Still not connected
   # Disable sta interface
   uci set wireless.sta_0.disabled="1"
@@ -65,5 +68,5 @@ else
   /etc/init.d/network restart
   sleep 1
   /etc/init.d/fallback-ip
-fi
+
 }
