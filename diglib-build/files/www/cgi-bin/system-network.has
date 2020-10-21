@@ -135,6 +135,7 @@
   wwan_netmask="$(uci -q get network.wwan.netmask)"
   wwan_gateway="$(uci -q get network.wwan.gateway)"
   wwan_dns="$(uci -q get network.wwan.dns)"
+	wwan_disabled=$(uci -q get wireless.sta_0.disabled)
 
 # DNS Filter
 	dns_filter_enable=$(uci -q get diglib.dnsfilter.enable)
@@ -222,9 +223,12 @@
 					<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			 		   If WiFi WAN settings are incorrect, all WiFi will be disabled.
 				</div>
+				<div id="wifi_wan_fail_messg" style="color:red; visibility:hidden; display:none">
+					<br>WiFi WAN could not connect. 
+					<br>Check WiFi WAN settings and Survey on WiFi page, then click Save&Apply.
+				</div>
 			</td>
 		</tr>
-		
 		<tr class="rowSpacer" ></tr>
 		
 		<tr>
@@ -329,6 +333,17 @@
 	</table>
 
 </form>
+
+<%
+	if [ $select_wan == "wifiwan" ] && [ $wwan_disabled == "1" ]; then
+%>		
+	<script>
+		document.getElementById("wifi_wan_fail_messg").style.visibility = "visible";
+		document.getElementById("wifi_wan_fail_messg").style.display = "inline";
+	</script>
+<%
+	fi
+%>
 
 <script>  
 	function display_Message(){
