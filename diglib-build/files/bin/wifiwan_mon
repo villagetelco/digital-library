@@ -39,21 +39,6 @@ else
   uci set wireless.sta_0.disabled="1"
   uci commit wireless
   
-  # Set WAN mode to Disabled
-  uci set diglib.wan.select_wan="disablewan"
-  uci commit diglib
-  
-  # Disable WAN port port
-  uci set network.wan.ifname=" "
-
-  # Enable LAN port
-  if [ $ethports == "1" ]; then
-  	uci set network.lan.ifname="$wanport $lanport" # For board with single eth port, make it LAN
-  else
-		uci set network.lan.ifname="$lanport"
-  fi
-  uci commit network
-
 	# Restart WiFi and Networking
   wifi
   /etc/init.d/network restart
