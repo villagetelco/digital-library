@@ -4,9 +4,9 @@
 
 <%# --- Get the variables for the HTML page --- %>
 <%
-MEMFREE=`cat /proc/meminfo | grep MemFree |cut -d : -f2 | tr -d ' '|tr -d 'kB'`
-MEMTOT=`cat /proc/meminfo | grep MemTotal |cut -d : -f2 | tr -d ' '`
-MEMSTR="Free Memory: "$MEMFREE" / Total Memory: "$MEMTOT
+MEMFREE=$(cat /proc/meminfo | grep MemFree |cut -d : -f2 | tr -d ' ')
+MEMTOT=$(cat /proc/meminfo | grep MemTotal |cut -d : -f2 | tr -d ' ')
+MEMSTR="Free Memory: $MEMFREE  / Total Memory: $MEMTOT"
 
 # Check Internet connectivity
 host="1.1.1.1"
@@ -46,14 +46,23 @@ fi
 	<tr class="rowSpacer"></tr>
 	<tr><td colspan="3">Uptime:</td><td colspan="17"><% uptime | cut -d " " -f4,5 | tr , " " %></td></tr>
 	<tr class="rowSpacer"></tr>
+	<tr><td colspan="3">Internet: </td><td colspan="17"><% echo $connection %> </td></tr>
+	<tr class="rowSpacer"></tr>
 	<tr><td colspan="3">Load Avg:</td><td colspan="17"><% uptime | cut -d , -f2,3,4 | cut -d : -f2 %></td></tr>
 	<tr class="rowSpacer"></tr>
 	<tr><td colspan="3">Memory:</td><td colspan="17"><% echo $MEMSTR %></td></tr>
 	<tr class="rowSpacer"></tr>
-	<tr><td colspan="5">Internet: </td><td colspan="17"><% echo $connection %> </td></tr>
-
+	<tr><td colspan="3">Storage:</td><td colspan="17"><% df -hmT | grep "Filesystem" %></td></tr> <br>
+	<% if [ -e "/dev/sda1" ]; then %>
+	<tr><td colspan="3"></td><td colspan="17"><% df -hmT | grep "/dev/sda1"  %></td></tr> <br>
+	<% fi %>
+	<% if [ -e "/dev/sdb1" ]; then %>
+	<tr><td colspan="3"></td><td colspan="17"><% df -hmT | grep "/dev/sdb1"  %></td></tr> <br>
+	<% fi %>
+	<% if [ -e "/dev/mmcblk0p1" ]; then %>
+	<tr><td colspan="3"></td><td colspan="17"><% df -hmT | grep "/dev/mmcblk0p1"  %></td></tr> <br>
+	<% fi %>
 	<tr class="rowSpacer"></tr>
-
 	<tr><td colspan="20"></td></tr>
 </table>
 </div>

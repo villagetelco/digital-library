@@ -5,8 +5,7 @@ sleep 5
 
 # ------------------------------
 
-# Mount the memory device in case auto mount did not work.
-# /dev/sda is primary and /dev/sdb is secondary. 
+# Mount the memory devices.
 
 # Make dirs in case it is first boot
 mkdir -p /mnt/sda1
@@ -31,19 +30,35 @@ fi
 rm /www/rachel
 rm /www/rachel-local2
 
-#Set up default Library directory in case there are no memory devices installed
-ln -s -f /www/rachel-x /www/rachel
-
-# Find library memory devices and link.
-# Check for primary memory device on "sda1" to use for main library.
-if [ -e "/dev/sda1" ]; then
+# Find Library memory devices and link.
+# Case 1. Check for a primary Library memory device on "sda1" to use for main library.
+if [ -e "/dev/sda1" ] && [ -e "/mnt/sda1/##LIBRARY##" ]; then
 	rm /www/rachel
 	ln -s -f /mnt/sda1	/www/rachel
-fi
-
-# Check for secondary memory device on "sdb1" to use for additional local content.
-if [ -e "/dev/sdb1" ]; then 
-	ln -s -f /mnt/sdb1 /www/rachel-local2
+	# Check for secondary memory device on "sdb1" to use for additional local content.
+	if [ -e "/dev/sdb1" ]; then 
+		ln -s -f /mnt/sdb1 /www/rachel-local2
+	fi
+# Case 2. Check for primary Library memory device on "sdb1" to use for main library.
+elif [ -e "/dev/sdb1" ] && [ -e "/mnt/sdb1/##LIBRARY##" ]; then
+	rm /www/rachel
+	ln -s -f /mnt/sdb1	/www/rachel
+	# Check for secondary memory device on "sda1" to use for additional local content.
+	if [ -e "/dev/sda1" ]; then 
+		ln -s -f /mnt/sda1 /www/rachel-local2
+	fi
+# Case 3. Check for non-Library memory device on "sda1" to use for main library.
+elif [ -e "/dev/sda1" ]; then
+	rm /www/rachel
+	ln -s -f /mnt/sda1	/www/rachel
+	# Check for secondary memory device on "sdb1" to use for additional local content.
+	if [ -e "/dev/sdb1" ]; then 
+		ln -s -f /mnt/sdb1 /www/rachel-local2
+	fi
+# Case 4. No memory device on "sda1" so so just use the default home page.
+else
+	rm /www/rachel
+	ln -s -f /www/rachel-x /www/rachel
 fi
 
 exit
