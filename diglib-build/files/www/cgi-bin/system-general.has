@@ -9,11 +9,11 @@
 
 <%# --- Process the form submission --- %>
 <%
-	if [ "$FORM_BUTTON" == "SetPassword" ]; then
+	if [ "$FORM_BUTTON" == "Set root Password" ]; then
 		((echo $FORM_PASSWORD; sleep 1; echo $FORM_PASSWORD) | passwd $login; /etc/init.d/uhttpd restart) &
 	fi
 
-	if [ "$FORM_BUTTON" == "SetAdminPassword" ]; then
+	if [ "$FORM_BUTTON" == "Set admin Password" ]; then
 		((echo $FORM_PASSWORD2; sleep 1; echo $FORM_PASSWORD2) | passwd admin; /etc/init.d/uhttpd restart) &
 	fi
 	
@@ -39,11 +39,25 @@
 	
 	# Restore Default settings
 		restore_defaults="0"
-		if [ "$FORM_BUTTON" == "Restore Defaults" ]; then
+		if [ "$FORM_BUTTON" == "Restore Factory Defaults" ]; then
 			restore_defaults="1"
 			cd /etc
 			tar -xzf conf-default.tar.gz >> /dev/null
 			cd
+		fi
+	
+	# Add Local Host
+		if [ "$FORM_BUTTON" == "Add Local Host" ]; then
+			tab='\t'
+			echo -e $FORM_HOST_IP_ADDR $tab $FORM_HOST_NAME >> /etc/hosts
+			/etc/init.d/dnsmasq restart
+		fi
+		
+	# Restore Local Host File
+		if [ "$FORM_BUTTON" == "Reset to Default" ]; then
+			default='127.0.0.1 \t localhost'
+			echo -e  $default  > /etc/hosts
+			/etc/init.d/dnsmasq restart
 		fi
 %>
 
@@ -102,21 +116,22 @@
 		sleep 1
 	fi
 %>
-
+<div id="divrootpwd" style="visibility:hidden; display:none">
 <table  class="configTable">
 	<tr><td colspan="20"></td></tr> <!--Determines column widths-->
 	<tr><td colspan="20"><h3>System Password</h3></td></tr> 
 	<tr>
 		<td colspan="1"></td>
-		<td colspan="4"><label for="PASSWORD">Password </label></td>  
+		<td colspan="4"><label for="PASSWORD">Password (root)</label></td>  
 		<td colspan="4"><input type="password" name="PASSWORD" id="password" value=" " maxlength="32"></td>
 		<td colspan="1"><span class="btnShow" onclick="toggleVis('password')">Show</span></td>
-		<td colspan="3"> <INPUT TYPE="SUBMIT" name="BUTTON" VALUE="SetPassword"> </td>
+		<td colspan="4"> <INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Set root Password"> </td>
 		<td colspan="3"> Login: <% echo -n $login %> </td>
 	</tr>	
 </table>
+</div>
 
-<div id="divpwd" style="visibility:hidden; display:none">
+<div id="divadminpwd" style="visibility:hidden; display:none">
 	<table  class="configTable">
 		<tr><td colspan="20"></td></tr> <!--Determines column widths-->
 		<tr>
@@ -124,16 +139,25 @@
 		<td colspan="4"><label for="PASSWORD2" >Password (admin)</label></td>  
 		<td colspan="4"><input type="password" name="PASSWORD2" id="password2" value=" " maxlength="32"></td>
 		<td colspan="1"><span class="btnShow" onclick="toggleVis('password2')">Show</span></td>
-		<td colspan="4"> <INPUT TYPE="SUBMIT" name="BUTTON" VALUE="SetAdminPassword"> </td>
+		<td colspan="4"> <INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Set admin Password"> </td>
 		</tr>	
 	</table>
 </div>
 
 <% if [ "$login" == "root" ]; then %>
-	<script>
-	document.getElementById("divpwd").style.visibility = "visible";
-	document.getElementById("divpwd").style.display = "inline";
-	</script>
+		<script>
+			document.getElementById("divrootpwd").style.visibility = "visible";
+			document.getElementById("divrootpwd").style.display = "inline";
+			document.getElementById("divadminpwd").style.visibility = "visible";
+			document.getElementById("divadminpwd").style.display = "inline";
+		</script>
+<% fi %>
+		
+<%	if [ "$login" == "admin" ]; then %>
+		<script>
+			document.getElementById("divadminpwd").style.visibility = "visible";
+			document.getElementById("divadminpwd").style.display = "inline";
+		</script>		
 <% fi %>
 
 <table class="configTable">
@@ -176,34 +200,69 @@
 				</SELECT>
 			</td>
 		<script>document.getElementById("timezone").value="<% echo -n $timezone %>";</script>
+
+		<td colspan="10">	<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save&Apply" onclick="showPageLoaderIcon()">	</td>
+		
 	</tr>	
 
 	<tr><td colspan="20"><h3>Port Forwarding</h3></td></tr>
-<!--	<tr>
-		<td colspan="1"></td>
-		<td colspan="4"><label for="HTTP">Enable HTTPS Forward</label></td>
-		<td colspan="1"><input type="checkbox" name="HTTP_ENABLE" value="checked" <% echo -n $http_tick %> ></td>
-	</tr> -->
 	<tr>
 		<td colspan="1"></td>
-		<td colspan="4"><label for="SSH">Enable SSH Forward</label></td>
+		<td colspan="5"><label for="SSH">Enable SSH Forward</label></td>
 		<td colspan="1"><input type="checkbox" name="SSH_ENABLE" value="checked" <% echo -n $ssh_tick %> ></td>
+		<td colspan="4">	<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save&Apply" onclick="showPageLoaderIcon()">	</td>
+		<td colspan="1">	<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Cancel"> </td>
 	</tr>
 
+	<tr><td colspan="20"><h3>Restore Factory Default Settings</h3></td></tr>
 	<tr class="rowSpacer"></tr>
 	<tr>
 		<td colspan="1"></td>
 		<td colspan="19">
-	<INPUT class="hiddenKey" TYPE="SUBMIT" name="BUTTON" VALUE="Save" accesskey="s"> 
-			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save&Apply">
-			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Cancel">
-			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Restore Defaults">
+			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Restore Factory Defaults" onclick="showPageLoaderIcon()">
 		</td>
 	</tr>
+
+	<tr><td colspan="20"><h3>Local Hosts File</h3></td></tr>
+    <tr>
+      <td colspan="1"></td>
+      <td colspan="3"><label for="HOST_IP_ADDR">IP Address</label></td>
+      <td colspan="3"><input type="text" size="10" name="HOST_IP_ADDR" pattern="(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$"></td>
+      <td colspan="1"></td>
+      <td colspan="2"><label for="HOST_NAME">Name</label></td>
+      <td colspan="4"><input type="text" name="HOST_NAME" maxlength="32" pattern="[a-zA-Z0-9_*.$%<>;:?@=!^|&+()#~\{\}\-]{1,128}"></td>      
+      <td><INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Add Local Host" onclick="showPageLoaderIcon()"></td>
+    </tr>
+</table>
+
+<table class="configTable">
+		<tr><td colspan="20"></td></tr> <!--Determines column widths-->
+		
+    <tr>
+			<td colspan="1"></td>
+    	<td colspan="12"><h4>Saved Hosts</h4></td>
+    </tr>
+    <tr>
+			<td colspan="1"></td>
+      <td colspan="12">
+				<%
+					cat /etc/hosts > /tmp/hosts.txt
+				%>
+    		<iframe id="HOSTS" src="/tmp/hosts.txt"  width="75%" height="100" ></iframe>
+      </td>
+    </tr>
+    
+    <tr>
+			<td colspan="1"></td>
+      <td><INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Refresh"></td>     
+			<td colspan="1"></td>
+      <td><INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Reset to Default" onclick="showPageLoaderIcon()"></td>
+   	</tr>
 </table>
 
 </form>
 </div>
+
 </body>
 </html>
 
