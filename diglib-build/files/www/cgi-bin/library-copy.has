@@ -61,15 +61,22 @@
 	</tr>
   </div>
   </table>
-  
+
+
+	<% ls -1 -p /www/rachel-local2 > /tmp/usb_files.txt %>
 	<div>
-	<table>
-		<% ls -1 -p /www/rachel-local2 > /tmp/usb_files.txt %>
-		<br>
-    <tr><td colspan="4"><label for="LOCAL_FILE_LIST">USB Contents</label></td></tr>
-   </table>
-    <td colspan="4"><iframe id="LOCAL_FILE_LIST" src="/tmp/usb_files.txt"  width="60%" height="100" ></iframe></td>
-    <br><br>
+		<table class="configTable">
+	    <tr>
+	    	<td colspan="12"><h4>USB Contents</h4></td>
+	    </tr>
+	    <tr>
+				<td colspan="1"></td>
+	      <td colspan="15">
+	    		<iframe id="LOCAL_FILE_LIST" src="/tmp/usb_files.txt"  width="100%" height="100" ></iframe>
+	      </td>
+	    </tr>
+    <tr class="rowSpacer"></tr>
+		</table>
 	</div> 
     
 </form>
