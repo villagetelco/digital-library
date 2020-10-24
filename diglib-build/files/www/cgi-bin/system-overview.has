@@ -33,8 +33,6 @@ fi
 <h2>System Overview</h2>
   
 <table class="configTable">
-	<tr><td colspan="20"></td></tr> <!--Determines column widths-->
-	<tr class="rowSpacer"></tr>
 	<tr><td colspan="3">Firmware:</td><td colspan="17"><% cat /etc/banner | grep Version | cut -d : -f 2 %> </td></tr>
 	<tr><td colspan="3"> </td><td colspan="17"><% cat /etc/banner | grep Build %> <% cat /etc/banner | grep Git %> </td></tr>
 	<tr class="rowSpacer"></tr>

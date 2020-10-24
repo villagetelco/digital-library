@@ -100,7 +100,6 @@
   fi
   
 %>
-
   
 <%# --- Present the HTML page --- %>
 <!DOCTYPE html>
@@ -108,7 +107,6 @@
 
 <head>
 <%inc /www/cgi-bin/inc/head.inc %>
-
 </head>
 
 <body>
@@ -169,7 +167,6 @@
 		<script>document.getElementById("encryption").value="<% echo -n $encryption %>";</script>
 	</tr>	
 
-
 	<tr><td colspan="20"><h3>WiFi Guest Access Point Settings</h3></td></tr>
 	<tr>
 		<td colspan="20"><font size="4"> Enable Guest WiFi Access Point &nbsp;</font>
@@ -208,9 +205,6 @@
 
 		<script>document.getElementById("guest_encryption").value="<% echo -n $guest_encryption %>";</script>
 	</tr>	
-
-
-
 
 	<tr><td colspan="20"><h3>WiFi WAN Client Settings</h3></td></tr>
 	<tr><td colspan="20"><% echo -n  $wan_str %></td></tr>
