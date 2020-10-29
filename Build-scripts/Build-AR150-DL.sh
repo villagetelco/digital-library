@@ -5,11 +5,12 @@
 : ${GITREPO="../../Git"}
 
 # Select the repo to use
-REPO="digital-library"
+#REPO="digital-library"
+REPO="digital-library-dev"
 BRANCH="master"
 
 echo "Set up version strings"
-DIRVER="VER-1.0-RC2.2"
+DIRVER="VER-1.0-RC3"
 VER="Digital-Library-01-AR150-"$DIRVER
 
 echo "************************************"
@@ -26,10 +27,7 @@ if [ ! -d $GITREPO"/"$REPO ]; then
 	exit
 fi
 
-echo "Check out the correct vt-firmware branch - $BRANCH"
-
 BUILD_DIR=$(pwd)
-cd $BUILD_DIR
 pwd
 
 ##############################
@@ -39,9 +37,9 @@ if [ ! -f ./already_configured ]; then
   # make sure it only executes once
   touch ./already_configured  
   echo "Make builds directory"
-  mkdir ./Builds/
-  mkdir ./Builds/ar71xx/
-  mkdir ./Builds/ar71xx/builds
+  mkdir -p ./Builds/
+  mkdir -p ./Builds/ar71xx/
+  mkdir -p ./Builds/ar71xx/builds
   echo "Initial set up completed. Continuing with build"
   echo ""
 else
@@ -154,8 +152,6 @@ echo ""
 
 echo "Run make for "$1 $2
 make -j1
-#make -j3
-#make -j1 V=s 2>&1 | tee ~/build.txt
 echo ""
 
 echo  "Rename files to add version info"

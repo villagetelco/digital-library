@@ -5,12 +5,12 @@
 : ${GITREPO="../../Git"}
 
 # Select the repo to use
-REPO="digital-library"
+#REPO="digital-library"
+REPO="digital-library-dev"
 BRANCH="master"
 
 echo "Set up version strings"
-#DIRVER="GA01.1"
-DIRVER="VER-1.0-RC2.2"
+DIRVER="VER-1.0-RC3"
 VER="Digital-Library-01-MT300N-V2-"$DIRVER
 
 
@@ -27,9 +27,6 @@ if [ ! -d $GITREPO"/"$REPO ]; then
 	echo " "
 	exit
 fi
-
-
-echo "Check out the correct vt-firmware branch - $BRANCH"
 
 BUILD_DIR=$(pwd)
 cd $GITREPO"/"$REPO
@@ -49,20 +46,12 @@ pwd
 
 ##############################
 
-# Check to see if setup has already run
-#if [ ! -f ./already_configured ]; then 
-  # make sure it only executes once
-#  touch ./already_configured  
-  echo "Make builds directory"
-  mkdir ./Builds/
-  mkdir ./Builds/ramips/
-  mkdir ./Builds/ramips/builds
-  echo "Initial set up completed. Continuing with build"
-  echo ""
-#else
-#  echo "Build environment is configured. Continuing with build"
-#  echo ""
-#fi
+echo "Make builds directory"
+mkdir -p ./Builds/
+mkdir -p ./Builds/ramips/
+mkdir -p ./Builds/ramips/builds
+echo "Initial set up completed. Continuing with build"
+echo ""
 
 #########################
 
@@ -138,9 +127,6 @@ rm -r ./files
 echo "Copy base files"
 cp -rf ./diglib-build/files     .  
 
-#echo "Copy additional files"
-#cp -rf ./diglib-build/files-2/* ./files  
-
 echo "Overlay device specific files"
 cp -rf ./diglib-build/$1/files  .  
 echo ""
@@ -172,8 +158,6 @@ echo ""
 
 echo "Run make for "$1 $2
 make -j1
-#make -j3
-#make -j1 V=s 2>&1 | tee ~/build.txt
 echo ""
 
 echo  "Rename files to add version info"

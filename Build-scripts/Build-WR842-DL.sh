@@ -5,11 +5,12 @@
 : ${GITREPO="../../Git"}
 
 # Select the repo to use
-REPO="digital-library"
+#REPO="digital-library"
+REPO="digital-library-dev"
 BRANCH="master"
 
 echo "Set up version strings"
-DIRVER="VER-1.0-RC2.2"
+DIRVER="VER-1.0-RC3"
 VER="Digital-Library-01-WR842-"$DIRVER
 
 echo "************************************"
@@ -26,10 +27,7 @@ if [ ! -d $GITREPO"/"$REPO ]; then
 	exit
 fi
 
-echo "Check out the correct vt-firmware branch - $BRANCH"
-
 BUILD_DIR=$(pwd)
-cd $BUILD_DIR
 pwd
 
 ##############################

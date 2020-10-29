@@ -5,11 +5,12 @@
 : ${GITREPO="../../Git"}
 
 # Select the repo to use
-REPO="digital-library"
+#REPO="digital-library"
+REPO="digital-library-dev"
 BRANCH="master"
 
 echo "Set up version strings"
-DIRVER="VER-1.0-RC2.2"
+DIRVER="VER-1.0-RC3"
 VER="Digital-Library-01-MR3040-"$DIRVER
 
 echo "************************************"
@@ -26,8 +27,6 @@ if [ ! -d $GITREPO"/"$REPO ]; then
 	exit
 fi
 
-echo "Check out the correct vt-firmware branch - $BRANCH"
-
 BUILD_DIR=$(pwd)
 cd $BUILD_DIR
 pwd
@@ -39,9 +38,9 @@ if [ ! -f ./already_configured ]; then
   # make sure it only executes once
   touch ./already_configured  
   echo "Make builds directory"
-  mkdir ./Builds/
-  mkdir ./Builds/ar71xx/
-  mkdir ./Builds/ar71xx/builds
+  mkdir -p ./Builds/
+  mkdir -p ./Builds/ar71xx/
+  mkdir -p ./Builds/ar71xx/builds
   echo "Initial set up completed. Continuing with build"
   echo ""
 else
@@ -122,9 +121,6 @@ rm -r ./files
 
 echo "Copy base files"
 cp -rf ./diglib-build/files     .  
-
-#echo "Copy additional files"
-#cp -rf ./diglib-build/files-2/* ./files  
 
 echo "Overlay device specific files"
 cp -rf ./diglib-build/$1/files  .  

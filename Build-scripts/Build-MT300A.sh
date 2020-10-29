@@ -9,7 +9,7 @@ REPO="digital-library"
 BRANCH="master"
 
 echo "Set up version strings"
-DIRVER="VER-1.0-RC2.2"
+DIRVER="VER-1.0-RC3"
 VER="Digital-Library-01-MT300A-"$DIRVER
 
 echo "************************************"
@@ -25,8 +25,6 @@ if [ ! -d $GITREPO"/"$REPO ]; then
 	echo " "
 	exit
 fi
-
-echo "Check out the correct vt-firmware branch - $BRANCH"
 
 BUILD_DIR=$(pwd)
 cd $BUILD_DIR
@@ -122,9 +120,6 @@ rm -r ./files
 
 echo "Copy base files"
 cp -rf ./diglib-build/files     .  
-
-#echo "Copy additional files"
-#cp -rf ./diglib-build/files-2/* ./files  
 
 echo "Overlay device specific files"
 cp -rf ./diglib-build/$1/files  .  
