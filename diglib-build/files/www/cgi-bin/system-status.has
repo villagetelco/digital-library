@@ -5,11 +5,18 @@
 <%# --- Get the variables for the HTML page --- %>
 	<%
 		rm /tmp/net_wifi_status.txt; touch /tmp/net_wifi_status.txt
+		
 		ethport1="$(uci -q get board.eth.wanport)"
 		ethport2="$(uci -q get board.eth.lanport)"
+		hi_band="$(uci -q get board.band.hi_band)"
 		
 		ap_connections="$(iw dev wlan0 station dump | grep -c Station)"
 		guest_ap_connections="$(iw dev wlan0-3 station dump | grep -c Station)"
+
+		if [ $hi_band == "1" ]; then
+			ap_connections_5g="$(iw dev wlan1 station dump | grep -c Station)"
+			guest_ap_connections_5g="$(iw dev wlan1-3 station dump | grep -c Station)"
+		fi
 		
 		echo "Network"                             > /tmp/net_wifi_status.txt
 		echo "-------"                            >> /tmp/net_wifi_status.txt
@@ -39,8 +46,12 @@
 
 		echo "WiFi"                               >> /tmp/net_wifi_status.txt
 		echo "----"                               >> /tmp/net_wifi_status.txt
-		echo Main  AP Connections: $ap_connections        >> /tmp/net_wifi_status.txt
-		echo Guest AP Connections: $guest_ap_connections  >> /tmp/net_wifi_status.txt
+		echo Main  AP Connections 2.4GHz: $ap_connections        >> /tmp/net_wifi_status.txt
+		echo Guest AP Connections 2.4GHz: $guest_ap_connections  >> /tmp/net_wifi_status.txt
+		if [ $hi_band == "1" ]; then
+			echo Main  AP Connections 5GHz: $ap_connections_5g        >> /tmp/net_wifi_status.txt
+			echo Guest AP Connections 5GHz: $guest_ap_connections_5g  >> /tmp/net_wifi_status.txt
+		fi
 		echo ""                                   >> /tmp/net_wifi_status.txt
 		iwinfo | grep -A 7 SSID                   >> /tmp/net_wifi_status.txt
 	%>
