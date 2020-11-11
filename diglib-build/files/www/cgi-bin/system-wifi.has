@@ -192,7 +192,7 @@
 	</tr>	
 	<script>document.getElementById("channel").value="<% echo -n $channel %>";</script>
 	
-	<% if [ "$hi_band" != "0" ]; then %>
+	<% if [ "$hi_band" == "1" ]; then %>
 	<tr>
 		<td colspan="1"></td>
 		<td colspan="4"><label for="CHANNEL_5G"> 5GHz Channel  </label></td>
@@ -227,7 +227,7 @@
 	<tr>
 		<td colspan="10"><font size="4"> Enable 2.4GHz Access Point &nbsp;</font>
 		<input type="checkbox" name="AP_ENABLE" value="checked" <% echo -n $ap_enable %> ></td>
-		<% if [ "$hi_band" != "0" ]; then %>
+		<% if [ "$hi_band" == "1" ]; then %>
 		<td colspan="10"><font size="4"> Enable 5GHz Access Point &nbsp;</font>
 		<input type="checkbox" name="AP_ENABLE_5G" value="checked" <% echo -n $ap_enable_5g %> ></td>
 		<% fi %>
@@ -269,7 +269,7 @@
 	<tr>
 		<td colspan="10"><font size="4"> Enable 2.4GHz Guest Access Point &nbsp;</font>
 		<input type="checkbox" name="GUEST_AP_ENABLE" value="checked" <% echo -n $guest_ap_enable %> ></td>
-		<% if [ "$hi_band" != "0" ]; then %>
+		<% if [ "$hi_band" == "1" ]; then %>
 			<td colspan="10"><font size="4"> Enable 5GHz Guest Access Point &nbsp;</font>
 			<input type="checkbox" name="GUEST_AP_ENABLE_5G" value="checked" <% echo -n $guest_ap_enable_5g %> ></td>	
 		<% fi %>
@@ -378,7 +378,7 @@
 </form>
 </div>
 
-<% if [ $hi_band != "0" ]; then %>		
+<% if [ $hi_band == "1" ]; then %>		
 	<script>
 		document.getElementById("wifi1").style.display = "none";
 		document.getElementById("wifi2").style.display = "none";
