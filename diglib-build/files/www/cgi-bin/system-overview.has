@@ -4,9 +4,9 @@
 
 <%# --- Get the variables for the HTML page --- %>
 <%
-MEMFREE=$(cat /proc/meminfo | grep MemFree |cut -d : -f2 | tr -d ' ')
-MEMTOT=$(cat /proc/meminfo | grep MemTotal |cut -d : -f2 | tr -d ' ')
-MEMSTR="Free Memory: $MEMFREE  / Total Memory: $MEMTOT"
+MEMAVAIL=$(cat /proc/meminfo | grep MemAvail |cut -d : -f2 | tr -d ' ')
+MEMTOT=$(cat /proc/meminfo   | grep MemTotal |cut -d : -f2 | tr -d ' ')
+MEMSTR="Available Memory: $MEMAVAIL  / Total Memory: $MEMTOT"
 
 # Check Internet connectivity
 host="1.1.1.1"
