@@ -1,0 +1,23 @@
+
+config system
+	option timezone 'UTC'
+	option hostname 'AR750'
+
+config timeserver 'ntp'
+	list server '0.openwrt.pool.ntp.org'
+	list server '1.openwrt.pool.ntp.org'
+	list server '2.openwrt.pool.ntp.org'
+	list server '3.openwrt.pool.ntp.org'
+	option enable_server '0'
+
+# Configure LEDs
+config led 'led_wlan2g'
+	option name 'WLAN2G'
+	option sysfs 'gl-ar750:white:wlan2g'
+	option trigger 'phy1tpt'
+
+config led 'led_wlan5g'
+	option name 'WLAN5G'
+	option sysfs 'gl-ar750:white:wlan5g'
+	option trigger 'phy0tpt'
+

@@ -1,0 +1,89 @@
+#!/usr/bin/haserl
+
+<%  echo -en "content-type: text/html\r\n\r\n"  # RF2616 Compliance %>
+
+<%# --- Get the variables for the HTML page --- %>
+	<%
+		rm /tmp/net_wifi_status.txt; touch /tmp/net_wifi_status.txt
+		
+		ethport1="$(uci -q get board.eth.wanport)"
+		ethport2="$(uci -q get board.eth.lanport)"
+		hi_band="$(uci -q get board.band.hi_band)"
+		
+		ap_connections="$(iw dev wlan0 station dump | grep -c Station)"
+		guest_ap_connections="$(iw dev wlan0-3 station dump | grep -c Station)"
+
+		if [ $hi_band == "1" ]; then
+			ap_connections_5g="$(iw dev wlan1 station dump | grep -c Station)"
+			guest_ap_connections_5g="$(iw dev wlan1-3 station dump | grep -c Station)"
+		fi
+		
+		echo "Network"                             > /tmp/net_wifi_status.txt
+		echo "-------"                            >> /tmp/net_wifi_status.txt
+		echo "Lan IP Address:"                    >> /tmp/net_wifi_status.txt
+		ifconfig br-lan|grep "inet addr:"         >> /tmp/net_wifi_status.txt
+		ifconfig br-lan:9|grep "inet addr:"       >> /tmp/net_wifi_status.txt
+		echo ""                                   >> /tmp/net_wifi_status.txt
+
+		echo "Eth WAN IP Address:"                >> /tmp/net_wifi_status.txt
+		ifconfig $ethport1|grep "inet addr:"      >> /tmp/net_wifi_status.txt
+		ifconfig $ethport1:9|grep "inet addr:"    >> /tmp/net_wifi_status.txt
+		ifconfig $ethport2|grep "inet addr:"      >> /tmp/net_wifi_status.txt
+		ifconfig $ethport2:9|grep "inet addr:"    >> /tmp/net_wifi_status.txt
+		echo ""                                   >> /tmp/net_wifi_status.txt
+
+		echo "WiFi WAN IP Address:"               >> /tmp/net_wifi_status.txt
+		ifconfig wlan0-2|grep "inet addr:"        >> /tmp/net_wifi_status.txt
+		echo ""                                   >> /tmp/net_wifi_status.txt
+
+#		echo "Cellular:"                    			>> /tmp/net_wifi_status.txt
+#		ifconfig 3g-cellular|grep "inet addr:"    >> /tmp/net_wifi_status.txt
+#		echo ""                                   >> /tmp/net_wifi_status.txt
+
+		echo "Bridge:"                            >> /tmp/net_wifi_status.txt
+		brctl show                                >> /tmp/net_wifi_status.txt
+		echo ""                                   >> /tmp/net_wifi_status.txt
+
+		echo "WiFi"                               >> /tmp/net_wifi_status.txt
+		echo "----"                               >> /tmp/net_wifi_status.txt
+		echo Main  AP Connections 2.4GHz: $ap_connections        >> /tmp/net_wifi_status.txt
+		echo Guest AP Connections 2.4GHz: $guest_ap_connections  >> /tmp/net_wifi_status.txt
+		if [ $hi_band == "1" ]; then
+			echo Main  AP Connections 5GHz: $ap_connections_5g        >> /tmp/net_wifi_status.txt
+			echo Guest AP Connections 5GHz: $guest_ap_connections_5g  >> /tmp/net_wifi_status.txt
+		fi
+		echo ""                                   >> /tmp/net_wifi_status.txt
+		iwinfo | grep -A 7 SSID                   >> /tmp/net_wifi_status.txt
+	%>
+
+<%# --- Present the HTML page --- %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%inc /www/cgi-bin/inc/head.inc %>
+</head>
+
+<body>
+<%inc /www/cgi-bin/inc/menu.inc %>
+<div class="page-container">
+<h2>System Status</h2>
+
+<form name="SYSTEM_STATUS" id="SYSTEM_STATUS" action="<% echo -n $SCRIPT_NAME %>" method="POST">
+<table class="configTable">
+	<tr><td><h3>Network / WiFi Status</h3></td></tr>
+	<tr>
+		<td>
+		<iframe id="NET_WIFI_STATUS" src="/tmp/net_wifi_status.txt"  width="850px" height="550" ></iframe>
+		</td>
+	</tr>
+	<tr class="rowSpacer"></tr>
+	<tr><td><INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Refresh"></td></tr>
+	<tr class="rowSpacer"></tr>
+</table>
+
+</form>
+</div>
+</body>
+</html>
+
+

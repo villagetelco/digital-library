@@ -1,0 +1,35 @@
+
+config interface 'loopback'
+	option ifname 'lo'
+	option proto 'static'
+	option ipaddr '127.0.0.1'
+	option netmask '255.0.0.0'
+
+config interface 'lan'
+	option type 'bridge'
+	option ifname 'eth0'
+	option proto 'static'
+	option ipaddr '10.10.10.1'
+	option netmask '255.255.255.0'
+	option gateway '255.255.255.255'
+	option dns '208.67.222.123, 208.67.220.123'
+
+config interface 'guest'
+	option proto 'static'
+	option ipaddr '10.10.11.1'
+	option netmask '255.255.255.0'
+
+config interface 'wan'
+	option proto 'dhcp'
+	option ifname 'eth1'
+
+config interface 'wwan'
+	option proto 'dhcp'
+
+config interface 'guest'
+	option proto 'static'
+	option ipaddr '10.10.11.1'
+	option netmask '255.255.255.0'
+
+
+

@@ -1,0 +1,145 @@
+#!/usr/bin/haserl --upload-limit=16400 --upload-dir=/tmp
+
+<%  echo -en "content-type: text/html\r\n\r\n"  # RF2616 Compliance %>
+
+<%# --- Process the form submission --- %>
+<%
+	if [ "$FORM_BUTTON" == "Upload" ]; then
+		if test -n "$HASERL_uploadfile_path"; then 
+		  filename=$FORM_uploadfile_name
+		  savedfile=$HASERL_uploadfile_path
+		  cp $savedfile /tmp/tempfile
+			rm -f $HASERL_uploadfile_path
+		fi
+	fi
+%>
+
+<%# --- Present the HTML page --- %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%inc /www/cgi-bin/inc/head.inc %>
+</head>
+
+<body>
+<%inc /www/cgi-bin/inc/menu.inc %>
+<div class="page-container">
+<h2>Library Management - Add / Delete Files</h2>
+
+<form action="<% echo -n $SCRIPT_NAME %>" method=POST enctype="multipart/form-data" >
+  <table class="configTable">  
+    <tr><td colspan="20"></td></tr> <!--Determines column widths-->
+    <tr>
+      <td colspan="10"><h3> Add File to Local Library </h3></td>
+    </tr>
+    <tr>
+      <td colspan="1"></td>
+      <td colspan="2"><input type=file name=uploadfile></td>
+    </tr>
+    <tr class="rowSpacer"></tr>
+    <tr>
+      <td colspan="1"></td>
+      <td colspan="2"><INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Upload"></td>
+      <td colspan="17">
+
+    <% if [ "$FORM_BUTTON" == "Upload" ]; then %>
+      <p>
+      You uploaded a file named <b><% echo -n $filename; echo "$filename" > /tmp/filename.txt %></b><br>
+      The file size is <% cat /tmp/tempfile | wc -c %> bytes.<br>
+      </p>
+    <% else %>
+      Upload selected file.
+    <% fi %>
+
+      </td>
+    </tr>
+    <tr>
+     <!-- <td colspan="5"><h3> Store the File </h3></td> -->
+    </tr>
+    <tr>
+      <td colspan="1"></td>
+      <td colspan="19">
+    <%
+    	if [ "$FORM_BUTTON" == "Store" ]; then 
+				filename=$(cat /tmp/filename.txt)              # Get original filename
+				chmod +rwx /tmp/tempfile
+    		mv /tmp/tempfile /www/rachel/local/$filename   # Use $filename to save file with original name
+    		rm -f /tmp/filename.txt
+				echo "<p class="impact">*** File Saved.</p>"   # Show message when save command completes.
+			fi
+    %>
+      </td>
+    </tr>
+    
+    <tr>
+      <td colspan="1"></td>
+      <td colspan="19">
+      	<br>
+      	<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Store">
+        <INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Cancel">
+      </td>
+    </tr>
+    
+    <tr>
+      <td colspan="10"><h3> Delete Local Library File/Dir </h3></td>
+    </tr>
+    <tr>
+      <td colspan="4"><label for="DEL_FILE">File/Dir to Delete</label></td>
+      <td colspan="8"><input type="text" name="DEL_FILE" ></td>
+    </tr>
+
+    <tr>
+      <td colspan="1"></td>
+      <td colspan="10">
+      	<br>
+      	<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Delete">
+        <INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Cancel">
+        <INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Refresh">
+      </td>
+    </tr>
+
+    <%
+    	if [ "$FORM_BUTTON" == "Delete" ]; then
+    		rm -rf /www/rachel/local/"$FORM_DEL_FILE"; SUCCESS=$?
+    		if [ "$SUCCESS" == "0" ]; then
+    			#echo "<p class="impact">*** Local File/Dir: \" $FORM_DEL_FILE \"  deleted.</p>"
+    			%>
+			    <tr>
+    				<p class="impact">*** Local File/Dir: <% echo -n $FORM_DEL_FILE %>  deleted.</p>
+    			</tr>
+    			<%
+    		else
+    			#echo "<p class="impact">*** Local File/Dir: \" $FORM_DEL_FILE \" failed to delete.</p>"
+    			%>
+			    <tr>
+    				<p class="impact">*** Local File/Dir: <% echo -n $FORM_DEL_FILE %>  failed to delete.</p>
+    			</tr>
+    			<%
+    		fi
+    	fi
+		%>
+  </table>
+  
+	<% ls -1 -p /www/rachel/local > /tmp/local_files.txt %>
+	<div>
+		<table class="configTable">
+			<tr><td colspan="20"></td></tr> <!--Determines column widths-->	
+	    <tr>
+	    	<td colspan="12"><h4>Local Files</h4></td>
+	    </tr>
+	    <tr>
+				<td colspan="1"></td>
+	      <td colspan="15">
+	    		<iframe id="LOCAL_FILE_LIST" src="/tmp/local_files.txt"  width="100%" height="100" ></iframe>
+	      </td>
+	    </tr>
+    <tr class="rowSpacer"></tr>
+		</table>
+	</div> 
+	
+</form>
+</div>
+</body>
+</html>
+
+

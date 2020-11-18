@@ -1,0 +1,269 @@
+#!/usr/bin/haserl
+
+<%  echo -en "content-type: text/html\r\n\r\n"  # RF2616 Compliance %>
+
+<%
+	login=$REMOTE_USER
+	HTTP_AUTH_PASS="-" 
+%>
+
+<%# --- Process the form submission --- %>
+<%
+	if [ "$FORM_BUTTON" == "Set root Password" ]; then
+		((echo $FORM_PASSWORD; sleep 1; echo $FORM_PASSWORD) | passwd $login; /etc/init.d/uhttpd restart) &
+	fi
+
+	if [ "$FORM_BUTTON" == "Set admin Password" ]; then
+		((echo $FORM_PASSWORD2; sleep 1; echo $FORM_PASSWORD2) | passwd admin; /etc/init.d/uhttpd restart) &
+	fi
+	
+	if [ "$FORM_BUTTON" == "Save" ] || [ "$FORM_BUTTON" == "Save&Apply" ]; then
+		echo $FORM_TIMEZONE > /etc/TZ
+		uci set system.@system[0].timezone=$FORM_TIMEZONE
+		uci commit system
+		
+		if [ "$FORM_HTTP_ENABLE" == "checked" ]; then
+			uci set firewall.https.dest="lan"
+		else
+			uci set firewall.https.dest="DISABLE"
+		fi
+
+		if [ "$FORM_SSH_ENABLE" == "checked" ]; then
+			uci set firewall.ssh.dest="lan"
+		else
+			uci set firewall.ssh.dest="DISABLE"
+		fi
+		uci commit firewall
+		/etc/init.d/firewall restart > /dev/null
+	fi
+	
+	# Restore Default settings
+		restore_defaults="0"
+		if [ "$FORM_BUTTON" == "Restore Factory Defaults" ]; then
+			restore_defaults="1"
+			cd /etc
+			tar -xzf conf-default.tar.gz >> /dev/null
+			cd
+		fi
+	
+	# Add Local Host
+		if [ "$FORM_BUTTON" == "Add Local Host" ]; then
+			tab='\t'
+			echo -e $FORM_HOST_IP_ADDR $tab $FORM_HOST_NAME >> /etc/hosts
+			/etc/init.d/dnsmasq restart
+		fi
+		
+	# Restore Local Host File
+		if [ "$FORM_BUTTON" == "Reset to Default" ]; then
+			default='127.0.0.1 \t localhost'
+			echo -e  $default  > /etc/hosts
+			/etc/init.d/dnsmasq restart
+		fi
+%>
+
+<%# --- Get the variables for the HTML page --- %>
+<% 
+	user=$(echo $USER)
+	timezone=$(uci get system.@system[0].timezone)
+	
+	ssh_enabled="$(uci -q get firewall.ssh.dest)"
+  if [ "$ssh_enabled" == "lan" ]; then
+  	ssh_tick="checked"
+  else
+    ssh_tick="0"
+  fi
+
+	http_enabled="$(uci -q get firewall.https.dest)"
+  if [ "$http_enabled" == "lan" ]; then
+  	http_tick="checked"
+  else
+    http_tick="0"
+  fi
+%>
+  
+<%# --- Present the HTML page --- %>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<%inc /www/cgi-bin/inc/head.inc %>
+</head>
+
+<body>
+<%inc /www/cgi-bin/inc/menu.inc %>
+
+<div class="page-container">
+
+<h2 class="pageTitle">System General</h2>
+
+<form name="SYSTEM-GENERAL" id="SYSTEM-GENERAL" action="<% echo -n $SCRIPT_NAME %>" method="POST">
+
+<% 
+	# Restore default settings
+	if [ $restore_defaults == "1" ];then
+		echo "<div><strong>"
+		echo "<br>&nbsp;&nbsp;&nbsp;Configuration settings restored to defaults."
+		echo "<br>&nbsp;&nbsp;&nbsp;Screen will change to Overview, then the device will reboot."
+		echo "<br>&nbsp;&nbsp;&nbsp;Please wait until restart is complete, then reload the screen."
+		echo "</strong></div>"
+		sleep 2
+		(sleep 2; reboot) &
+%>
+<script>
+  window.location.href = "/cgi-bin/system-overview.has";
+</script>
+<%
+		sleep 1
+	fi
+%>
+<div id="divrootpwd" style="visibility:hidden; display:none">
+<table  class="configTable">
+	<tr><td colspan="20"></td></tr> <!--Determines column widths-->
+	<tr><td colspan="20"><h3>System Password</h3></td></tr> 
+	<tr>
+		<td colspan="1"></td>
+		<td colspan="4"><label for="PASSWORD">Password (root)</label></td>  
+		<td colspan="4"><input type="password" name="PASSWORD" id="password" value=" " maxlength="32"></td>
+		<td colspan="1"><span class="btnShow" onclick="toggleVis('password')">Show</span></td>
+		<td colspan="4"> <INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Set root Password"> </td>
+		<td colspan="3"> Login: <% echo -n $login %> </td>
+	</tr>	
+</table>
+</div>
+
+<div id="divadminpwd" style="visibility:hidden; display:none">
+	<table  class="configTable">
+		<tr><td colspan="20"></td></tr> <!--Determines column widths-->
+		<tr>
+		<td colspan="1"></td>
+		<td colspan="4"><label for="PASSWORD2" >Password (admin)</label></td>  
+		<td colspan="4"><input type="password" name="PASSWORD2" id="password2" value=" " maxlength="32"></td>
+		<td colspan="1"><span class="btnShow" onclick="toggleVis('password2')">Show</span></td>
+		<td colspan="4"> <INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Set admin Password"> </td>
+		</tr>	
+	</table>
+</div>
+
+<% if [ "$login" == "root" ]; then %>
+		<script>
+			document.getElementById("divrootpwd").style.visibility = "visible";
+			document.getElementById("divrootpwd").style.display = "inline";
+			document.getElementById("divadminpwd").style.visibility = "visible";
+			document.getElementById("divadminpwd").style.display = "inline";
+		</script>
+<% fi %>
+		
+<%	if [ "$login" == "admin" ]; then %>
+		<script>
+			document.getElementById("divadminpwd").style.visibility = "visible";
+			document.getElementById("divadminpwd").style.display = "inline";
+		</script>		
+<% fi %>
+
+<table class="configTable">
+	<tr><td colspan="20"><h3>TimeZone</h3></td></tr>
+	<tr>
+		<td colspan="1"></td>
+		<td colspan="4"><label for="TIMEZONE"> Timezone</label></td>
+	  	<td colspan="10"><SELECT name="TIMEZONE" id="timezone">
+						      <option value="UTC">UTC</option>
+						      <option value="WST11">(GMT -11:00) Samoa, Midway Island</option>
+						      <option value="HST10">(GMT -10:00) Hawaii</option>
+						      <option value="AKST9">(GMT -9:00) Alaska</option>
+						      <option value="PST8">(GMT -8:00) Pacific Time (US &amp; Canada)</option>
+						      <option value="MST7">(GMT -7:00) Mountain Time (US &amp; Canada)</option>
+						      <option value="CST6">(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
+						      <option value="EST5">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
+						      <option value="AST4">(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</option>
+						      <option value="NST3:30">(GMT -3:30) Newfoundland</option>
+						      <option value="ART3">(GMT -3:00) Argintina, Brazil</option>
+						      <option value="GST2">(GMT -2:00) Georgia</option>
+						      <option value="AZOT1">(GMT -1:00) Azores, Cape Verde Islands</option>
+						      <option value="GMT0">(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
+						      <option value="CET-1">(GMT +1:00) Brussels, Copenhagen, Madrid, Paris</option>
+						      <option value="EET-2">(GMT +2:00) Kaliningrad, South Africa</option>
+						      <option value="AST-3">(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</option>
+						      <option value="IRST-3:30">(GMT +3:30) Tehran</option>
+						      <option value="GST-4">(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</option>
+						      <option value="AFT-4:30">(GMT +4:30) Kabul</option>
+						      <option value="PKT-5">(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</option>
+						      <option value="IST-5:30">(GMT +5:30) Bombay, Calcutta, Madras, New Delhi</option>
+						      <option value="NPT-5:45">(GMT +5:45) Kathmandu</option>
+						      <option value="BDT-6">(GMT +6:00) Almaty, Dhaka, Colombo</option>
+						      <option value="ICT-7">(GMT +7:00) Bangkok, Hanoi, Jakarta, Phnom Phen</option>
+						      <option value="CST-8">(GMT +8:00) Beijing, Perth, Singapore, Hong Kong</option>
+						      <option value="JST-9">(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</option>
+						      <option value="ACST-9:30">(GMT +9:30) Adelaide, Darwin</option>
+						      <option value="AEST-10">(GMT +10:00) Eastern Australia, Guam, Vladivostok</option>
+						      <option value="NCT-11">(GMT +11:00) Noumea, New Caledonia</option>
+						      <option value="NZST-12">(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</option>
+				</SELECT>
+			</td>
+		<script>document.getElementById("timezone").value="<% echo -n $timezone %>";</script>
+
+		<td colspan="10">	<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save&Apply" onclick="showPageLoaderIcon()">	</td>
+		
+	</tr>	
+
+	<tr><td colspan="20"><h3>Port Forwarding</h3></td></tr>
+	<tr>
+		<td colspan="1"></td>
+		<td colspan="5"><label for="SSH">Enable SSH Forward</label></td>
+		<td colspan="1"><input type="checkbox" name="SSH_ENABLE" value="checked" <% echo -n $ssh_tick %> ></td>
+		<td colspan="4">	<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save&Apply" onclick="showPageLoaderIcon()">	</td>
+		<td colspan="1">	<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Cancel"> </td>
+	</tr>
+
+	<tr><td colspan="20"><h3>Restore Factory Default Settings</h3></td></tr>
+	<tr class="rowSpacer"></tr>
+	<tr>
+		<td colspan="1"></td>
+		<td colspan="19">
+			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Restore Factory Defaults" onclick="showPageLoaderIcon()">
+		</td>
+	</tr>
+
+	<tr><td colspan="20"><h3>Local Hosts File</h3></td></tr>
+    <tr>
+      <td colspan="1"></td>
+      <td colspan="3"><label for="HOST_IP_ADDR">IP Address</label></td>
+      <td colspan="3"><input type="text" size="10" name="HOST_IP_ADDR" pattern="(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$"></td>
+      <td colspan="1"></td>
+      <td colspan="2"><label for="HOST_NAME">Name</label></td>
+      <td colspan="4"><input type="text" name="HOST_NAME" maxlength="32" pattern="[a-zA-Z0-9_*.$%<>;:?@=!^|&+()#~\{\}\-]{1,128}"></td>      
+      <td><INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Add Local Host" onclick="showPageLoaderIcon()"></td>
+    </tr>
+</table>
+
+<table class="configTable">
+		<tr><td colspan="20"></td></tr> <!--Determines column widths-->
+		
+    <tr>
+			<td colspan="1"></td>
+    	<td colspan="12"><h4>Saved Hosts</h4></td>
+    </tr>
+    <tr>
+			<td colspan="1"></td>
+      <td colspan="12">
+				<%
+					cat /etc/hosts > /tmp/hosts.txt
+				%>
+    		<iframe id="HOSTS" src="/tmp/hosts.txt"  width="75%" height="100" ></iframe>
+      </td>
+    </tr>
+    
+    <tr>
+			<td colspan="1"></td>
+      <td><INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Refresh"></td>     
+			<td colspan="1"></td>
+      <td><INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Reset to Default" onclick="showPageLoaderIcon()"></td>
+   	</tr>
+</table>
+
+</form>
+</div>
+
+</body>
+</html>
+
+

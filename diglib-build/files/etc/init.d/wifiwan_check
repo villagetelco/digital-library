@@ -1,0 +1,19 @@
+#!/bin/sh /etc/rc.common
+
+# /etc/init.d/wifiwan_check
+
+START=99
+
+start()
+{	
+# If WiFi WAN sta iface is not enabled, exit
+sta_disabled=$(uci -q get wireless.sta_0.disabled)
+wwan_enabled=$(uci -q get diglib.wan.select_wan)
+if [ $sta_disabled != "0" ] || [ $wwan_enabled != "wifiwan" ]; then
+  exit
+fi
+
+/bin/wifiwan_mon &
+}
+
+

@@ -1,0 +1,6 @@
+
+config board 'eth'
+	option wanport 'eth0'
+	option lanport 'eth1'	
+	option ethports '2'
+

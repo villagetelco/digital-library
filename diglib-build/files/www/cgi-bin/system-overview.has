@@ -1,0 +1,69 @@
+#!/usr/bin/haserl
+
+<%  echo -en "content-type: text/html\r\n\r\n"  # RF2616 Compliance %>
+
+<%# --- Get the variables for the HTML page --- %>
+<%
+MEMAVAIL=$(cat /proc/meminfo | grep MemAvail |cut -d : -f2 | tr -d ' ')
+MEMTOT=$(cat /proc/meminfo   | grep MemTotal |cut -d : -f2 | tr -d ' ')
+MEMSTR="Available Memory: $MEMAVAIL  / Total Memory: $MEMTOT"
+
+# Check Internet connectivity
+host="1.1.1.1"
+ping -c2 $host 1>/dev/null 2>/dev/null; SUCCESS=$?
+if [ $SUCCESS -eq "0" ]; then
+  internet="1"
+  connection="<span class="impactOK"> Internet Connection OK </span>"
+else
+	internet="0"
+	connection="<span class="impact-light"> No Internet Connection </span>"
+fi
+%>
+
+<%# --- Present the HTML page --- %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%inc /www/cgi-bin/inc/head.inc %>
+</head>
+
+<body>
+<%inc /www/cgi-bin/inc/menu.inc %>
+<div class="page-container" id="SysOverview">
+<h2>System Overview</h2>
+  
+<table class="configTable">
+	<tr><td colspan="3">Firmware:</td><td colspan="17"><% cat /etc/banner | grep Version | cut -d : -f 2 %> </td></tr>
+	<tr><td colspan="3"> </td><td colspan="17"><% cat /etc/banner | grep Build %> <% cat /etc/banner | grep Git %> </td></tr>
+	<tr class="rowSpacer"></tr>
+	<tr><td colspan="3">System:</td><td colspan="17"><% cat /etc/os-release | grep _RELEASE | cut -d = -f2 %></td></tr>
+	<tr class="rowSpacer"></tr>
+	<tr><td colspan="3">Hostname:</td><td colspan="17"><% uci get system.@[0].hostname %></td></tr>
+	<tr class="rowSpacer"></tr>
+	<tr><td colspan="3">System Time:</td><td colspan="17"><% date %></td></tr>
+	<tr class="rowSpacer"></tr>
+	<tr><td colspan="3">Uptime:</td><td colspan="17"><% uptime | cut -d " " -f4,5 | tr , " " %></td></tr>
+	<tr class="rowSpacer"></tr>
+	<tr><td colspan="3">Internet: </td><td colspan="17"><% echo $connection %> </td></tr>
+	<tr class="rowSpacer"></tr>
+	<tr><td colspan="3">Load Avg:</td><td colspan="17"><% uptime | cut -d , -f2,3,4 | cut -d : -f2 %></td></tr>
+	<tr class="rowSpacer"></tr>
+	<tr><td colspan="3">Memory:</td><td colspan="17"><% echo $MEMSTR %></td></tr>
+	<tr class="rowSpacer"></tr>
+	<tr><td colspan="3">Storage:</td><td colspan="17"><% df -hmT | grep "Filesystem" %></td></tr> <br>
+	<% if [ -e "/dev/sda1" ]; then %>
+	<tr><td colspan="3"></td><td colspan="17"><% df -hmT | grep "/dev/sda1"  %></td></tr> <br>
+	<% fi %>
+	<% if [ -e "/dev/sdb1" ]; then %>
+	<tr><td colspan="3"></td><td colspan="17"><% df -hmT | grep "/dev/sdb1"  %></td></tr> <br>
+	<% fi %>
+	<% if [ -e "/dev/mmcblk0p1" ]; then %>
+	<tr><td colspan="3"></td><td colspan="17"><% df -hmT | grep "/dev/mmcblk0p1"  %></td></tr> <br>
+	<% fi %>
+	<tr class="rowSpacer"></tr>
+	<tr><td colspan="20"></td></tr>
+</table>
+</div>
+</body>
+</html>
+
