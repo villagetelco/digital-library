@@ -16,20 +16,35 @@ A basic library image has been developed containing some 40GB of content, largel
 Additional applications such as Sugarizer (which provides the interactive Sugar graphical learning environment) have been included.
 
 The basic library image includes:
+
     • Wikipedia for Schools
+    
     • Khan Academy Maths and Science Videos 
+    
     • Phet Interactive Simulations for Science and Maths
+    
     • Siyavula / CK-12 Textbooks
+
     • African Story Books / Book Dash / Cat and Dog Books / Mustard Seed Books / English Storybooks
+
     • Gutenberg Project – Great Books of the World 
+
     • Blockly Games
+
     • OLE Nepal Collection of Digital Learning Materials
+
     • Women in African History
+
     • Maps of the World
+
     • MedlinePlus / Hesperian / Khan Academy Health and Medicine
+
     • InfoNet-Biovision Articles on Agriculture, Environment and  Health subjects.
+
     • Practical Action Knowledge Bank of Technologies
+
     • Sugarizer  Interactive Sugar graphical learning environment from XO laptops.
+
     
 Users can add local content to the main library memory device or to a second memory device, either by uploading files via the web interface, or by preparing files for the memory devices on a separate PC.
 
