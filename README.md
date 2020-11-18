@@ -50,3 +50,10 @@ Users can add local content to the main library memory device or to a second mem
 
 The Digital Library can connect to an upstream network via Ethernet or WiFi in order to provide access to additional on line resources such as an Internet connection. DNS Filtering is supported to ensure inappropriate content is not accessible through the Digital Library.
 
+Firmware for various devices is available to download here:
+
+    http://download.villagetelco.org/firmware/digital-library/
+    
+
+
+
