@@ -35,6 +35,7 @@ rm /www/rachel-local2
 if [ -e "/dev/sda1" ] && [ -e "/mnt/sda1/##LIBRARY##" ]; then
 	rm /www/rachel
 	ln -s -f /mnt/sda1	/www/rachel
+	mkdir -p /mnt/sda1/temp # Make temp directory for uploading
 	# Check for secondary memory device on "sdb1" to use for additional local content.
 	if [ -e "/dev/sdb1" ]; then 
 		ln -s -f /mnt/sdb1 /www/rachel-local2
@@ -43,6 +44,7 @@ if [ -e "/dev/sda1" ] && [ -e "/mnt/sda1/##LIBRARY##" ]; then
 elif [ -e "/dev/sdb1" ] && [ -e "/mnt/sdb1/##LIBRARY##" ]; then
 	rm /www/rachel
 	ln -s -f /mnt/sdb1	/www/rachel
+		mkdir -p /mnt/sdb1/temp # Make temp directory for uploading
 	# Check for secondary memory device on "sda1" to use for additional local content.
 	if [ -e "/dev/sda1" ]; then 
 		ln -s -f /mnt/sda1 /www/rachel-local2
@@ -51,6 +53,7 @@ elif [ -e "/dev/sdb1" ] && [ -e "/mnt/sdb1/##LIBRARY##" ]; then
 elif [ -e "/dev/sda1" ]; then
 	rm /www/rachel
 	ln -s -f /mnt/sda1	/www/rachel
+	mkdir -p /mnt/sda1/temp # Make temp directory for uploading
 	# Check for secondary memory device on "sdb1" to use for additional local content.
 	if [ -e "/dev/sdb1" ]; then 
 		ln -s -f /mnt/sdb1 /www/rachel-local2

@@ -1,4 +1,4 @@
-#!/usr/bin/haserl --upload-limit=16400 --upload-dir=/tmp
+#!/usr/bin/haserl --upload-limit=128000 --upload-dir=/www/rachel/temp
 
 <%  echo -en "content-type: text/html\r\n\r\n"  # RF2616 Compliance %>
 
@@ -7,10 +7,15 @@
 	if [ "$FORM_BUTTON" == "Upload" ]; then
 		if test -n "$HASERL_uploadfile_path"; then 
 		  filename=$FORM_uploadfile_name
+		  echo "$filename" > /tmp/filename.txt
 		  savedfile=$HASERL_uploadfile_path
-		  cp $savedfile /tmp/tempfile
+		  mv $savedfile /www/rachel/local/tempfile
 			rm -f $HASERL_uploadfile_path
 		fi
+	fi
+	
+	if [ "$FORM_BUTTON" == "Refresh" ] || [ "$FORM_BUTTON" == "Cancel" ]; then
+		rm -f /www/rachel/local/tempfile
 	fi
 %>
 
@@ -39,13 +44,13 @@
     <tr class="rowSpacer"></tr>
     <tr>
       <td colspan="1"></td>
-      <td colspan="2"><INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Upload"></td>
+      <td colspan="2"><INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Upload" onclick="showPageLoaderIcon()"></td>
       <td colspan="17">
 
     <% if [ "$FORM_BUTTON" == "Upload" ]; then %>
       <p>
-      You uploaded a file named <b><% echo -n $filename; echo "$filename" > /tmp/filename.txt %></b><br>
-      The file size is <% cat /tmp/tempfile | wc -c %> bytes.<br>
+      You uploaded a file named <b><% echo -n $filename %></b><br>
+      The file size is: <% ls -hl /www/rachel/local/tempfile | tr -s " "| cut -d " " -f 5 %> bytes.<br>
       </p>
     <% else %>
       Upload selected file.
@@ -54,16 +59,13 @@
       </td>
     </tr>
     <tr>
-     <!-- <td colspan="5"><h3> Store the File </h3></td> -->
-    </tr>
-    <tr>
       <td colspan="1"></td>
       <td colspan="19">
     <%
     	if [ "$FORM_BUTTON" == "Store" ]; then 
-				filename=$(cat /tmp/filename.txt)              # Get original filename
-				chmod +rwx /tmp/tempfile
-    		mv /tmp/tempfile /www/rachel/local/$filename   # Use $filename to save file with original name
+				filename="$(cat /tmp/filename.txt)"              # Get original filename
+				chmod +rwx /www/rachel/local/tempfile
+    		mv /www/rachel/local/tempfile /www/rachel/local/"$filename"   # Use $filename to save file with original name
     		rm -f /tmp/filename.txt
 				echo "<p class="impact">*** File Saved.</p>"   # Show message when save command completes.
 			fi
@@ -77,6 +79,7 @@
       	<br>
       	<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Store">
         <INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Cancel">
+        <INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Refresh">
       </td>
     </tr>
     
@@ -120,7 +123,9 @@
 		%>
   </table>
   
-	<% ls -1 -p /www/rachel/local > /tmp/local_files.txt %>
+	<% 
+			ls -1 -p /www/rachel/local > /tmp/local_files.txt 
+	%>
 	<div>
 		<table class="configTable">
 			<tr><td colspan="20"></td></tr> <!--Determines column widths-->	
