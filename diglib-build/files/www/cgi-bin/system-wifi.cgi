@@ -86,7 +86,7 @@
     uci commit wireless
 
     # Run network restart in background, and check that wifi is operating correctly    
-		(sleep 1; /etc/init.d/network restart; /etc/init.d/fallback-ip start; /etc/init.d/chk-wifi-wan start) &
+		(sleep 1; /etc/init.d/network restart; /etc/init.d/fallback-ip start; /etc/init.d/wifiwan_check start) &
   fi
 %>
 

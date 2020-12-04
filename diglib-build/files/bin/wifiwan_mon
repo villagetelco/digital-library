@@ -4,9 +4,36 @@ wanport=$(uci -q get board.eth.wanport)
 lanport=$(uci -q get board.eth.lanport)
 ethports=$(uci -q get board.eth.ethports)
 
-sleep 10
+# Check (twice) if upstream WiFi host is present
+host="$(uci -q get wireless.sta_0.ssid)"
+check_host=$(iwinfo radio0 scan | grep -c $host) 
+if [ $check_host != "0" ]; then
+	uci set wireless.sta_0.disabled="0"			# Found host. Enable the WiFi WAN interface			
+else
+	sleep 5  # Failed to find host. Wait and check again
+	check_host=$(iwinfo radio0 scan | grep -c $host) 
+	if [ $check_host != "0" ]; then
+		uci set wireless.sta_0.disabled="0"			# Found host. Enable the WiFi WAN interface 
+		uci commit wireless
+	  wifi                                    # Restart WiFi and Networking
+  	/etc/init.d/network restart
+  	sleep 1
+  	/etc/init.d/fallback-ip
+	else
+		uci set wireless.sta_0.disabled="1"			# Can't find host. Disable the WiFi WAN interface 
+		uci commit wireless
+	  wifi                                    # Restart WiFi and Networking and exit
+  	/etc/init.d/network restart
+  	sleep 1
+  	/etc/init.d/fallback-ip
+		exit
+	fi
+fi
 
+
+# WiFi WAN Host is present
 # Check if WiFi WAN sta interface is working 
+sleep 10
 sta_check=$(iwinfo wlan0-2 info | grep "Channel" | grep -c "unknown")
 sta_inet_check=$(ifconfig wlan0-2 | grep -c "inet")
 if [ $sta_check == "0" ] && [ $sta_inet_check != "0" ]; then
@@ -46,5 +73,6 @@ else
   /etc/init.d/fallback-ip
 fi
 
+exit
 
 

@@ -110,7 +110,7 @@
 		(sleep 2; reboot) &
 %>
 <script>
-  window.location.href = "/cgi-bin/system-overview.has";
+  window.location.href = "/cgi-bin/system-overview.cgi";
 </script>
 <%
 		sleep 1

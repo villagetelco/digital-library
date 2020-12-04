@@ -6,11 +6,11 @@
 
 <script>
     var XHR = new XMLHttpRequest();
-    XHR.open("GET", "/cgi-bin/system-overview.has", true, "no user", "no password");
+    XHR.open("GET", "/cgi-bin/system-overview.cgi", true, "no user", "no password");
     XHR.send();
 
     setTimeout(function () {
 /*        window.location.href = "/"; */
-        window.location.href = "/cgi-bin/system-overview.has";
+        window.location.href = "/cgi-bin/system-overview.cgi";
     }, 2000);
 </script>

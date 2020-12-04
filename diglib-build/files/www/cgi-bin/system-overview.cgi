@@ -18,6 +18,8 @@ else
 	internet="0"
 	connection="<span class="impact-light"> No Internet Connection </span>"
 fi
+
+hostname=$(uci get system.@[0].hostname)
 %>
 
 <%# --- Present the HTML page --- %>
@@ -38,7 +40,7 @@ fi
 	<tr class="rowSpacer"></tr>
 	<tr><td colspan="3">System:</td><td colspan="17"><% cat /etc/os-release | grep _RELEASE | cut -d = -f2 %></td></tr>
 	<tr class="rowSpacer"></tr>
-	<tr><td colspan="3">Hostname:</td><td colspan="17"><% uci get system.@[0].hostname %></td></tr>
+	<tr><td colspan="3">Hostname:</td><td colspan="17"><% echo $hostname %></td></tr>
 	<tr class="rowSpacer"></tr>
 	<tr><td colspan="3">System Time:</td><td colspan="17"><% date %></td></tr>
 	<tr class="rowSpacer"></tr>
