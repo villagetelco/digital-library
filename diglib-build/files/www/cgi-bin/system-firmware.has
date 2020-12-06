@@ -86,7 +86,7 @@
     			setInterval(
       			function(){
         			if (seconds<=0){
-          			window.location.href = "/cgi-bin/system-overview.cgi"; /* Reload Config page */
+          			window.location.href = "/cgi-bin/system-overview.has"; /* Reload Config page */
         			} else {
           			document.getElementById('seconds').innerHTML = --seconds;
         			}

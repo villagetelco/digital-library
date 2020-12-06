@@ -12,29 +12,29 @@
 
   <div></div> <!-- Space for the logo -->
   
-	<a href="/cgi-bin/system-overview.cgi">System Overview</a>
+	<a href="/cgi-bin/system-overview.has">System Overview</a>
 
 	<div class="dropdown"> <!-- Library -->
    <button class="dropbtn"><strong>Library</strong></button>
     <div class="dropdown-content">
-      <a href="/cgi-bin/library-add.cgi">Add/Delete</a>
-      <a href="/cgi-bin/library-copy.cgi">Copy</a>
-      <!-- <a href="/cgi-bin/library-dup.cgi">Duplicate</a> -->
+      <a href="/cgi-bin/library-add.has">Add/Delete</a>
+      <a href="/cgi-bin/library-copy.has">Copy</a>
+      <!-- <a href="/cgi-bin/library-dup.has">Duplicate</a> -->
       <a href="/index.html">Home Page</a>
     </div>
   </div> 
  
-	<a href="/cgi-bin/system-general.cgi">General</a>
+	<a href="/cgi-bin/system-general.has">General</a>
  
-	<a href="/cgi-bin/system-wifi.cgi">WiFi</a>
+	<a href="/cgi-bin/system-wifi.has">WiFi</a>
 
-	<a href="/cgi-bin/system-network.cgi">Network</a>
+	<a href="/cgi-bin/system-network.has">Network</a>
 
-	<a href="/cgi-bin/system-status.cgi">Network Status</a>
+	<a href="/cgi-bin/system-status.has">Network Status</a>
 
-	<a href="/cgi-bin/system-firmware.cgi">Firmware Upgrade</a>
+	<a href="/cgi-bin/system-firmware.has">Firmware Upgrade</a>
 
-  <a href="/cgi-bin/logout.cgi">Logout</a>
+  <a href="/cgi-bin/logout.has">Logout</a>
 
   <div id="refreshIndicate" style="display: none;">AUTO<br>REFRESH</div>
 
