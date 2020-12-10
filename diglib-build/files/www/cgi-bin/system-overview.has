@@ -10,13 +10,18 @@ MEMSTR="Available Memory: $MEMAVAIL  / Total Memory: $MEMTOT"
 
 # Check Internet connectivity
 host="1.1.1.1"
-ping -c2 $host 1>/dev/null 2>/dev/null; SUCCESS=$?
+fping -q -t 100 $host 1>/dev/null 2>/dev/null; SUCCESS=$?
 if [ $SUCCESS -eq "0" ]; then
   internet="1"
   connection="<span class="impactOK"> Internet Connection OK </span>"
-else
-	internet="0"
-	connection="<span class="impact-light"> No Internet Connection </span>"
+else    #Failed so try again
+	fping -q -t 100 $host 1>/dev/null 2>/dev/null; SUCCESS=$?
+	if [ $SUCCESS -eq "0" ]; then
+		connection="<span class="impactOK"> Internet Connection OK </span>"
+	else
+		internet="0"
+		connection="<span class="impact-light"> No Internet Connection </span>"
+	fi
 fi
 
 hostname=$(uci get system.@[0].hostname)

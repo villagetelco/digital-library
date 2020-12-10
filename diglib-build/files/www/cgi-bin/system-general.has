@@ -10,11 +10,11 @@
 <%# --- Process the form submission --- %>
 <%
 	if [ "$FORM_BUTTON" == "Set root Password" ]; then
-		((echo $FORM_PASSWORD; sleep 1; echo $FORM_PASSWORD) | passwd $login; /etc/init.d/uhttpd restart) &
+		((echo $FORM_PASSWORD; sleep 1; echo $FORM_PASSWORD) | passwd $login; /etc/init.d/set-htpasswd.sh start) &
 	fi
 
 	if [ "$FORM_BUTTON" == "Set admin Password" ]; then
-		((echo $FORM_PASSWORD2; sleep 1; echo $FORM_PASSWORD2) | passwd admin; /etc/init.d/uhttpd restart) &
+		((echo $FORM_PASSWORD2; sleep 1; echo $FORM_PASSWORD2) | passwd admin; /etc/init.d/set-htpasswd.sh start) &
 	fi
 	
 	if [ "$FORM_BUTTON" == "Save" ] || [ "$FORM_BUTTON" == "Save&Apply" ]; then
