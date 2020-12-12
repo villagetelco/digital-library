@@ -394,7 +394,7 @@
 <%
 	# Check for wwan host
 	host_chk=$(cat /tmp/scan.txt | grep -c "\"$host_ssid\"")
-	if [ $wifi_wan_enable == "checked" ] && [ $host_chk == "0" ]; then
+	if [ $wifi_wan_enable == "1" ] && [ $host_chk == "0" ]; then
 %>
 	<script>document.getElementById("host_str").style.visibility="visible";</script>
 	<script>document.getElementById("host_str").style.display="inline";</script>
