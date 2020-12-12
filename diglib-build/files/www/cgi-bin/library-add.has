@@ -2,6 +2,8 @@
 
 <%  echo -en "content-type: text/html\r\n\r\n"  # RF2616 Compliance %>
 
+<%	mkdir -p /www/rachel/temp # Make sure temp storage exists %>
+
 <%# --- Process the form submission --- %>
 <%
 	if [ "$FORM_BUTTON" == "Upload" ]; then
