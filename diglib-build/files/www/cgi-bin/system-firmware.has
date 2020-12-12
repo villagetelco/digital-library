@@ -99,7 +99,7 @@
   	  				);
 						</script>	
 			<%
-						sysupgrade $settings </dev/null &>/dev/null &  # Perform sysupgrade in background  
+						sysupgrade $settings /tmp/flash.bin </dev/null &>/dev/null &  # Perform sysupgrade in background  
 					fi
 				fi
 			%> 
