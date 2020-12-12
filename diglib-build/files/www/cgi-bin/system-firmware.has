@@ -70,12 +70,11 @@
 			%>
 					<p class="impact">*** Sysupgrade starting now... </p>
 			<%				
-    			sysupgrade -T /tmp/flash.bin; SUCCESS=$?
+    			sysupgrade -T /tmp/flash.bin; SUCCESS=$?  # Run sysupgrade in Test mode
     			if [ $SUCCESS -ne "0" ]; then
 						echo "<p class="impact">*** Sysupgrade failed. Code: $SUCCESS</p>"   # Show Fail message if sysupgrade returns
 					else
-						echo "<p class="impact">*** Sysupgrade proceeding...</p>"   # Show OK message if sysupgrade test is ok
-						sysupgrade -T $settings </dev/null &>/dev/null &  ### Test setting - to be removed.
+						echo "<p class="impact">*** Sysupgrade proceeding...</p>"            # Show OK message if sysupgrade test is ok
 
 						if [ "$FORM_SETTINGS_ENABLE" == "checked" ]; then
 							echo "Configuration settings will be retained."
