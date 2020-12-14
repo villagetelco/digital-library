@@ -4,9 +4,10 @@ START=99
 start()
 {	
 	# Check that wifi has started correctly
-	wifi_check=$(iw dev | grep -c "channel")
-	if [ $wifi_check == "0" ]; then
+	wifi_check0=$(iwinfo | grep wlan0 -A 2 | grep -c -i "Channel")
+	if [ $wifi_check0 == "0" ]; then
 		wifi
 		/etc/init.d/network restart
 		/etc/init.d/dnsmasq restart
+	fi
 }
