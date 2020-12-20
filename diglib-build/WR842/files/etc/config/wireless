@@ -33,7 +33,7 @@ config wifi-iface 'ap_1'
 	option maxassoc '10'
 	option key 'passwordguest'
 
-cconfig wifi-iface 'sta_0'
+config wifi-iface 'sta_0'
 	option device 'radio0'
 	option ifname 'wlan0-2'
 	option mode 'sta'
