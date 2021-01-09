@@ -22,12 +22,11 @@ h3 { font-size: 120%; }
 small { font-size: 80%; }
 b { font-weight: bold; }
 
-#rachel {
+#banner {
     display: block;
     width: 960px;
     height: 90px;
-    background: #000 url('art/OER2GO_banner.png') no-repeat 0 0;
-/*    background: #000 url('art/rachel_banner.jpg') no-repeat 0 0; */
+    background: #000 url('art/banner.png') no-repeat 0 0;
     text-indent: -1000em; 
     border-radius: 5px;
     margin: auto;
@@ -124,9 +123,9 @@ b { font-weight: bold; }
 /* END for index modules                     */
 /*-------------------------------------------*/
 
-#rachel-small {
+#banner-small {
     display: block;
-    background: #000 url('art/rachel-banner-small.png') no-repeat 5px 0;
+    background: #000 url('art/banner-small.png') no-repeat 5px 0;
     height: 28px;
     margin-bottom: 5px;
     text-indent: -1000em;

@@ -27,41 +27,41 @@ mount -rw /dev/sdd1  /mnt/sdd1
 fi
 
 # Remove old links
-rm /www/rachel
-rm /www/rachel-local2
+rm /www/library
+rm /www/library-local2
 
 # Find Library memory devices and link.
 # Case 1. Check for a primary Library memory device on "sda1" to use for main library.
 if [ -e "/dev/sda1" ] && [ -e "/mnt/sda1/##LIBRARY##" ]; then
-	rm /www/rachel
-	ln -s -f /mnt/sda1	/www/rachel
+	rm /www/library
+	ln -s -f /mnt/sda1	/www/library
 	mkdir -p /mnt/sda1/temp # Make temp directory for uploading
 	# Check for secondary memory device on "sdb1" to use for additional local content.
 	if [ -e "/dev/sdb1" ]; then 
-		ln -s -f /mnt/sdb1 /www/rachel-local2
+		ln -s -f /mnt/sdb1 /www/library-local2
 	fi
 # Case 2. Check for primary Library memory device on "sdb1" to use for main library.
 elif [ -e "/dev/sdb1" ] && [ -e "/mnt/sdb1/##LIBRARY##" ]; then
-	rm /www/rachel
-	ln -s -f /mnt/sdb1	/www/rachel
+	rm /www/library
+	ln -s -f /mnt/sdb1	/www/library
 		mkdir -p /mnt/sdb1/temp # Make temp directory for uploading
 	# Check for secondary memory device on "sda1" to use for additional local content.
 	if [ -e "/dev/sda1" ]; then 
-		ln -s -f /mnt/sda1 /www/rachel-local2
+		ln -s -f /mnt/sda1 /www/library-local2
 	fi
 # Case 3. Check for non-Library memory device on "sda1" to use for main library.
 elif [ -e "/dev/sda1" ]; then
-	rm /www/rachel
-	ln -s -f /mnt/sda1	/www/rachel
+	rm /www/library
+	ln -s -f /mnt/sda1	/www/library
 	mkdir -p /mnt/sda1/temp # Make temp directory for uploading
 	# Check for secondary memory device on "sdb1" to use for additional local content.
 	if [ -e "/dev/sdb1" ]; then 
-		ln -s -f /mnt/sdb1 /www/rachel-local2
+		ln -s -f /mnt/sdb1 /www/library-local2
 	fi
 # Case 4. No memory device on "sda1" so so just use the default home page.
 else
-	rm /www/rachel
-	ln -s -f /www/rachel-x /www/rachel
+	rm /www/library
+	ln -s -f /www/library-x /www/library
 fi
 
 exit
