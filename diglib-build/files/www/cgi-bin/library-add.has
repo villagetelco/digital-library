@@ -2,6 +2,8 @@
 
 <%  echo -en "content-type: text/html\r\n\r\n"  # RF2616 Compliance %>
 
+<%	mkdir -p /www/rachel/temp # Make sure temp storage exists %>
+
 <%# --- Process the form submission --- %>
 <%
 	if [ "$FORM_BUTTON" == "Upload" ]; then
@@ -34,6 +36,14 @@
 <form action="<% echo -n $SCRIPT_NAME %>" method=POST enctype="multipart/form-data" >
   <table class="configTable">  
     <tr><td colspan="20"></td></tr> <!--Determines column widths-->
+
+	<% 	# Test for storage memory
+		if [ ! -e "/www/rachel/local" ]; then
+    	echo "<tr><td colspan="20">"
+    	echo "<p class="impact">*** No storage memory available.</p>" 
+    	echo "</td></tr>"
+    fi
+	%>
     <tr>
       <td colspan="10"><h3> Add File to Local Library </h3></td>
     </tr>
