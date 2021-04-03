@@ -25,6 +25,7 @@ config dhcp 'lan'
 	option start '101'
 	option limit '100'
 	option leasetime '120m'
+	option ignore '0'
 
 config dhcp 'guest'
 	option interface 'guest'

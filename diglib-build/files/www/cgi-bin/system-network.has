@@ -98,7 +98,16 @@
 			uci set network.wwan.dns="$FORM_WWAN_DNS"			
 			uci -q delete dhcp.setup.server
 		fi
-		
+
+		# Setup DHCP Enable
+		if [ "$FORM_DHCP_ENABLE" == "checked" ]; then
+			uci set diglib.lan.dhcp_enable="1"
+			uci set dhcp.lan.ignore="0"
+		else
+			uci set diglib.lan.dhcp_enable="0"
+			uci set dhcp.lan.ignore="1"
+		fi		
+
 		uci commit network
 		uci commit wireless
 		uci commit dhcp
@@ -135,7 +144,7 @@
   wwan_netmask="$(uci -q get network.wwan.netmask)"
   wwan_gateway="$(uci -q get network.wwan.gateway)"
   wwan_dns="$(uci -q get network.wwan.dns)"
-	wwan_disabled=$(uci -q get wireless.sta_0.disabled)
+  wwan_disabled=$(uci -q get wireless.sta_0.disabled)
 
 # DNS Filter
 	dns_filter_enable=$(uci -q get diglib.dnsfilter.enable)
@@ -143,6 +152,14 @@
 		dns_filter_enable="checked"
 	else
 		dns_filter_enable="0"
+	fi
+
+# DHCP Enable
+  dhcp_enable="$(uci -q get diglib.lan.dhcp_enable)"
+	if [ $dhcp_enable == "1" ]; then
+		dhcp_enable="checked"
+	else
+		dhcp_enable="0"
 	fi
 
 # Select WAN control
@@ -197,7 +214,8 @@
 		
 		<tr class="rowSpacer"></tr>
 		<tr>
-			<td colspan="7"><font size="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Enable DNS Filter &nbsp;</font>
+			<td colspan="1"></td>
+			<td colspan="6"><font size="3"> Enable DNS Filter &nbsp;</font>
 			<input type="checkbox" name="DNS_FILTER_ENABLE" value="checked" <% echo -n $dns_filter_enable %> ></td>
 		
 			<td colspan="2"><label for="DNS_FILT_ADDR1"> Addr 1</label></td>
@@ -206,6 +224,13 @@
 			<td colspan="2"><label for="DNS_FILT_ADDR2"> Addr 2</label></td>
 			<td colspan="3"><input type="text" name="DNS_FILT_ADDR2" VALUE="<% echo -n $dns_filt_addr2 %>"  pattern="(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$"></td>
 		</tr>
+
+		<tr class="rowSpacer"></tr>
+		<tr>
+			<td colspan="1"></td>
+			<td colspan="6"><font size="3"> Enable DHCP &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font>
+			<input type="checkbox" name="DHCP_ENABLE" value="checked" <% echo -n $dhcp_enable %> ></td>
+		<tr>
 		
 		<tr><td colspan="20"><h3>WAN Settings</h3></td></tr> 
 		<tr>
