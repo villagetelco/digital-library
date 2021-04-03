@@ -402,11 +402,13 @@
 
 <!-- WiFi Scan List -->
 <%
-	# Build scan SSID list
-  ssid_str="<option selected disabled>Choose WiFi SSID...</option>"$ssid_str
+
+	# Build scan SSID list.
+	ssid_str="<option selected disabled>Choose WiFi SSID...</option>"  # Add first line
 	str=$(cat /tmp/scan.txt | grep "Address" | cut -d : -f 2-7)
 	for addr in $str
 	do
+		# Get encryption 
 		if [ $(cat /tmp/scan.txt |grep -w -A 4 "$addr" |grep -c "mixed WPA/WPA2 PSK") == "1" ]; then
 			encr="psk-mixed"
 			encr_str="WPA/WPA2"
@@ -427,28 +429,36 @@
 			encr_str="WPA/WPA2"
 		fi
 
+		# Get signal strength	
 		sig=$(cat /tmp/scan.txt | grep -w -A 3 "$addr" | grep "Signal" | cut -d : -f 2 | cut -d " " -f2,3)
+
+		# Get channel
 		chan=$(cat /tmp/scan.txt| grep -w -A 2 "$addr" | grep "Channel" | cut -d : -f3)
-		ssid=$(cat /tmp/scan.txt| grep -w -A 1 "$addr" | grep "ESSID" | cut -d : -f2 | sed 's/"//g')
-		
-		ssid_str="<option	value="$ssid::$encr"><pre> $ssid  (Ch: $chan  Encr: $encr_str Sig: $sig) </pre> </option>"$ssid_str
-	done	
+
+		# Get SSID field, strip leading space and quotes
+		ssid=$(cat /tmp/scan.txt| grep -w -A 1 "$addr" | grep "ESSID" | cut -d : -f2 | sed 's/ //'| sed 's/"//g')
+	
+		# Append new option line to build up Select list. Put quotes around the value string to preserve spaces in SSID.
+		ssid_str="<option value="\"$ssid::$encr\""><pre> $ssid (Ch: $chan  Encr: $encr_str Sig: $sig) </pre> </option>"$ssid_str
+
+	done
 %>	
 
 <!-- Store the list of SSIDs -->
-<span  id="survey_str" style="visibility:hidden; display:none;"> <% echo -n $ssid_str %> </span>
+<span id="survey_str" style="visibility:hidden; display:none;"> <% echo -n $ssid_str %> </span>
 
 <!-- Populate the select control with list of SSIDs -->
 <script> document.getElementById("ssid_survey").innerHTML = document.getElementById("survey_str").innerHTML; </script>
 
+<!-- Populate the Host SSID and Encryption fields from selected item -->
 <script>
 function writeToHostSSID(){
 	var str = document.getElementById("ssid_survey").value;
-	var arr = str.split("::");  
+	var arr = str.split("::"); 
 	var ssid = arr[0]; 
 	var encr = arr[1];
 	document.getElementById("host_ssid").value = ssid;
-  document.getElementById("host_encryption").value = encr; 
+	document.getElementById("host_encryption").value = encr; 
 }
 </script>
 
