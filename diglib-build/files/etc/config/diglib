@@ -10,4 +10,5 @@ config diglib 'lan'
 	option dns_filt_addr1 '208.67.222.123'
 	option dns_filt_addr2 '208.67.220.123'
 	option dns1 '8.8.8.8'
+	option dhcp_enable '1'
 
