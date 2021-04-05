@@ -5,13 +5,14 @@ lanport=$(uci -q get board.eth.lanport)
 ethports=$(uci -q get board.eth.ethports)
 
 # Check (twice) if upstream WiFi host is present
+sleep 2
 host="$(uci -q get wireless.sta_0.ssid)"
-check_host=$(iwinfo radio0 scan | grep -c $host) 
+check_host=$(iwinfo radio0 scan | grep -c "$host") 
 if [ $check_host != "0" ]; then
-	uci set wireless.sta_0.disabled="0"			# Found host. Enable the WiFi WAN interface			
+	uci set wireless.sta_0.disabled="0"			# Found host. Enable the WiFi WAN interface		
 else
 	sleep 5  # Failed to find host. Wait and check again
-	check_host=$(iwinfo radio0 scan | grep -c $host) 
+	check_host=$(iwinfo radio0 scan | grep -c "$host") 
 	if [ $check_host != "0" ]; then
 		uci set wireless.sta_0.disabled="0"			# Found host. Enable the WiFi WAN interface 
 		uci commit wireless
@@ -29,21 +30,20 @@ else
 		exit
 	fi
 fi
-
-
 # WiFi WAN Host is present
-# Check if WiFi WAN sta interface is working 
-sleep 10
+
+# Check if WiFi WAN is working and has network connection 
+sleep 5
 sta_check=$(iwinfo wlan0-2 info | grep "Channel" | grep -c "unknown")
 sta_inet_check=$(ifconfig wlan0-2 | grep -c "inet")
 if [ $sta_check == "0" ] && [ $sta_inet_check != "0" ]; then
 	# All ok, wait
-	sleep 10
+	sleep 5
 	sta_check=$(iwinfo wlan0-2 info | grep "Channel" | grep -c "unknown")
 	sta_inet_check=$(ifconfig wlan0-2 | grep -c "inet")
 	if [ $sta_check == "0" ] && [ $sta_inet_check != "0" ]; then
 		# All ok, wait
-		sleep 10
+		sleep 5
 		sta_check=$(iwinfo wlan0-2 info | grep "Channel" | grep -c "unknown")
 		sta_inet_check=$(ifconfig wlan0-2 | grep -c "inet")
 		if [ $sta_check == "0" ] && [ $sta_inet_check != "0" ]; then
@@ -53,8 +53,8 @@ if [ $sta_check == "0" ] && [ $sta_inet_check != "0" ]; then
 	fi
 fi
 
-# Failed a connection test, so wait and re-check
-sleep 20
+# Failed network connection test, so wait and re-check
+sleep 10
 sta_check=$(iwinfo wlan0-2 info | grep "Channel" | grep -c "unknown")
 sta_inet_check=$(ifconfig wlan0-2 | grep -c "inet")
 if [ $sta_check == "0" ] && [ $sta_inet_check != "0" ]; then

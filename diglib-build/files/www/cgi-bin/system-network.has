@@ -53,13 +53,15 @@
 				uci set network.lan.ifname="$lanport" 
 			fi
 			# Check (twice) if upstream WiFi host is present
+			sleep 2
 			host="$(uci -q get wireless.sta_0.ssid)"
-			check_host=$(iwinfo radio0 scan | grep -c $host) 
+			check_host=$(iwinfo radio0 scan | grep -c "$host") 			
 			if [ $check_host != "0" ]; then
 				uci set wireless.sta_0.disabled="0"			# Found host. Enable the WiFi WAN interface			
 			else
-				sleep 5  # Failed to find host. Wait and check again
-				check_host=$(iwinfo radio0 scan | grep -c $host) 
+				# Failed to find host. Wait and check again.
+				sleep 5  
+				check_host=$(iwinfo radio0 scan | grep -c "$host") 
 				if [ $check_host != "0" ]; then
 					uci set wireless.sta_0.disabled="0"			# Found host. Enable the WiFi WAN interface 
 				else
