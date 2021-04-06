@@ -13,12 +13,18 @@
 	fi
 
 	if [ "$FORM_BUTTON" == "Save" ] || [ "$FORM_BUTTON" == "Save&Apply" ]; then
-		uci set wireless.ap_0.ssid="$FORM_SSID"
+		SSID="$(echo "$FORM_SSID" | sed 's/^[ ]*//g' | sed 's/[ ]*$//g' | sed 's/[ ][ ]*/ /g')"
+		  # Strip leading, trailing and multiple spaces		
+		uci set wireless.ap_0.ssid="$SSID"
+		
 		uci set wireless.ap_0.encryption="$FORM_ENCRYPTION"
 		uci set wireless.ap_0.key="$FORM_KEY"
 	  uci set wireless.ap_0.maxassoc="$FORM_AP_CONNECTIONS"
 	  
-		uci set wireless.ap_1.ssid="$FORM_GUEST_SSID"
+		GUEST_SSID="$(echo "$FORM_GUEST_SSID" | sed 's/^[ ]*//g' | sed 's/[ ]*$//g' | sed 's/[ ][ ]*/ /g')"  
+		  # Strip leading, trailing and multiple spaces		
+		uci set wireless.ap_1.ssid="$GUEST_SSID"
+		
 		uci set wireless.ap_1.encryption="$FORM_GUEST_ENCRYPTION"
 		uci set wireless.ap_1.key="$FORM_GUEST_KEY"
 	  uci set wireless.ap_1.maxassoc="$FORM_GUEST_AP_CONNECTIONS"
@@ -228,7 +234,8 @@
 	<tr>
 		<td colspan="1"></td>
 		<td colspan="4"><label for="SSID">WiFi Name SSID</label></td>
-		<td colspan="3"><input type="text" name="SSID" required maxlength="128" VALUE="<% echo -n $ssid %>" pattern="[a-zA-Z0-9_*.$%<>;:?@=!^|&+()#~\{\}\-]{1,128}" ></td>
+		<td colspan="3"><input type="text" name="SSID" required maxlength="128" VALUE="<% echo -n $ssid %>" 
+		                 pattern="[a-zA-Z0-9_*.$%<>;:?@=!^|&+()#~\{\}\- ]{1,128}" ></td> 
 		<td colspan="2"></td>
 		<td colspan="4"><label for="AP_CONNECTIONS"> Max Connections (1-35) </label></td>
 		<td colspan="3"><input type="number" name="AP_CONNECTIONS" min="1" max="35" VALUE="<% echo -n $ap_connections %>"></td>
@@ -270,8 +277,8 @@
 	<tr>
 		<td colspan="1"></td>
 		<td colspan="4"><label for="GUEST_SSID">Guest WiFi Name SSID</label></td>
-		<td colspan="3">
-			<input type="text" name="GUEST_SSID" required maxlength="128" VALUE="<% echo -n $guest_ssid %>" pattern="[a-zA-Z0-9_*.$%<>;:?@=!^|&+()#~\{\}\-]{1,128}" ></td>
+		<td colspan="3"><input type="text" name="GUEST_SSID" required maxlength="128" VALUE="<% echo -n $guest_ssid %>" 
+                                 pattern="[a-zA-Z0-9_*.$%<>;:?@=!^|&+()#~\{\}\- ]{1,128}" ></td>
 		<td colspan="2"></td>
 		<td colspan="4"><label for="GUEST_AP_CONNECTIONS"> Max Connections (1-35) </label></td>
 		<td colspan="3"><input type="number" name="GUEST_AP_CONNECTIONS" min="1" max="35" VALUE="<% echo -n $guest_ap_connections %>"> </td>
