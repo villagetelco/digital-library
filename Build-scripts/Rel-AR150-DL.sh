@@ -5,11 +5,12 @@
 : ${GITREPO="../../Git"}
 
 # Select the repo to use
-REPO="digital-library"
-BRANCH="Ver-2"
+#REPO="digital-library"
+#BRANCH= ???
+#DIRVER= ???
+source ./Rel.txt
 
 echo "Set up version strings"
-DIRVER="VER-2.0"
 VER="Digital-Library-AR150-"$DIRVER
 
 echo "************************************"
