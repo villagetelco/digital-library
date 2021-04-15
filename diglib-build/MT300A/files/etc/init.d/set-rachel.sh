@@ -36,30 +36,30 @@ if mount -rw /dev/mmcblk0p1 /mnt/mmcblk0p1; then
   fi
 fi
 
-# Find contents directories and force link to /www/rachel
+# Find contents directories and force link to /www/library
 
 # Check for MMC/SD library alone
 if [ $MMC == 1 ] && [ $SDA != 1 ]; then
-	ln -s -f /mnt/mmcblk0p1 /www/rachel                                     
+	ln -s -f /mnt/mmcblk0p1 /www/library                                     
 	if [ -e "/dev/sda1" ]; then # Check for secondary USB device to use for additional local content
-		ln -s -f /mnt/sda1 /www/rachel-local2
+		ln -s -f /mnt/sda1 /www/library-local2
 	fi
                                                            
 # Check for USB library alone
 elif [ $MMC != 1 ] && [ $SDA == 1 ]; then 
-	ln -s -f /mnt/sda1   /www/rachel
+	ln -s -f /mnt/sda1   /www/library
 
 # Check for both USB and MMC/SD libraries present
 elif [ $MMC == 1 ] && [ $SDA == 1 ]; then
-	ln -s -f /mnt/sda1   /www/rachel  # Use just the USB library
+	ln -s -f /mnt/sda1   /www/library  # Use just the USB library
 	
 else
 	# There is no library memory device present
 	if [ -e "/dev/sda1" ]; then # Check for non-library USB device to use for web content 
-		ln -s -f /mnt/sda1 /www/rachel
+		ln -s -f /mnt/sda1 /www/library
 	else
-		ln -s -f /www/rachel-x   /www/rachel # No memory device at all - link to dummy menu page.
-		ln -s -f /www/rachel/rachel.index.html   /www/rachel/index.html		
+		ln -s -f /www/library-x   /www/library # No memory device at all - link to dummy menu page.
+		ln -s -f /www/library/library.index.html   /www/library/index.html		
 	fi
 fi
 
