@@ -6,13 +6,12 @@
 
 # Select the repo to use
 #REPO="digital-library"
-REPO="digital-library-dev"
-BRANCH="master"
+#BRANCH= ???
+#DIRVER= ???
+source ./Build.txt
 
 echo "Set up version strings"
-DIRVER="VER-1.0-RC3"
-VER="Digital-Library-01-MT300N-V2-"$DIRVER
-
+VER="Digital-Library-MT300N-V2-"$DIRVER
 
 echo "************************************"
 echo ""
@@ -30,17 +29,17 @@ fi
 
 BUILD_DIR=$(pwd)
 cd $GITREPO"/"$REPO
-###git checkout $BRANCH > /dev/null
+git checkout $BRANCH > /dev/null
 # Make sure checkout worked
-###CHK_BR=`git branch | grep "*" | cut -d " " -f2`
-###if [ $CHK_BR != $BRANCH ]; then
-###	echo "Branch checkout failed"
-###	echo "*****"
-###	exit
-###else
-###	echo "Branch checkout successful"
-###fi
-###git branch | grep "*"
+CHK_BR=`git branch | grep "*" | cut -d " " -f2`
+if [ $CHK_BR != $BRANCH ]; then
+	echo "Branch checkout failed"
+	echo "*****"
+	exit
+else
+	echo "Branch checkout successful"
+fi
+git branch | grep "*"
 cd $BUILD_DIR
 pwd
 
