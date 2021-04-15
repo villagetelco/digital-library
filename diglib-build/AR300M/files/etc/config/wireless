@@ -6,7 +6,7 @@ config wifi-device 'radio0'
 	option hwmode '11g'
 	option disabled '0'
 	option channel '11'
-	option htmode 'HT20'
+	option htmode 'HT40'
 
 config wifi-iface 'ap_0'
 	option device 'radio0'
