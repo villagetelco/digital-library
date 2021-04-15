@@ -17,8 +17,8 @@ umount  /mnt/sda1
 umount  /mnt/mmcblk0p1
 
 # Remove old links
-rm /www/rachel
-rm /www/rachel-local2
+rm /www/library
+rm /www/library-local2
 
 # Mount MMC/SD and USB memory devices and check for library flag
 SDA=0

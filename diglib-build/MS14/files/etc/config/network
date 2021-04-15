@@ -5,6 +5,9 @@ config interface 'loopback'
 	option ipaddr '127.0.0.1'
 	option netmask '255.0.0.0'
 
+config globals 'globals'
+	option ula_prefix 'auto'
+
 config interface 'lan'
 	option type 'bridge'
 	option ifname 'eth0'
@@ -13,6 +16,7 @@ config interface 'lan'
 	option netmask '255.255.255.0'
 	option gateway '255.255.255.255'
 	option dns '208.67.222.123, 208.67.220.123'
+	option ip6assign '60'
 
 config interface 'wan'
 	option proto 'dhcp'
@@ -25,4 +29,5 @@ config interface 'guest'
 	option proto 'static'
 	option ipaddr '10.10.11.1'
 	option netmask '255.255.255.0'
+	option ip6assign '60'
 
