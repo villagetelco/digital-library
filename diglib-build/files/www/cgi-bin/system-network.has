@@ -4,7 +4,6 @@
 
 <%# --- Process the form submission --- %>
 <%
-
 	if [ "$FORM_BUTTON" == "Save" ] || [ "$FORM_BUTTON" == "Save&Apply" ]; then
 		uci set network.lan.ipaddr="$FORM_IPADDR"
 		uci set network.lan.netmask="$FORM_NETMASK"
@@ -28,14 +27,25 @@
 		wanport="$(uci -q get board.eth.wanport)"
 		lanport="$(uci -q get board.eth.lanport)"
 		ethports="$(uci -q get board.eth.ethports)"
-
+		# Disable both WiFi WAN interfaces
+		uci set wireless.sta_0.disabled="1"
+		uci set wireless.sta_1.disabled="1"
+		# Select Radio for WiFi WAN  
+		wifi_wan_radio="$(uci -q get diglib.wan.wifi_wan_radio)"
+		if [ $wifi_wan_radio == "secondary" ]; then
+			scan_radio="radio1"
+			sta="sta_1"
+		else
+			scan_radio="radio0"
+			sta="sta_0"
+		fi
+	
 		# Ethernet WAN
 		if [ "$FORM_SELECT_WAN" == "ethwan" ]; then
 			uci set diglib.wan.select_wan="ethwan"
 			uci set network.wan.disabled="0"  # Enable Eth WAN 
 			uci set network.wan.ifname="$wanport"
 			uci set network.wwan.disabled="1" # Disable WiFi WAN
-			uci set wireless.sta_0.disabled="1"
 			if [ $ethports == "1" ]; then
 				uci set network.lan.ifname=" " # For board with single Eth port, there is no Eth LAN
 			else
@@ -54,18 +64,18 @@
 			fi
 			# Check (twice) if upstream WiFi host is present
 			sleep 2
-			host="$(uci -q get wireless.sta_0.ssid)"
-			check_host=$(iwinfo radio0 scan | grep -c "$host") 			
+			host="$(uci -q get wireless.$sta.ssid)"
+			check_host=$(iwinfo $scan_radio scan | grep -c "$host") 			
 			if [ $check_host != "0" ]; then
-				uci set wireless.sta_0.disabled="0"			# Found host. Enable the WiFi WAN interface			
+				uci set wireless.$sta.disabled="0"			# Found host. Enable the WiFi WAN interface			
 			else
 				# Failed to find host. Wait and check again.
 				sleep 5  
-				check_host=$(iwinfo radio0 scan | grep -c "$host") 
+				check_host=$(iwinfo $scan_radio scan | grep -c "$host") 
 				if [ $check_host != "0" ]; then
-					uci set wireless.sta_0.disabled="0"			# Found host. Enable the WiFi WAN interface 
+					uci set wireless.$sta.disabled="0"			# Found host. Enable the WiFi WAN interface 
 				else
-					uci set wireless.sta_0.disabled="1"			# Can't find host. Disable the WiFi WAN interface 
+					uci set wireless.$sta.disabled="1"			# Can't find host. Disable the WiFi WAN interface 
 				fi
 			fi
 
@@ -74,7 +84,6 @@
 			uci set diglib.wan.select_wan="disablewan"
 			uci set network.wan.disabled="1"  # Disable Eth WAN
 			uci set network.wwan.disabled="1" # Disable WiFi WAN
-			uci set wireless.sta_0.disabled="1"
 			if [ $ethports == "1" ]; then
 				uci set network.lan.ifname="$lanport $wanport" # For board with single eth port, make it LAN
 			else
@@ -118,7 +127,6 @@
 	fi
 
 	if [ "$FORM_BUTTON" == "Save&Apply" ]; then
-
     # Run network restart in background    
 		(sleep 1; wifi;	/etc/init.d/dnsmasq restart; /etc/init.d/network restart; /etc/init.d/fallback-ip start; /etc/init.d/wifiwan_check start) &
   fi
@@ -146,7 +154,7 @@
   wwan_netmask="$(uci -q get network.wwan.netmask)"
   wwan_gateway="$(uci -q get network.wwan.gateway)"
   wwan_dns="$(uci -q get network.wwan.dns)"
-  wwan_disabled=$(uci -q get wireless.sta_0.disabled)
+  wwan_disabled="$(uci -q get wireless.$sta.disabled)"
 
 # DNS Filter
 	dns_filter_enable=$(uci -q get diglib.dnsfilter.enable)

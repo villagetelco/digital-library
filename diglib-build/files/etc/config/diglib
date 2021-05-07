@@ -1,6 +1,7 @@
 
 config diglib 'wan'
 	option select_wan 'ethwan'
+	option wifi_wan_radio 'primary'
 
 config diglib 'dnsfilter'
 	option enable '1'
