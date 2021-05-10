@@ -6,16 +6,16 @@
 
 # Select the repo to use
 #REPO="digital-library"
-REPO="digital-library-dev"
-BRANCH="master"
+#BRANCH= ???
+#DIRVER= ???
+source ./Build.txt
 
 echo "Set up version strings"
-DIRVER="VER-1.0-RC3"
-VER="Digital-Library-01-MR3040-"$DIRVER
+VER="Digital-Library-MS14-Duo-"$DIRVER
 
 echo "************************************"
 echo ""
-echo "Build script for Digital library TP-Link MR3040 device"
+echo "Build script for Digital library MS14-Duo device"
 
 echo "Git directory: "$GITREPO
 echo "Repo: "$REPO
@@ -28,6 +28,18 @@ if [ ! -d $GITREPO"/"$REPO ]; then
 fi
 
 BUILD_DIR=$(pwd)
+cd $GITREPO"/"$REPO
+git checkout $BRANCH > /dev/null
+# Make sure checkout worked
+CHK_BR=`git branch | grep "*" | cut -d " " -f2`
+if [ $CHK_BR != $BRANCH ]; then
+	echo "Branch checkout failed"
+	echo "*****"
+	exit
+else
+	echo "Branch checkout successful"
+fi
+git branch | grep "*"
 cd $BUILD_DIR
 pwd
 
@@ -52,7 +64,7 @@ fi
 
 echo "Start build process"
 
-BINDIR="./bin/targets/ar71xx/tiny"
+BINDIR="./bin/targets/ar71xx/generic"
 BUILDDIR="./Builds/ar71xx"
 
 ###########################
@@ -78,7 +90,7 @@ echo "Source repo details: "$REPO $REPOID
 
 # Set up new directory name with date and version
 DATE=`date +%Y-%m-%d-%H:%M`
-DIR=$DATE"-MR3040-Digital-Library-"$DIRVER
+DIR=$DATE"-MS14-Duo-Digital-Library-"$DIRVER
 
 ###########################
 # Set up build directory
@@ -92,7 +104,7 @@ echo $DIR > $BUILDDIR/builds/build-$DIR/md5sums-$VER.txt
 
 # Build function
 
-function build() {
+function build_ms14() {
 
 echo "Set up .config for "$1 $2
 rm -f ./.config
@@ -167,11 +179,9 @@ fi
 
 echo "Update md5sums file"
 md5sum $BINDIR/*-squash*sysupgrade.bin >> $BUILDDIR/builds/build-$DIR/md5sums-$VER.txt
-md5sum $BINDIR/*-squash*factory.bin >> $BUILDDIR/builds/build-$DIR/md5sums-$VER.txt
 
 echo  "Move files to build folder"
 mv $BINDIR/openwrt*-squash*sysupgrade.bin $BUILDDIR/builds/build-$DIR
-mv $BINDIR/openwrt*-squash*factory.bin $BUILDDIR/builds/build-$DIR
 echo ""
 
 echo "Clean up unused files"
@@ -193,10 +203,10 @@ echo "Start Device builds"
 echo " "
 echo '----------------------------'
 
-build MR3040 
+build_ms14 MS14-Duo 
 
 echo " "
-echo " Build script MR3040 Digital Library complete"
+echo " Build script MS14-Duo Digital Library complete"
 echo " "
 echo '----------------------------'
 
