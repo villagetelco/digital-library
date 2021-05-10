@@ -3,13 +3,40 @@
 <%  echo -en "content-type: text/html\r\n\r\n"  # RF2616 Compliance %>
 
 <%  
-	hi_band=$(uci -q get board.band.hi_band) 	
+	hi_band=$(uci -q get board.band.hi_band) 		
+	if [ $hi_band != "1" ]; then
+		uci set diglib.wan.wifi_wan_radio="primary"
+	fi
+
+	wifi_wan_radio="$(uci -q get diglib.wan.wifi_wan_radio)"
+	if [ $wifi_wan_radio == "secondary" ]; then
+		scan_radio="radio1"	
+		sta="sta_1"
+	else
+		scan_radio="radio0"	
+		sta="sta_0"
+	fi		
 %>
 
 <%# --- Process the form submission --- %>
 <%
+	if [ "$FORM_BUTTON" == "Save" ] || [ "$FORM_BUTTON" == "Save&Apply" ] || [ "$FORM_BUTTON" == "Scan" ]; then	
+		if [ "$FORM_SELECT_WIFI_WAN_RADIO" == "secondary" ]; then
+			uci set diglib.wan.wifi_wan_radio="secondary"
+			scan_radio="radio1"	
+			sta="sta_1"
+		else
+			uci set diglib.wan.wifi_wan_radio="primary"
+			scan_radio="radio0"	
+			sta="sta_0"
+		fi
+    uci commit wireless 
+    uci commit diglib 
+	fi
+	
+	
 	if [ "$FORM_BUTTON" == "Scan" ]; then
-		iwinfo radio0 scan > /tmp/scan.txt 
+		iwinfo $scan_radio scan > /tmp/scan.txt 
 	fi
 
 	if [ "$FORM_BUTTON" == "Save" ] || [ "$FORM_BUTTON" == "Save&Apply" ]; then
@@ -31,17 +58,17 @@
 
 		uci set wireless.radio0.txpower="$FORM_TXPOWER"
 
-		uci set wireless.sta_0.ssid="$FORM_HOST_SSID"
-		uci set wireless.sta_0.encryption="$FORM_HOST_ENCRYPTION"
-		uci set wireless.sta_0.key="$FORM_HOST_KEY"
+		uci set wireless.$sta.ssid="$FORM_HOST_SSID"
+		uci set wireless.$sta.encryption="$FORM_HOST_ENCRYPTION"
+		uci set wireless.$sta.key="$FORM_HOST_KEY"
 
 		# Set channel only if wwan sta mode not in use, and channel is not null
-		sta_chk=$(uci -q get wireless.sta_0.disabled)
+		sta_chk=$(uci -q get wireless.$sta.disabled)
 		if [ "$sta_chk" == "1" ] && [ ! -z "$FORM_CHANNEL" ]; then
 			uci set wireless.radio0.channel="$FORM_CHANNEL"
 		fi
 
-		# Process %GHz parameters if required
+		# Process 5GHz parameters if required
 		if [ $hi_band  == "1" ]; then
 			uci set wireless.ap5_0.ssid="$FORM_SSID""-5"
 			uci set wireless.ap5_0.encryption="$FORM_ENCRYPTION"
@@ -58,6 +85,7 @@
 		fi
 
     uci commit wireless 
+
 	fi
 
 	#----------
@@ -77,7 +105,7 @@
 			uci set wireless.ap_1.disabled="1"
 		fi
 
-		# Process %GHz parameters if required
+		# Process 5GHz parameters if required
 		if [ $hi_band  == "1" ]; then
 			if [ "$FORM_AP_ENABLE_5G" == "checked" ]; then
 				uci set wireless.ap5_0.disabled="0"
@@ -115,9 +143,9 @@
   txpower="$(uci -q get wireless.radio0.txpower)"
 	channel="$(uci -q get wireless.radio0.channel)"
 	
-  host_ssid="$(uci -q get wireless.sta_0.ssid)"
-  host_encryption="$(uci -q get wireless.sta_0.encryption)"
-  host_key="$(uci -q get wireless.sta_0.key)"
+  host_ssid="$(uci -q get wireless.$sta.ssid)"
+  host_encryption="$(uci -q get wireless.$sta.encryption)"
+  host_key="$(uci -q get wireless.$sta.key)"
 
 	# AP Enable
   ap_disabled="$(uci -q get wireless.ap_0.disabled)"
@@ -137,7 +165,7 @@
 	# WiFi WAN Enable
   wifi_wan_enable="0"
   wan_str="<span id="wan_str" style="color:red">WiFi WAN is <strong>DISABLED</strong></span>"
-  sta_disabled="$(uci -q get wireless.sta_0.disabled)"
+  sta_disabled="$(uci -q get wireless.$sta.disabled)"
   if [ "$sta_disabled" == "0" ]; then
   	wifi_wan_enable="1"
 	  wan_str="<span id="wan_str" style="color:green">WiFi WAN is <strong>ENABLED</strong></span>"
@@ -163,7 +191,15 @@
   	  guest_ap_enable_5g="0"
   	fi
 	fi
-  
+
+# Select WiFi WAN radio
+	select_radio="$(uci -q get diglib.wan.wifi_wan_radio)"
+	if [ "$select_radio" == "secondary" ];then
+		primary_radio=""; secondary_radio="checked"
+	else
+		primary_radio="checked"; secondary_radio=""
+	fi
+
 %>
   
 <%# --- Present the HTML page --- %>
@@ -308,6 +344,16 @@
 	</tr>	
 
 	<tr><td colspan="20"><h3>WiFi WAN Client Settings</h3></td></tr>
+	
+	<% if [ "$hi_band" == "1" ]; then %>
+		<td colspan="15"><font size="4"> Select WiFi WAN Radio &nbsp;</font>
+		<input type="radio" id="PRIMARY" name="SELECT_WIFI_WAN_RADIO" value="primary"	    	<% echo -n $primary_radio %>	>	
+		<label for="primary">2.4GHz Radio</label>
+		<input type="radio" id="SECONDARY" name="SELECT_WIFI_WAN_RADIO" value="secondary" 	<% echo -n $secondary_radio %> >	
+		<label for="secondary">5GHz Radio</label>
+	<% fi %>
+
+	
 	<tr><td colspan="20"><% echo -n  $wan_str %></td></tr>
 	<tr>
 		<td colspan="1"></td>
@@ -473,7 +519,7 @@ function writeToHostSSID(){
 </html>
 
 <%
-	iwinfo radio0 scan  </dev/null &>/tmp/scan.txt &  # Run a scan in background ready for next page display
+	iwinfo $scan_radio scan  </dev/null &>/tmp/scan.txt &  # Run a scan in background ready for next page display
 %>
 
 
