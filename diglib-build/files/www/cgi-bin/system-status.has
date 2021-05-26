@@ -3,7 +3,7 @@
 <%  echo -en "content-type: text/html\r\n\r\n"  # RF2616 Compliance %>
 
 <%# --- Get the variables for the HTML page --- %>
-	<%
+<%
 		rm /tmp/net_wifi_status.txt; touch /tmp/net_wifi_status.txt
 		
 		ethport1="$(uci -q get board.eth.wanport)"
@@ -54,7 +54,17 @@
 		fi
 		echo ""                                   		>> /tmp/net_wifi_status.txt
 		iwinfo | grep -A 7 SSID                   		>> /tmp/net_wifi_status.txt
-	%>
+		echo ""                                   		>> /tmp/net_wifi_status.txt
+
+		echo "Mesh"                               		>> /tmp/net_wifi_status.txt
+		echo "----"                               		>> /tmp/net_wifi_status.txt
+
+		iw dev wlan0-4 mpath dump											>> /tmp/net_wifi_status.txt
+		echo "--"                               			>> /tmp/net_wifi_status.txt
+		iw dev wlan0-4 station dump										>> /tmp/net_wifi_status.txt
+		
+
+%>
 
 <%# --- Present the HTML page --- %>
 <!DOCTYPE html>
@@ -73,7 +83,7 @@
 	<tr><td><h3>Network / WiFi Status</h3></td></tr>
 	<tr>
 		<td>
-		<iframe id="NET_WIFI_STATUS" src="/tmp/net_wifi_status.txt"  width="850px" height="550" ></iframe>
+		<iframe id="NET_WIFI_STATUS" src="/tmp/net_wifi_status.txt"  width="900px" height="550" ></iframe>
 		</td>
 	</tr>
 	<tr class="rowSpacer"></tr>

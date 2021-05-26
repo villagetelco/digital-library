@@ -164,7 +164,7 @@
 
 	# WiFi WAN Enable
   wifi_wan_enable="0"
-  wan_str="<span id="wan_str" style="color:red">WiFi WAN is <strong>DISABLED</strong></span>"
+  wan_str="<span id="wan_str" style="color:red">WiFi WAN is currently <strong>DISABLED</strong> See Network page</span>"
   sta_disabled="$(uci -q get wireless.$sta.disabled)"
   if [ "$sta_disabled" == "0" ]; then
   	wifi_wan_enable="1"
@@ -343,6 +343,22 @@
 		<script>document.getElementById("guest_encryption").value="<% echo -n $guest_encryption %>";</script>
 	</tr>	
 
+
+  <tr class="rowSpacer"></tr>
+	<tr><td></td></tr>
+  
+	<tr>
+		<td colspan="10">
+<!--			<INPUT class="hiddenKey" TYPE="SUBMIT" name="BUTTON" VALUE="Save" accesskey="s">  -->
+			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save" onclick="showPageLoaderIcon()"> 
+			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save&Apply" onclick="showPageLoaderIcon()">
+			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Cancel" onclick="showPageLoaderIcon()">
+			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Refresh" onclick="showPageLoaderIcon()">
+		</td>
+	</tr>
+
+
+
 	<tr><td colspan="20"><h3>WiFi WAN Client Settings</h3></td></tr>
 	
 	<% if [ "$hi_band" == "1" ]; then %>
@@ -414,7 +430,6 @@
 		<td colspan="10">
 <!--			<INPUT class="hiddenKey" TYPE="SUBMIT" name="BUTTON" VALUE="Save" accesskey="s">  -->
 			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save" onclick="showPageLoaderIcon()"> 
-			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save&Apply" onclick="showPageLoaderIcon()">
 			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Cancel" onclick="showPageLoaderIcon()">
 			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Refresh" onclick="showPageLoaderIcon()">
 		</td>
