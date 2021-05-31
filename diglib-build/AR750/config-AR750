@@ -510,6 +510,7 @@ CONFIG_USE_UCLIBCXX=y
 # CONFIG_PKG_CHECK_FORMAT_SECURITY is not set
 # CONFIG_PKG_ASLR_PIE is not set
 CONFIG_PKG_CC_STACKPROTECTOR_NONE=y
+# CONFIG_PKG_CC_STACKPROTECTOR_REGULAR is not set
 CONFIG_KERNEL_CC_STACKPROTECTOR_NONE=y
 # CONFIG_KERNEL_CC_STACKPROTECTOR_REGULAR is not set
 # CONFIG_KERNEL_CC_STACKPROTECTOR_STRONG is not set
@@ -5432,9 +5433,9 @@ CONFIG_DRIVER_11W_SUPPORT=y
 # CONFIG_PACKAGE_wpa-supplicant-openssl is not set
 # CONFIG_PACKAGE_wpa-supplicant-p2p is not set
 # CONFIG_PACKAGE_wpa-supplicant-wolfssl is not set
-CONFIG_PACKAGE_wpad=y
-CONFIG_PACKAGE_wpad-basic=m
-# CONFIG_PACKAGE_wpad-mesh-openssl is not set
+# CONFIG_PACKAGE_wpad is not set
+# CONFIG_PACKAGE_wpad-basic is not set
+CONFIG_PACKAGE_wpad-mesh-openssl=y
 # CONFIG_PACKAGE_wpad-mesh-wolfssl is not set
 # CONFIG_PACKAGE_wpad-mini is not set
 # CONFIG_PACKAGE_wpad-openssl is not set

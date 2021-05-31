@@ -19,11 +19,14 @@ config interface 'lan'
 	option ip6assign '60'
 
 config interface 'wan'
+	option type 'bridge'
 	option proto 'dhcp'
+	option disabled '0'
 	option ifname 'eth0'
 
 config interface 'wwan'
 	option proto 'dhcp'
+	option disabled '1'
 
 config interface 'guest'
 	option type 'bridge'
