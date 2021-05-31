@@ -19,10 +19,10 @@ config interface 'lan'
 	option ifname 'eth0'
 
 config interface 'wan'
+	option type 'bridge'
 	option proto 'dhcp'
-	option ifname 'eth1'
-	option dns '208.67.222.123'
 	option disabled '0'
+	option ifname 'eth1'
 
 config interface 'wwan'
 	option proto 'dhcp'

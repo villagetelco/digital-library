@@ -88,3 +88,13 @@ config wifi-iface 'sta_1'
 	option ssid 'Host-SSID'
 	option disabled '1'
 
+config wifi-iface 'ah_0'
+	option device 'radio1'  ###
+	option ifname 'wlan0-4'
+	option mode 'mesh'
+	option mesh_id 'vt-mesh-11s'
+	option network 'wan'
+	option disabled '1'
+	option encryption 'psk2/aes'
+	option key 'meshpassword'
+	
