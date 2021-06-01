@@ -95,6 +95,6 @@ config wifi-iface 'ah_0'
 	option mesh_id 'vt-mesh-11s'
 	option network 'wan'
 	option disabled '1'
-	option encryption 'psk2/aes'
-	option key 'meshpassword'
+#	option encryption 'psk2/aes'
+#	option key 'meshpassword'
 	
