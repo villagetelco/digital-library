@@ -6,8 +6,6 @@
 <%
 		rm /tmp/net_wifi_status.txt; touch /tmp/net_wifi_status.txt
 		
-		ethport1="$(uci -q get board.eth.wanport)"
-		ethport2="$(uci -q get board.eth.lanport)"
 		hi_band="$(uci -q get board.band.hi_band)"
 		
 		ap_connections="$(iw dev wlan0 station dump | grep -c Station)"
@@ -26,10 +24,7 @@
 		echo ""                                   		>> /tmp/net_wifi_status.txt
 
 		echo "Eth WAN IP Address:"                		>> /tmp/net_wifi_status.txt
-		ifconfig $ethport1|grep "inet addr:"      		>> /tmp/net_wifi_status.txt
-		ifconfig $ethport1:9|grep "inet addr:"    		>> /tmp/net_wifi_status.txt
-		ifconfig $ethport2|grep "inet addr:"      		>> /tmp/net_wifi_status.txt
-		ifconfig $ethport2:9|grep "inet addr:"    		>> /tmp/net_wifi_status.txt
+		ifconfig br-wan|grep "inet addr:" 						>> /tmp/net_wifi_status.txt
 		echo ""                                   		>> /tmp/net_wifi_status.txt
 
 		echo "WiFi WAN IP Address:"               		>> /tmp/net_wifi_status.txt
