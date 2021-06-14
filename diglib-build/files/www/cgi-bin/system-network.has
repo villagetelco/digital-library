@@ -29,9 +29,19 @@
 		lanport="$(uci -q get board.eth.lanport)"
 		ethports="$(uci -q get board.eth.ethports)"
 
+		# WAN to LAN
+		if [ "$FORM_WAN_LAN" == "checked" ]; then
+			uci set diglib.wan.wan_lan="1"
+			wan_lan="1"
+		else
+			uci set diglib.wan.wan_lan="0"
+			wan_lan="0"
+		fi
+
 		# Ethernet WAN
 		if [ "$FORM_SELECT_WAN" == "ethwan" ]; then
 			uci set diglib.wan.select_wan="ethwan"
+			uci set diglib.wan.wan_lan="0"
 			uci set network.wan.disabled="0"  # Enable Eth WAN 
 			uci set network.wan.ifname="$wanport"
 			uci set network.wwan.disabled="1" # Disable WiFi WAN
@@ -47,8 +57,8 @@
 			uci set diglib.wan.select_wan="wifiwan"
 			uci set network.wwan.disabled="0" # Enable WiFi WAN
 			uci set network.wan.disabled="1" # Disable Eth WAN
-			if [ $ethports == "1" ]; then
-				uci set network.lan.ifname="$lanport $wanport" # For board with single eth port, make it LAN
+			if [ $wan_lan == "1" ]; then  
+				uci set network.lan.ifname="$lanport $wanport" 
 			else
 				uci set network.lan.ifname="$lanport" 
 			fi
@@ -73,8 +83,11 @@
 			uci set network.wan.disabled="1"  # Disable Eth WAN
 			uci set network.wwan.disabled="1" # Disable WiFi WAN
 			uci set wireless.sta_0.disabled="1"
-			if [ $ethports == "1" ]; then
-				uci set network.lan.ifname="$lanport $wanport" # For board with single eth port, make it LAN
+			uci set network.wan.ifname="$wanport"
+
+			if [ $wan_lan == "1" ]; then
+				uci set network.lan.ifname="$lanport $wanport" 
+				uci set network.wan.ifname=" "
 			else
 				uci set network.lan.ifname="$lanport" 
 			fi
@@ -98,7 +111,16 @@
 			uci set network.wwan.dns="$FORM_WWAN_DNS"			
 			uci -q delete dhcp.setup.server
 		fi
-		
+
+		# Setup DHCP Enable
+		if [ "$FORM_DHCP_ENABLE" == "checked" ]; then
+			uci set diglib.lan.dhcp_enable="1"
+			uci set dhcp.lan.ignore="0"
+		else
+			uci set diglib.lan.dhcp_enable="0"
+			uci set dhcp.lan.ignore="1"
+		fi		
+
 		uci commit network
 		uci commit wireless
 		uci commit dhcp
@@ -107,11 +129,9 @@
 	fi
 
 	if [ "$FORM_BUTTON" == "Save&Apply" ]; then
-
     # Run network restart in background    
 		(sleep 1; wifi;	/etc/init.d/dnsmasq restart; /etc/init.d/network restart; /etc/init.d/fallback-ip start; /etc/init.d/wifiwan_check start) &
   fi
-
 %>
 
 <%# --- Get the variables for the HTML page --- %>
@@ -145,6 +165,14 @@
 		dns_filter_enable="0"
 	fi
 
+# DHCP Enable
+  dhcp_enable="$(uci -q get diglib.lan.dhcp_enable)"
+	if [ $dhcp_enable == "1" ]; then
+		dhcp_enable="checked"
+	else
+		dhcp_enable="0"
+	fi
+
 # Select WAN control
 	select_wan="$(uci -q get diglib.wan.select_wan)"
 	if [ "$select_wan" == "wifiwan" ];then
@@ -155,6 +183,13 @@
 		eth_wan=""; wifi_wan=""; disable_wan="checked"
 	fi
 	
+# WAN to LAN
+	wan_lan=$(uci -q get diglib.wan.wan_lan)
+	if [ $wan_lan == "1" ]; then
+		wan_lan="checked"
+	else
+		wan_lan="0"
+	fi
 %>
 
 <%# --- Present the HTML page --- %>
@@ -206,6 +241,13 @@
 			<td colspan="2"><label for="DNS_FILT_ADDR2"> Addr 2</label></td>
 			<td colspan="3"><input type="text" name="DNS_FILT_ADDR2" VALUE="<% echo -n $dns_filt_addr2 %>"  pattern="(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$"></td>
 		</tr>
+
+		<tr class="rowSpacer"></tr>
+		<tr>
+			<td colspan="1"></td>
+			<td colspan="5"><font size="3"> Enable DHCP &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font>
+			<input type="checkbox" name="DHCP_ENABLE" value="checked" <% echo -n $dhcp_enable %> ></td>
+		</tr>
 		
 		<tr><td colspan="20"><h3>WAN Settings</h3></td></tr> 
 		<tr>
@@ -217,16 +259,29 @@
 				<label for="WIFI_WAN">WiFi WAN</label> 
 				<input type="radio" id="DISABLE_WAN" name="SELECT_WAN" onchange="hide_Message();" value="disablewan" <% echo -n $disable_wan %> >
 				<label for="DISABLE_WAN">Disable WAN</label>
+
 				<br> 
 				<div id="wifi_wan_messg" style="color:red; visibility:hidden; display:none">
 					<br>CAUTION: Ensure that WiFi WAN settings are correct before Applying. 
 					<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			 		   If WiFi WAN settings are incorrect, all WiFi will be disabled.
 				</div>
+				
 				<div id="wifi_wan_fail_messg" style="color:red; visibility:hidden; display:none">
 					<br>WiFi WAN could not connect. 
 					<br>Check WiFi WAN settings and Survey on WiFi page, then click Save&Apply.
 				</div>
+								
+				<tr class="rowSpacer"></tr>
+				<tr>
+					<td colspan="1"></td>
+					<td colspan="5">
+					<div id="wan_lan" style="visibility:visible; display:inline">
+						<font size="3">&nbsp;&nbsp;&nbsp; WAN Port to LAN &nbsp;&nbsp;&nbsp;&nbsp;</font>
+						<input type="checkbox" name="WAN_LAN" value="checked" <% echo -n $wan_lan %> ></td>
+					</div>
+				</tr>
+
 			</td>
 		</tr>
 		<tr class="rowSpacer" ></tr>
@@ -333,6 +388,17 @@
 	</table>
 
 </form>
+
+<%
+	if [ $select_wan == "ethwan" ]; then
+%>		
+	<script>
+		document.getElementById("wan_lan").style.visibility = "hidden";
+		document.getElementById("wan_lan").style.display = "none";
+	</script>
+<%
+	fi
+%>
 
 <%
 	if [ $select_wan == "wifiwan" ] && [ $wwan_disabled == "1" ]; then
