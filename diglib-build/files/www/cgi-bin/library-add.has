@@ -1,8 +1,8 @@
-#!/usr/bin/haserl --upload-limit=128000 --upload-dir=/www/rachel/temp
+#!/usr/bin/haserl --upload-limit=128000 --upload-dir=/www/library/temp
 
 <%  echo -en "content-type: text/html\r\n\r\n"  # RF2616 Compliance %>
 
-<%	mkdir -p /www/rachel/temp # Make sure temp storage exists %>
+<%	mkdir -p /www/library/temp # Make sure temp storage exists %>
 
 <%# --- Process the form submission --- %>
 <%
@@ -11,13 +11,13 @@
 		  filename=$FORM_uploadfile_name
 		  echo "$filename" > /tmp/filename.txt
 		  savedfile=$HASERL_uploadfile_path
-		  mv $savedfile /www/rachel/local/tempfile
+		  mv $savedfile /www/library/local/tempfile
 			rm -f $HASERL_uploadfile_path
 		fi
 	fi
 	
 	if [ "$FORM_BUTTON" == "Refresh" ] || [ "$FORM_BUTTON" == "Cancel" ]; then
-		rm -f /www/rachel/local/tempfile
+		rm -f /www/library/local/tempfile
 	fi
 %>
 
@@ -38,7 +38,7 @@
     <tr><td colspan="20"></td></tr> <!--Determines column widths-->
 
 	<% 	# Test for storage memory
-		if [ ! -e "/www/rachel/local" ]; then
+		if [ ! -e "/www/library/local" ]; then
     	echo "<tr><td colspan="20">"
     	echo "<p class="impact">*** No storage memory available.</p>" 
     	echo "</td></tr>"
@@ -60,7 +60,7 @@
     <% if [ "$FORM_BUTTON" == "Upload" ]; then %>
       <p>
       You uploaded a file named <b><% echo -n $filename %></b><br>
-      The file size is: <% ls -hl /www/rachel/local/tempfile | tr -s " "| cut -d " " -f 5 %> bytes.<br>
+      The file size is: <% ls -hl /www/library/local/tempfile | tr -s " "| cut -d " " -f 5 %> bytes.<br>
       </p>
     <% else %>
       Upload selected file.
@@ -74,8 +74,8 @@
     <%
     	if [ "$FORM_BUTTON" == "Store" ]; then 
 				filename="$(cat /tmp/filename.txt)"              # Get original filename
-				chmod +rwx /www/rachel/local/tempfile
-    		mv /www/rachel/local/tempfile /www/rachel/local/"$filename"   # Use $filename to save file with original name
+				chmod +rwx /www/library/local/tempfile
+    		mv /www/library/local/tempfile /www/library/local/"$filename"   # Use $filename to save file with original name
     		rm -f /tmp/filename.txt
 				echo "<p class="impact">*** File Saved.</p>"   # Show message when save command completes.
 			fi
@@ -113,7 +113,7 @@
 
     <%
     	if [ "$FORM_BUTTON" == "Delete" ]; then
-    		rm -rf /www/rachel/local/"$FORM_DEL_FILE"; SUCCESS=$?
+    		rm -rf /www/library/local/"$FORM_DEL_FILE"; SUCCESS=$?
     		if [ "$SUCCESS" == "0" ]; then
     			#echo "<p class="impact">*** Local File/Dir: \" $FORM_DEL_FILE \"  deleted.</p>"
     			%>
@@ -134,7 +134,7 @@
   </table>
   
 	<% 
-			ls -1 -p /www/rachel/local > /tmp/local_files.txt 
+			ls -1 -p /www/library/local > /tmp/local_files.txt 
 	%>
 	<div>
 		<table class="configTable">
