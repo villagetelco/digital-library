@@ -1,8 +1,8 @@
 
 config diglib 'wan'
 	option wifi_wan_radio 'primary'
-	option select_wan 'ethwan'
-	option wan_lan '0'
+	option select_wan 'none'
+	option wan_lan '1'
 
 config diglib 'dnsfilter'
 	option enable '1'
