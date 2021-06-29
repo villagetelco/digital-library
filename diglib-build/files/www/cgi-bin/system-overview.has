@@ -64,8 +64,8 @@ hostname=$(uci get system.@[0].hostname)
 	<% if [ -e "/dev/sdb1" ]; then %>
 	<tr><td colspan="3"></td><td colspan="17"><% df -hmT | grep "/dev/sdb1"  %></td></tr> <br>
 	<% fi %>
-	<% if [ -e "/dev/mmcblk0p1" ]; then %>
-	<tr><td colspan="3"></td><td colspan="17"><% df -hmT | grep "/dev/mmcblk0p1"  %></td></tr> <br>
+	<% if [ -e "/dev/mmcblk0p3" ]; then %>
+	<tr><td colspan="3"></td><td colspan="17"><% df -hmT | grep "/dev/mmcblk0p3"  %></td></tr> <br>
 	<% fi %>
 	<tr class="rowSpacer"></tr>
 	<tr><td colspan="20"></td></tr>
