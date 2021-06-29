@@ -45,13 +45,13 @@
   <br>
     <%
     	if [ "$FORM_BUTTON" == "Copy" ]; then
-				rsync -rav /www/rachel-local2/$FORM_ADD_FILE  /www/rachel/local  > /tmp/copy.txt; SUCCESS=$?
+				rsync -rav /www/library-local2/$FORM_ADD_FILE  /www/library/local  > /tmp/copy.txt; SUCCESS=$?
 				if [ "$SUCCESS" == "0" ]; then
 					echo "Copy successful. "
 					cat /tmp/copy.txt | sed 's/s/S/' | grep "Sent" | cut -d " " -f1,2,3
 				else
 					echo "Copy failed. Error: $SUCCESS"
-					if [ ! -e /www/rachel-local2/$FORM_ADD_FILE ]; then
+					if [ ! -e /www/library-local2/$FORM_ADD_FILE ]; then
 						echo "Directory/File not found"
 					fi
 				fi
@@ -63,7 +63,7 @@
   </table>
 
 
-	<% ls -1 -p /www/rachel-local2 > /tmp/usb_files.txt %>
+	<% ls -1 -p /www/library-local2 > /tmp/usb_files.txt %>
 	<div>
 		<table class="configTable">
 	    <tr>
