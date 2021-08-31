@@ -302,15 +302,15 @@
 		<tr>
 			<td colspan="1"></td>
 			<td colspan="20"> <h4>Select WAN type</h4> &nbsp;
-			  <input type="radio" id="ETH_WAN" name="SELECT_WAN" onchange="hide_Message();" value="ethwan" <% echo -n $eth_wan %> >
+			  <input type="radio" id="ETH_WAN" name="SELECT_WAN" onchange="display_MessageEth();"value="ethwan"<% echo -n $eth_wan %> >
 				<label for="ETH_WAN">Ethernet WAN</label> 
-				<input type="radio" id="WIFI_WAN" name="SELECT_WAN" onchange="display_Message();" value="wifiwan" <% echo -n $wifi_wan %> >
+				<input type="radio" id="WIFI_WAN" name="SELECT_WAN" onchange="display_MessageWwan();"value="wifiwan"<% echo -n $wifi_wan %> >
 				<label for="WIFI_WAN">WiFi WAN</label> 
-				<input type="radio" id="MESH_WAN" name="SELECT_WAN" onchange="hide_Message();" value="meshwan" <% echo -n $mesh_wan %> >
+				<input type="radio" id="MESH_WAN" name="SELECT_WAN" onchange="display_Message();"value="meshwan"<% echo -n $mesh_wan %> >
 				<label for="MESH_WAN">Mesh WAN</label>
-				<input type="radio" id="MESH_WAN_GW" name="SELECT_WAN" onchange="hide_Message();" value="meshwangw" <% echo -n $mesh_wan_gw %> >
+				<input type="radio" id="MESH_WAN_GW" name="SELECT_WAN" onchange="display_MessageEth();"value="meshwangw"<% echo -n $mesh_wan_gw %> >
 				<label for="MESH_WAN_GW">Mesh WAN GW</label>
-				<input type="radio" id="DISABLE_WAN" name="SELECT_WAN" onchange="hide_Message();" value="disablewan" <% echo -n $disable_wan %> >
+				<input type="radio" id="DISABLE_WAN" name="SELECT_WAN" onchange="display_Message();"value="disablewan"<% echo -n $disable_wan %> >
 				<label for="DISABLE_WAN">Disable WAN</label>
 
 				<br> 
@@ -321,11 +321,10 @@
 				</div>
 				
 				<div id="wifi_wan_fail_messg" style="color:red; visibility:hidden; display:none">
-					<br>WiFi WAN could not connect. 
+					<br>CAUTION: WiFi WAN was selected but SSID could not be found. 
 					<br>Check WiFi WAN settings and Survey on WiFi page, then click Save&Apply.
 				</div>
-								
-				<tr class="rowSpacer"></tr>
+												
 				<tr>
 					<td colspan="1"></td>
 					<td colspan="5">
@@ -337,8 +336,8 @@
 
 			</td>
 		</tr>
-		<tr class="rowSpacer" ></tr>
 		
+		<tr class="rowSpacer" ></tr>
 		<tr>
 			<td colspan="1"></td>
 			<td colspan="19"><h4>Ethernet WAN Settings</h4></td>
@@ -357,7 +356,8 @@
 		<tr class="rowSpacer"></tr>
 	</table>
 	
- <div id="div_wan" style="display:none;" > <!-- Start of div_wan -->
+<!-- Start of div_wan -->
+ <div id="div_wan" style="display:none;" > 
 	<table class="configTable">
 		<tr>
 			<td colspan="1"></td>
@@ -380,7 +380,8 @@
 		<tr class="rowSpacer" ></tr>
 		<tr class="rowSpacer" ></tr>
 	</table>
- </div> <!-- End of div_wan -->
+ </div> 
+ <!-- End of div_wan -->
 
 
 	<table class="configTable">
@@ -401,10 +402,10 @@
 		<script>document.getElementById("wwan_proto").value="<% echo -n $wwan_proto %>";</script>
 		<tr class="rowSpacer"></tr>
 	</table>
-	
- <div id="div_wwan" style="display:none;" > <!-- Start of div_wwan -->
- 
 
+ <!-- Start of div_wwan -->
+ <div id="div_wwan" style="display:none;" > 
+ 
 	<table class="configTable">
 		<tr>
 			<td colspan="1"></td>
@@ -426,7 +427,8 @@
 		<tr class="rowSpacer"></tr>
 		<tr class="rowSpacer"></tr>
 	</table>
- </div> <!-- End of div_wwan -->	
+ </div> 
+ <!-- End of div_wwan -->	
  
 		
 	<table class="configTable">
@@ -436,63 +438,68 @@
 				<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save" accesskey="s" onclick="showPageLoaderIcon()"> 
 				<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save&Apply" onclick="showPageLoaderIcon()">
 				<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Cancel">
+				<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Refresh">
 			</td>
 		</tr>
 	</table>
 
 </form>
 
-<%
-	if [ $select_wan == "ethwan" ]; then
-%>		
-	<script>
-		document.getElementById("wan_lan").style.visibility = "hidden";
-		document.getElementById("wan_lan").style.display = "none";
-	</script>
-<%
-	fi
-%>
+<%# WAN Mode Display %> 
+<% 	if [ $select_wan == "ethwan" ]; then  # Don't display WAN-LAN checkbox %>		
+			<script>
+				document.getElementById("wan_lan").style.visibility = "hidden";
+				document.getElementById("wan_lan").style.display = "none";
+			</script>
+<% 	fi %>
 
-<%
-	if [ $select_wan == "wifiwan" ] && [ $wwan_disabled == "1" ]; then
-%>		
-	<script>
-		document.getElementById("wifi_wan_fail_messg").style.visibility = "visible";
-		document.getElementById("wifi_wan_fail_messg").style.display = "inline";
-	</script>
-<%
-	fi
-%>
+<% 	if [ $select_wan == "wifiwan" ] && [ $wwan_disabled == "1" ]; then  # Display WWAN fail message %>		
+			<script>
+				document.getElementById("wifi_wan_fail_messg").style.visibility = "visible";
+				document.getElementById("wifi_wan_fail_messg").style.display = "inline";
+			</script>
+<% 	fi %>
 
+<!-- WAN mode display -->
 <script>  
-	function display_Message(){
-		document.getElementById("wifi_wan_messg").style.visibility = "visible";
-		document.getElementById("wifi_wan_messg").style.display = "inline";
-	}
-	
-	function hide_Message(){
+	function display_MessageEth(){
 		document.getElementById("wifi_wan_messg").style.visibility = "hidden";
 		document.getElementById("wifi_wan_messg").style.display = "none";
+		document.getElementById("wan_lan").style.visibility = "hidden";
+		document.getElementById("wan_lan").style.display = "none";
+	}
+	function display_MessageWwan(){
+		document.getElementById("wifi_wan_messg").style.visibility = "visible";
+		document.getElementById("wifi_wan_messg").style.display = "inline";
+		document.getElementById("wan_lan").style.visibility = "visible";
+		document.getElementById("wan_lan").style.display = "inline";
+	}
+	function display_Message(){
+		document.getElementById("wifi_wan_messg").style.visibility = "hidden";
+		document.getElementById("wifi_wan_messg").style.display = "none";
+		document.getElementById("wan_lan").style.visibility = "visible";
+		document.getElementById("wan_lan").style.display = "inline";
 	}
 
+<!-- WAN static/dhcp display -->
 	document.getElementById("div_wan").style.display = "inline"; 
 	var x = document.getElementById("wan_proto").value;
 	if (x == "dhcp") {
 		document.getElementById("div_wan").style.display = "none"; 
 	}
-	
-	document.getElementById("div_wwan").style.display = "inline"; 
-	var y = document.getElementById("wwan_proto").value;
-	if (y == "dhcp") {
-		document.getElementById("div_wwan").style.display = "none"; 
-	}
-	
 	function displayWAN(){
 		document.getElementById("div_wan").style.display = "inline"; 
 		var x = document.getElementById("wan_proto").value;
 		if (x == "dhcp") {
 			document.getElementById("div_wan").style.display = "none"; 
 		}
+	}
+
+<!-- WWAN static/dhcp display -->	
+	document.getElementById("div_wwan").style.display = "inline"; 
+	var y = document.getElementById("wwan_proto").value;
+	if (y == "dhcp") {
+		document.getElementById("div_wwan").style.display = "none"; 
 	}
 	function displayWWAN(){
 		document.getElementById("div_wwan").style.display = "inline"; 
