@@ -2,7 +2,7 @@
 
 <%  echo -en "content-type: text/html\r\n\r\n"  # RF2616 Compliance %>
 
-<%  
+<%  Set up for dual band 
 	hi_band=$(uci -q get board.band.hi_band) 		
 	if [ $hi_band != "1" ]; then
 		uci set diglib.wan.wifi_wan_radio="primary"
@@ -33,12 +33,55 @@
     uci commit wireless 
     uci commit diglib 
 	fi
-	
-	
+%>
+
+<%
 	if [ "$FORM_BUTTON" == "Scan" ]; then
 		iwinfo $scan_radio scan > /tmp/scan.txt 
-	fi
 
+		# Build scan SSID list.
+		ssid_str="<option selected disabled>Choose WiFi SSID...</option>"  # Add first line
+		str=$(cat /tmp/scan.txt | grep "Address" | cut -d : -f 2-7)
+		for addr in $str
+		do
+			# Get encryption 
+			if [ $(cat /tmp/scan.txt |grep -w -A 4 "$addr" |grep -c "mixed WPA/WPA2 PSK") == "1" ]; then
+				encr="psk-mixed"
+				encr_str="WPA/WPA2"
+			elif [ $(cat /tmp/scan.txt |grep -w -A 4 "$addr" |grep -c "WPA2 PSK") == "1" ]; then
+				encr="psk2"
+				encr_str="WPA2"
+			elif [ $(cat /tmp/scan.txt |grep -w -A 4 "$addr" |grep -c "WPA PSK") == "1" ]; then
+				encr="psk"
+				encr_str="WPA"
+			elif [ $(cat /tmp/scan.txt |grep -w -A 4 "$addr" |grep -c "WEP") == "1" ]; then
+				encr="wep"
+				encr_str="WEP"
+			elif [ $(cat /tmp/scan.txt |grep -w -A 4 "$addr" |grep -c "none") == "1" ]; then
+				encr="none"
+				encr_str="None"
+			else
+				encr="psk-mixed"
+				encr_str="WPA/WPA2"
+			fi
+
+			# Get signal strength	
+			sig=$(cat /tmp/scan.txt | grep -w -A 3 "$addr" | grep "Signal" | cut -d : -f 2 | cut -d " " -f2,3)
+	
+			# Get channel
+			chan=$(cat /tmp/scan.txt| grep -w -A 2 "$addr" | grep "Channel" | cut -d : -f3)
+	
+			# Get SSID field, strip leading space and quotes
+			ssid=$(cat /tmp/scan.txt| grep -w -A 1 "$addr" | grep "ESSID" | cut -d : -f2 | sed 's/ //'| sed 's/"//g')
+		
+			# Append new option line to build up Select list. Put quotes around the value string to preserve spaces in SSID.
+			ssid_str="<option value="\"$ssid::$encr\""><pre> $ssid (Ch: $chan  Encr: $encr_str Sig: $sig) </pre> </option>"$ssid_str
+		done
+	fi
+%>
+
+
+<%
 	if [ "$FORM_BUTTON" == "Save" ] || [ "$FORM_BUTTON" == "Save&Apply" ]; then
 		SSID="$(echo "$FORM_SSID" | sed 's/^[ ]*//g' | sed 's/[ ]*$//g' | sed 's/[ ][ ]*/ /g')"
 		  # Strip leading, trailing and multiple spaces		
@@ -128,6 +171,7 @@
   fi
 %>
 
+
 <%# --- Get the variables for the HTML page --- %>
 <% 
   ssid="$(uci -q get wireless.ap_0.ssid)"
@@ -201,7 +245,7 @@
 	fi
 
 %>
-  
+
 <%# --- Present the HTML page --- %>
 <!DOCTYPE html>
 <html lang="en">
@@ -280,7 +324,8 @@
 	<tr>
 		<td colspan="1"></td>
 		<td colspan="4"><label for="KEY"> Passphrase (8-32 char)</label></td>
-		<td colspan="3"><input type="password" name="KEY" id="key" required maxlength="32" VALUE="<% echo -n $key %>" pattern="[a-zA-Z0-9_*.$%<>;:?@=!^|&+()#~\{\}\-]{8,32}" ></td>
+		<td colspan="3"><input type="password" name="KEY" id="key" required maxlength="32" VALUE="<% echo -n $key %>" 
+			pattern="[a-zA-Z0-9_*.$%<>;:?@=!^|&+()#~\{\}\-]{8,32}" ></td>
 		<td colspan="1"><span class="btnShow" onclick="toggleVis('key')">Show</span></td>
 		<td colspan="2"></td>
 		
@@ -328,7 +373,7 @@
 		<td colspan="2"></td>
 		
 		<td colspan="3"><label for="GUEST_ENCRYPTION"> Encryption</label></td>
-	    <td colspan="4"><SELECT name="GUEST_ENCRYPTION" id="guest_encryption">
+	  <td colspan="4"><SELECT name="GUEST_ENCRYPTION" id="guest_encryption">
 		<option value="psk-mixed">WPA/WPA2</option>
 		<option value="psk2">WPA2</option>
 		<option value="psk">WPA</option>
@@ -343,21 +388,17 @@
 		<script>document.getElementById("guest_encryption").value="<% echo -n $guest_encryption %>";</script>
 	</tr>	
 
-
   <tr class="rowSpacer"></tr>
 	<tr><td></td></tr>
   
 	<tr>
 		<td colspan="10">
-<!--			<INPUT class="hiddenKey" TYPE="SUBMIT" name="BUTTON" VALUE="Save" accesskey="s">  -->
-			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save" onclick="showPageLoaderIcon()"> 
+			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save" accesskey="s" onclick="showPageLoaderIcon()"> 
 			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save&Apply" onclick="showPageLoaderIcon()">
 			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Cancel" onclick="showPageLoaderIcon()">
 			<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Refresh" onclick="showPageLoaderIcon()">
 		</td>
 	</tr>
-
-
 
 	<tr><td colspan="20"><h3>WiFi WAN Client Settings</h3></td></tr>
 	
@@ -468,51 +509,8 @@
 	<script>document.getElementById("host_str").style.display="inline";</script>
 <% fi %>
 
-<!-- WiFi Scan List -->
-<%
 
-	# Build scan SSID list.
-	ssid_str="<option selected disabled>Choose WiFi SSID...</option>"  # Add first line
-	str=$(cat /tmp/scan.txt | grep "Address" | cut -d : -f 2-7)
-	for addr in $str
-	do
-		# Get encryption 
-		if [ $(cat /tmp/scan.txt |grep -w -A 4 "$addr" |grep -c "mixed WPA/WPA2 PSK") == "1" ]; then
-			encr="psk-mixed"
-			encr_str="WPA/WPA2"
-		elif [ $(cat /tmp/scan.txt |grep -w -A 4 "$addr" |grep -c "WPA2 PSK") == "1" ]; then
-			encr="psk2"
-			encr_str="WPA2"
-		elif [ $(cat /tmp/scan.txt |grep -w -A 4 "$addr" |grep -c "WPA PSK") == "1" ]; then
-			encr="psk"
-			encr_str="WPA"
-		elif [ $(cat /tmp/scan.txt |grep -w -A 4 "$addr" |grep -c "WEP") == "1" ]; then
-			encr="wep"
-			encr_str="WEP"
-		elif [ $(cat /tmp/scan.txt |grep -w -A 4 "$addr" |grep -c "none") == "1" ]; then
-			encr="none"
-			encr_str="None"
-		else
-			encr="psk-mixed"
-			encr_str="WPA/WPA2"
-		fi
-
-		# Get signal strength	
-		sig=$(cat /tmp/scan.txt | grep -w -A 3 "$addr" | grep "Signal" | cut -d : -f 2 | cut -d " " -f2,3)
-
-		# Get channel
-		chan=$(cat /tmp/scan.txt| grep -w -A 2 "$addr" | grep "Channel" | cut -d : -f3)
-
-		# Get SSID field, strip leading space and quotes
-		ssid=$(cat /tmp/scan.txt| grep -w -A 1 "$addr" | grep "ESSID" | cut -d : -f2 | sed 's/ //'| sed 's/"//g')
-	
-		# Append new option line to build up Select list. Put quotes around the value string to preserve spaces in SSID.
-		ssid_str="<option value="\"$ssid::$encr\""><pre> $ssid (Ch: $chan  Encr: $encr_str Sig: $sig) </pre> </option>"$ssid_str
-
-	done
-%>	
-
-<!-- Store the list of SSIDs -->
+<!-- Store the list of scanned SSIDs -->
 <span id="survey_str" style="visibility:hidden; display:none;"> <% echo -n $ssid_str %> </span>
 
 <!-- Populate the select control with list of SSIDs -->
@@ -520,21 +518,23 @@
 
 <!-- Populate the Host SSID and Encryption fields from selected item -->
 <script>
-function writeToHostSSID(){
-	var str = document.getElementById("ssid_survey").value;
-	var arr = str.split("::"); 
-	var ssid = arr[0]; 
-	var encr = arr[1];
-	document.getElementById("host_ssid").value = ssid;
-	document.getElementById("host_encryption").value = encr; 
-}
+	function writeToHostSSID(){
+		var str = document.getElementById("ssid_survey").value;
+		var arr = str.split("::"); 
+		var ssid = arr[0]; 
+		var encr = arr[1];
+		document.getElementById("host_ssid").value = ssid;
+		document.getElementById("host_encryption").value = encr; 
+	}
 </script>
 
 </body>
 </html>
 
-<%
+<%# 
+	# Uncomment this section if background scan required. Note this will slow normal page load.
 	iwinfo $scan_radio scan  </dev/null &>/tmp/scan.txt &  # Run a scan in background ready for next page display
 %>
 
+<!-- End --> 
 
