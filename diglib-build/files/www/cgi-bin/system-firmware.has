@@ -8,7 +8,7 @@
 		if test -n "$HASERL_uploadfile_path"; then 
 		  filename=$FORM_uploadfile_name
 		  savedfile=$HASERL_uploadfile_path
-		  cp $savedfile /tmp/flash.bin
+		  mv $savedfile /tmp/flash.bin
 			rm -f $HASERL_uploadfile_path
 		fi
 	fi
