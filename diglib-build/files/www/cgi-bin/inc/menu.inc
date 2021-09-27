@@ -32,6 +32,8 @@
 
 	<a href="/cgi-bin/system-status.has">Network Status</a>
 
+	<a href="/cgi-bin/system-remoteit.has">Remote Access</a>
+
 	<a href="/cgi-bin/system-firmware.has">Firmware Upgrade</a>
 
   <a href="/cgi-bin/logout.has">Logout</a>
