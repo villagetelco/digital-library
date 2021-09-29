@@ -30,16 +30,9 @@
 			fi
 	fi
 	
-	if [ "$FORM_BUTTON" = "Remove" ]; then
-		opkg remove remoteit                                             > /tmp/remoteit_status.txt
-		rm -rf /usr/share/remoteit/
-		rm /etc/remoteit/config.json
-		rm /etc/remoteit/registration; touch /etc/remoteit/registration
-		echo "<p style='color:Green;'> Removal complete </p>"           >> /tmp/remoteit_status.txt
-	fi 
-
 	if [ "$FORM_BUTTON" = "Register" ]; then
-		echo $FORM_REGISTRATION_CODE > /etc/remoteit.registration
+		echo $FORM_REGISTRATION_CODE > /etc/remoteit/registration
+		rm /etc/remoteit/config.json  
 		/usr/share/remoteit/refresh.sh                                     > /tmp/remoteit_status.txt
 		echo "<p style='color:Green;'> Registration complete </p>"        >> /tmp/remoteit_status.txt
 		
@@ -49,6 +42,14 @@
 			echo "<p style='color:Red;'> Device is not registered </p>"     >> /tmp/remoteit_status.txt
 		fi
   fi
+
+	if [ "$FORM_BUTTON" = "Remove" ]; then
+		opkg remove remoteit                                             > /tmp/remoteit_status.txt
+		rm -rf /usr/share/remoteit/
+		rm /etc/remoteit/config.json
+		rm /etc/remoteit/registration; touch /etc/remoteit/registration
+		echo "<p style='color:Green;'> Removal complete </p>"           >> /tmp/remoteit_status.txt
+	fi 
 
 	if [ "$FORM_BUTTON" = "Save" ]; then
 		echo $FORM_REGISTRATION_CODE > /etc/remoteit/registration
