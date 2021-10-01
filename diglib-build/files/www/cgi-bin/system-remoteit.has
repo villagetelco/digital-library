@@ -17,35 +17,45 @@
 		fi
 
 	if [ "$FORM_BUTTON" = "Install" ]; then
-		rm /etc/remoteit/config.json
-		rm /etc/remoteit/registration; touch /etc/remoteit/registration
-		opkg remove remoteit 
-		opkg install /root/remoteit*.ipk                                 > /tmp/remoteit_status.txt
-		echo "<p style='color:Green;'> Installation complete </p>"      >> /tmp/remoteit_status.txt
-		
+		if [ -e "/usr/share/remoteit" ]; then
+			echo "<p style='color:Red;'> Remoteit is already installed. </p>"            > /tmp/remoteit_status.txt
+			echo "<p style='color:Red;'> Please Remove then Install and Register </p>"  >> /tmp/remoteit_status.txt
+		else
+			rm /etc/remoteit/config.json
+			rm /etc/remoteit/registration; touch /etc/remoteit/registration
+			opkg install /root/remoteit*.ipk                                 > /tmp/remoteit_status.txt  # ?? Check for correct status line
+			echo "<p style='color:Green;'> Installation complete </p>"      >> /tmp/remoteit_status.txt		
+			
 			if [ -e "/etc/remoteit/config.json" ]; then
 				echo "<p style='color:Green;'> Device is registered </p>"   >> /tmp/remoteit_status.txt
 			else
 				echo "<p style='color:Red;'> Device is not registered </p>" >> /tmp/remoteit_status.txt
-			fi
+			fi			
+		fi
 	fi
 	
 	if [ "$FORM_BUTTON" = "Register" ]; then
-		echo $FORM_REGISTRATION_CODE > /etc/remoteit/registration
-		rm /etc/remoteit/config.json  
-		/usr/share/remoteit/refresh.sh                                     > /tmp/remoteit_status.txt
-		echo "<p style='color:Green;'> Registration complete </p>"        >> /tmp/remoteit_status.txt
-		
 		if [ -e "/etc/remoteit/config.json" ]; then
-			echo "<p style='color:Green;'> Device is registered </p>"       >> /tmp/remoteit_status.txt
+			echo "<p style='color:Red;'> Device is already registered. </p>"            > /tmp/remoteit_status.txt
+			echo "<p style='color:Red;'> Please Remove then Install and Register </p>" >> /tmp/remoteit_status.txt
 		else
-			echo "<p style='color:Red;'> Device is not registered </p>"     >> /tmp/remoteit_status.txt
+			echo $FORM_REGISTRATION_CODE > /etc/remoteit/registration
+			rm /etc/remoteit/config.json  
+			/usr/share/remoteit/refresh.sh                                     > /tmp/remoteit_status.txt
+			echo "<p style='color:Green;'> Registration complete </p>"        >> /tmp/remoteit_status.txt
+		
+			if [ -e "/etc/remoteit/config.json" ]; then
+				echo "<p style='color:Green;'> Device is registered </p>"       >> /tmp/remoteit_status.txt
+			else
+				echo "<p style='color:Red;'> Device is not registered </p>"     >> /tmp/remoteit_status.txt
+			fi
 		fi
   fi
 
 	if [ "$FORM_BUTTON" = "Remove" ]; then
-		opkg remove remoteit                                             > /tmp/remoteit_status.txt
-		rm -rf /usr/share/remoteit/
+		opkg remove remoteit                                             > /tmp/remoteit_status.txt  # ?? Check for correct status line
+		# Clean up
+		rm -r /usr/share/remoteit
 		rm /etc/remoteit/config.json
 		rm /etc/remoteit/registration; touch /etc/remoteit/registration
 		echo "<p style='color:Green;'> Removal complete </p>"           >> /tmp/remoteit_status.txt
@@ -66,11 +76,11 @@
 <html>
 
 <head>
-<%inc /www/cgi-bin/inc/head.inc %>
+<%inc ./inc/head.inc %>
 </head>
 
 <body>
-<%inc /www/cgi-bin/inc/menu.inc %>
+<%inc ./inc/menu.inc %>
 
 <div class="page-container">
 
