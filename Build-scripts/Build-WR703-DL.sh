@@ -10,7 +10,7 @@ BRANCH="Ver-1"
 
 echo "Set up version strings"
 DIRVER="VER-1.6"
-VER="Digital-Library-01-WR703-"$DIRVER
+VER="Digital-Library-"$DIRVER
 
 echo "************************************"
 echo ""

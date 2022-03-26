@@ -10,11 +10,11 @@ BRANCH="Ver-1"
 
 echo "Set up version strings"
 DIRVER="VER-1.6"
-VER="Digital-Library-01-WR703-"$DIRVER
+VER="Digital-Library-"$DIRVER
 
 echo "************************************"
 echo ""
-echo "Build script for Digital library TP-Link WR703 device"
+echo "Build script for Digital library TP-Link MR3020 device"
 
 echo "Git directory: "$GITREPO
 echo "Repo: "$REPO
@@ -76,7 +76,7 @@ echo "Source repo details: "$REPO $REPOID
 
 # Set up new directory name with date and version
 DATE=`date +%Y-%m-%d-%H:%M`
-DIR=$DATE"-WR703-Digital-Library-"$DIRVER
+DIR=$DATE"-MR3020-Digital-Library-"$DIRVER
 
 ###########################
 # Set up build directory
@@ -120,9 +120,6 @@ rm -r ./files
 echo "Copy base files"
 cp -rf ./diglib-build/files     .  
 
-#echo "Copy additional files"
-#cp -rf ./diglib-build/files-2/* ./files  
-
 echo "Overlay device specific files"
 cp -rf ./diglib-build/$1/files  .  
 echo ""
@@ -154,8 +151,6 @@ echo ""
 
 echo "Run make for "$1 $2
 make -j1
-#make -j3
-#make -j1 V=s 2>&1 | tee ~/build.txt
 echo ""
 
 echo  "Rename files to add version info"
@@ -194,10 +189,10 @@ echo "Start Device builds"
 echo " "
 echo '----------------------------'
 
-build WR703 
+build MR3020 
 
 echo " "
-echo " Build script WR703 Digital Library complete"
+echo " Build script MR3020 Digital Library complete"
 echo " "
 echo '----------------------------'
 

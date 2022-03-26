@@ -6,10 +6,10 @@
 
 # Select the repo to use
 REPO="digital-library"
-BRANCH="main"
+BRANCH="Ver-1"
 
 echo "Set up version strings"
-DIRVER="VER-1.0"
+DIRVER="VER-1.6"
 VER="Digital-Library-01-MR3020-"$DIRVER
 
 echo "************************************"
