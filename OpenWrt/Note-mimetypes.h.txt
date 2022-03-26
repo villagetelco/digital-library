@@ -1,0 +1,7 @@
+
+Update mimetypes.h in the relevant directories for device images using uhttpd
+
+Added  "mp4", "video/mp4"
+
+For MR3020, MR3040, WR703:
+   <openwrt>/build_dir/target-mips_24kc_musl/uhttpd.....
