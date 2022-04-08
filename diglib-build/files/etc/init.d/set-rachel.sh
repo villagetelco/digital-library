@@ -75,6 +75,9 @@ elif [ -e "/dev/sda1" ]; then
 else
 	rm /www/library
 	ln -s -f /www/library-x /www/library
+	if [ -e "/dev/sdb1" ]; then 
+		ln -s -f /mnt/sdb1 /www/library-local2
+	fi
 fi
 
 exit
