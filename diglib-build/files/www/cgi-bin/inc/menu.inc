@@ -28,11 +28,21 @@
  
 	<a href="/cgi-bin/system-wifi.has">WiFi</a>
 
-	<a href="/cgi-bin/system-network.has">Network</a>
+		<div class="dropdown"> <!-- Network -->
+	   <button class="dropbtn"><strong>Network</strong></button>
+	    <div class="dropdown-content">
+				<a href="/cgi-bin/system-network.has">Network</a>
+				<a href="/cgi-bin/system-status.has">Network Status</a>
+	    </div>
+	  </div> 
 
-	<a href="/cgi-bin/system-status.has">Network Status</a>
-
-	<a href="/cgi-bin/system-firmware.has">Firmware Upgrade</a>
+	<div class="dropdown"> <!-- Firmware Upgrade -->
+		<button class="dropbtn"><strong>Firmware Upgrade</strong></button>
+	  <div class="dropdown-content">
+			<a href="/cgi-bin/system-firmware.has">Firmware Upgrade</a>
+			<a href="/cgi-bin/system-firmware-usb.has">USB Firmware Upgrade</a>
+ 	  </div>
+ 	</div> 
 
   <a href="/cgi-bin/logout.has">Logout</a>
 
