@@ -1,0 +1,26 @@
+
+config polipo 'daemon'
+	option daemonise '1'
+	option pidFile '/var/run/polipo.pid'
+
+config polipo 'general'
+	option enabled '1'
+	option proxyAddress '0.0.0.0'
+	option proxyPort '8123'
+	option chunkHighMark '1048576'
+	option logSyslog '0'
+	option logFile '/var/log/polipo'
+	option localDocumentRoot '/www/polipo'
+	option dnsUseGethostbyname 'true'
+	list allowedClients '10.10.10.0/24'
+	list allowedClients '172.31.255.253'
+
+config polipo 'cache'
+	option diskCacheRoot '/mnt/sda1/cache'
+	option diskCacheUnlinkTime '20d'
+	option diskCacheTruncateTime '5d'
+	option diskCacheTruncateSize '3145728'
+	option cacheIsShared '1'
+
+config polipo 'pmm'
+

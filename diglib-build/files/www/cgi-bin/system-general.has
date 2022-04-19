@@ -22,6 +22,7 @@
 		uci set system.@system[0].timezone=$FORM_TIMEZONE
 		uci commit system
 		
+		# Port forward for HTTP and SSH
 		if [ "$FORM_HTTP_ENABLE" == "checked" ]; then
 			uci set firewall.https.dest="lan"
 		else
@@ -35,8 +36,19 @@
 		fi
 		uci commit firewall
 		/etc/init.d/firewall restart > /dev/null
+		
+		# Enable Cache
+		if [ "$FORM_CACHE_ENABLE" == "checked" ]; then
+			uci set cache.setup.cache_enable="checked"
+		else
+			uci set cache.setup.cache_enable="0"
+		fi
+		uci commit cache
+		/etc/init.d/config_cache start
+		/etc/init.d/firewall restart
+		/etc/init.d/network restart
 	fi
-	
+
 	# Restore Default settings
 		restore_defaults="0"
 		if [ "$FORM_BUTTON" == "Restore Factory Defaults" ]; then
@@ -79,6 +91,9 @@
   else
     http_tick="0"
   fi
+  
+  cache_enable=$(uci -q get cache.setup.cache_enable)
+
 %>
   
 <%# --- Present the HTML page --- %>
@@ -204,6 +219,15 @@
 		<td colspan="10">	<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save&Apply" onclick="showPageLoaderIcon()">	</td>
 		
 	</tr>	
+
+	<tr><td colspan="20"><h3>HTTP Cache</h3></td></tr>
+	<tr>
+		<td colspan="1"></td>
+		<td colspan="5"><label for="SSH">Enable HTTP Cache</label></td>
+		<td colspan="1"><input type="checkbox" name="CACHE_ENABLE" value="checked" <% echo -n $cache_enable %> ></td>
+		<td colspan="4">	<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save&Apply" onclick="showPageLoaderIcon()">	</td>
+		<td colspan="1">	<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Cancel"> </td>
+	</tr>
 
 	<tr><td colspan="20"><h3>Port Forwarding</h3></td></tr>
 	<tr>

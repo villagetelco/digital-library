@@ -6,6 +6,44 @@
 # put custom rules into the root chains e.g. INPUT or FORWARD or into the
 # special user chains, e.g. input_wan_rule or postrouting_lan_rule.
 
+# Set up transparent proxy settings
+
+CACHE_ENABLE=$(uci -q get cache.setup.cache_enable)
+IP_ADDRESS=$(uci get network.lan.ipaddr)
+
+if [ $CACHE_ENABLE = "checked" ]; then
+	uci set firewall.proxy.proto="tcp"
+	uci set firewall.proxy.src="lan"
+	uci set firewall.proxy.src_dport="80"
+	uci set firewall.proxy.dest_port="8888"
+	uci set firewall.proxy.proto="tcp"
+	uci set firewall.proxy.src_dip="!"$IP_ADDRESS
+	uci set firewall.proxy.dest_ip=$IP_ADDRESS
+	uci set firewall.proxy2.proto="tcp"
+	uci set firewall.proxy2.src="lan"
+	uci set firewall.proxy2.src_dport="8080"
+	uci set firewall.proxy2.dest_port="8888"
+	uci set firewall.proxy2.proto="tcp"
+	uci set firewall.proxy2.src_dip="!"$IP_ADDRESS
+	uci set firewall.proxy2.dest_ip=$IP_ADDRESS
+else
+	uci set firewall.proxy.proto="tcp"
+	uci set firewall.proxy.src=" "
+	uci set firewall.proxy.src_dport=" "
+	uci set firewall.proxy.dest_port=" "
+	uci set firewall.proxy.proto=" "
+	uci set firewall.proxy.src_dip=" "
+	uci set firewall.proxy.dest_ip=" "
+	uci set firewall.proxy2.proto="tcp"
+	uci set firewall.proxy2.src=" "
+	uci set firewall.proxy2.src_dport=" "
+	uci set firewall.proxy2.dest_port=" "
+	uci set firewall.proxy2.proto=" "
+	uci set firewall.proxy2.src_dip=" "
+	uci set firewall.proxy2.dest_ip=" "
+fi
+
+uci commit firewall
 
 # Set up DNS Filter capture for DNS requests
 DNSFILTER_ENABLE=$(uci -q get diglib.dnsfilter.enable)

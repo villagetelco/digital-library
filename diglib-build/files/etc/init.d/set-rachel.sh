@@ -39,7 +39,8 @@ rm /www/library-local2
 if [ -e "/dev/sda1" ] && [ -e "/mnt/sda1/##LIBRARY##" ]; then
 	rm /www/library
 	ln -s -f /mnt/sda1	/www/library
-	mkdir -p /mnt/sda1/temp # Make temp directory for uploading
+	mkdir -p /mnt/sda1/temp   # Make temp directory for uploading
+  mkdir -p /mnt/sda1/cache  # Make cache directory  
 	# Check for secondary memory device on "sdb1" to use for additional local content.
 	if [ -e "/dev/sdb1" ]; then 
 		ln -s -f /mnt/sdb1 /www/library-local2
@@ -48,7 +49,8 @@ if [ -e "/dev/sda1" ] && [ -e "/mnt/sda1/##LIBRARY##" ]; then
 elif [ -e "/dev/sdb1" ] && [ -e "/mnt/sdb1/##LIBRARY##" ]; then
 	rm /www/library
 	ln -s -f /mnt/sdb1	/www/library
-		mkdir -p /mnt/sdb1/temp # Make temp directory for uploading
+	mkdir -p /mnt/sdb1/temp   # Make temp directory for uploading
+  mkdir -p /mnt/sdb1/cache  # Make cache directory  
 	# Check for secondary memory device on "sda1" to use for additional local content.
 	if [ -e "/dev/sda1" ]; then 
 		ln -s -f /mnt/sda1 /www/library-local2
@@ -57,7 +59,8 @@ elif [ -e "/dev/sdb1" ] && [ -e "/mnt/sdb1/##LIBRARY##" ]; then
 elif [ -e "/dev/mmcblk0p3" ] && [ -e "/mnt/mmcblk0p3/##LIBRARY##" ]; then
 	rm /www/library
 	ln -s -f /mnt/mmcblk0p3 /www/library
-	mkdir -p /mnt/mmcblk0p3/temp # Make temp directory for uploading
+	mkdir -p /mnt/mmcblk0p3/temp  # Make temp directory for uploading
+	mkdir -p /mnt/mmcblk0p3/cache # Make cache directory
 	# Check for secondary memory device on "sdb1" to use for additional local content.
 	if [ -e "/dev/sda1" ]; then 
 		ln -s -f /mnt/sda1 /www/library-local2
@@ -66,12 +69,13 @@ elif [ -e "/dev/mmcblk0p3" ] && [ -e "/mnt/mmcblk0p3/##LIBRARY##" ]; then
 elif [ -e "/dev/sda1" ]; then
 	rm /www/library
 	ln -s -f /mnt/sda1	/www/library
-	mkdir -p /mnt/sda1/temp # Make temp directory for uploading
+	mkdir -p /mnt/sda1/temp   # Make temp directory for uploading
+	mkdir -p /mnt/sda1/cache  # Make cache directory
 	# Check for secondary memory device on "sdb1" to use for additional local content.
 	if [ -e "/dev/sdb1" ]; then 
 		ln -s -f /mnt/sdb1 /www/library-local2
 	fi
-# Case 5. No memory device on "sda1" or "mmcblk0p3" so so just use the default home page.
+# Case 5. No memory device on "sda1" or "mmcblk0p3" so so just use the default home page. No cache or temp.
 else
 	rm /www/library
 	ln -s -f /www/library-x /www/library
