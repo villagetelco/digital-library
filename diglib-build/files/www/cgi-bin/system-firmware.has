@@ -45,7 +45,7 @@
 
     <% if [ "$FORM_BUTTON" == "Upload" ]; then %>
       <p>
-      You uploaded a file named <b><% echo -n $filename %></b>
+      You uploaded a file named: <br><b><% echo -n $filename %></b>
       <br>
       The file is <% cat /tmp/flash.bin | wc -c %> bytes long.
       <br>
