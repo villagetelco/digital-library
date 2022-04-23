@@ -1,7 +1,7 @@
 #! /bin/sh
 
 # Purge the on-disk cache
-sleep 10
-polipo -x
+sleep 1
+polipo -c /tmp/etc/polipo.conf -x
 
 

@@ -21,6 +21,9 @@ uci delete polipo.general.allowedClients
 uci add_list polipo.general.allowedClients=$OCTET123".0/24"
 uci add_list polipo.general.allowedClients=172.31.255.253  #Fallback client IP
 
+uci commit polipo
+uci commit tinyproxy
+
 # Enable cache
 if [ $CACHE_ENABLE = "checked" ]; then
 	/etc/init.d/tinyproxy enable
@@ -36,8 +39,10 @@ fi
 
 # Firewall proxy settings are in /etc/firewall.user
 
-uci commit polipo
-uci commit tinyproxy
+# Purge the on-disk cache at startup
+sleep 1
+polipo -c /tmp/etc/polipo.conf -x
+
 }
 
 
