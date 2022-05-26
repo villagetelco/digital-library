@@ -1,2 +1,2 @@
 config cache 'setup'
-	option cache_enable 'checked'
+	option cache_enable '0'
