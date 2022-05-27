@@ -93,7 +93,7 @@
   fi
   
   cache_enable=$(uci -q get cache.setup.cache_enable)
-
+	cache_size=$(du -h /www/library/cache/ | tail -n 1 | cut -d "/" -f1)
 %>
   
 <%# --- Present the HTML page --- %>
@@ -179,7 +179,7 @@
 	<tr><td colspan="20"><h3>TimeZone</h3></td></tr>
 	<tr>
 		<td colspan="1"></td>
-		<td colspan="4"><label for="TIMEZONE"> Timezone</label></td>
+		<td colspan="5"><label for="TIMEZONE"> Timezone</label></td>
 	  	<td colspan="10"><SELECT name="TIMEZONE" id="timezone">
 						      <option value="UTC">UTC</option>
 						      <option value="WST11">(GMT -11:00) Samoa, Midway Island</option>
@@ -225,17 +225,18 @@
 		<td colspan="1"></td>
 		<td colspan="5"><label for="SSH">Enable HTTP Cache</label></td>
 		<td colspan="1"><input type="checkbox" name="CACHE_ENABLE" value="checked" <% echo -n $cache_enable %> ></td>
-		<td colspan="4">	<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save&Apply" onclick="showPageLoaderIcon()">	</td>
-		<td colspan="1">	<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Cancel"> </td>
+		<td colspan="4"><INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save&Apply" onclick="showPageLoaderIcon()">	</td>
+		<td colspan="3"><INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Cancel"> </td>
+		<td colspan="5"><% echo "Cache Size: $cache_size" %></td>
 	</tr>
-
+	
 	<tr><td colspan="20"><h3>Port Forwarding</h3></td></tr>
 	<tr>
 		<td colspan="1"></td>
 		<td colspan="5"><label for="SSH">Enable SSH Forward</label></td>
 		<td colspan="1"><input type="checkbox" name="SSH_ENABLE" value="checked" <% echo -n $ssh_tick %> ></td>
-		<td colspan="4">	<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save&Apply" onclick="showPageLoaderIcon()">	</td>
-		<td colspan="1">	<INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Cancel"> </td>
+		<td colspan="4"><INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save&Apply" onclick="showPageLoaderIcon()">	</td>
+		<td colspan="3"><INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Cancel"> </td>
 	</tr>
 
 	<tr><td colspan="20"><h3>Restore Factory Default Settings</h3></td></tr>
