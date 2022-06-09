@@ -16,6 +16,19 @@
 	if [ "$FORM_BUTTON" == "Set admin Password" ]; then
 		((echo $FORM_PASSWORD2; sleep 1; echo $FORM_PASSWORD2) | passwd admin; /etc/init.d/set-htpasswd.sh start) &
 	fi
+
+	if [ "$FORM_BUTTON" == "Purge" ]; then  # Purge the cache
+		polipo-pid=$(cat /var/run/polipo.pid)
+		kill -USR1 polipo-pid
+		sleep 1
+		polipo -c /tmp/etc/polipo.conf -x > /dev/null
+		kill -USR2 polipo-pid
+	fi
+
+	if [ "$FORM_BUTTON" == "Empty" ]; then  # Remove all cache files
+		rm -r /www/library/cache/*
+	fi
+
 	
 	if [ "$FORM_BUTTON" == "Save" ] || [ "$FORM_BUTTON" == "Save&Apply" ]; then
 		echo $FORM_TIMEZONE > /etc/TZ
@@ -141,7 +154,7 @@
 		<td colspan="4"><input type="password" name="PASSWORD" id="password" value=" " maxlength="32"></td>
 		<td colspan="1"><span class="btnShow" onclick="toggleVis('password')">Show</span></td>
 		<td colspan="4"> <INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Set root Password"> </td>
-		<td colspan="3"> Login: <% echo -n $login %> </td>
+		<td colspan="4"> Current Login: <% echo -n $login %> </td>
 	</tr>	
 </table>
 </div>
@@ -227,6 +240,12 @@
 		<td colspan="1"><input type="checkbox" name="CACHE_ENABLE" value="checked" <% echo -n $cache_enable %> ></td>
 		<td colspan="4"><INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Save&Apply" onclick="showPageLoaderIcon()">	</td>
 		<td colspan="3"><INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Cancel"> </td>
+	</tr>
+	<tr>
+		<td colspan="1"></td>
+		<td colspan="6"><label for="SSH">Cache Contents</label></td>
+		<td colspan="4"><INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Purge" onclick="showPageLoaderIcon()">	</td>
+		<td colspan="3"><INPUT TYPE="SUBMIT" name="BUTTON" VALUE="Empty" onclick="showPageLoaderIcon()"> </td>
 		<td colspan="5"><% echo "Cache Size: $cache_size" %></td>
 	</tr>
 	
