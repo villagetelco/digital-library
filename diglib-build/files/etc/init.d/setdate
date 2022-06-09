@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Stored time format: 2022.06.01+00:00
+
+# Set the system clock at startup to saved time
+date --set $(cat /etc/fake-hwclock.data)
+
+# Start fake-hwclock in background to update the saved time hourly
+/bin/fake-hwclock.sh &
+
+exit
+
+
+
