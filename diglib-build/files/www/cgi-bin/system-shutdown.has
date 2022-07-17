@@ -1,0 +1,47 @@
+#!/usr/bin/haserl
+
+<%  echo -en "content-type: text/html\r\n\r\n"  # RF2616 Compliance %>
+
+<%# --- Present the HTML page --- %>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<%inc /www/cgi-bin/inc/head.inc %>
+</head>
+
+<body>
+<%inc /www/cgi-bin/inc/menu.inc %>
+
+<div class="page-container">
+
+<h2 class="pageTitle">Shutdown</h2>
+
+<form name="SHUTDOWN" id="SHUTDOWN" action="<% echo -n $SCRIPT_NAME %>" method="POST">
+
+  <table class="configTable">
+    <tr>
+      <td>
+	    <%
+	    	if [ "$FORM_BUTTON" == "SHUTDOWN" ]; then
+	    %>
+	      	<p class="impact">*** System is shutting down </p>
+	      	<p class="impact">*** Cycle the power to restart </p>
+	 		<%
+					# Halt the system
+					sync && exec /sbin/poweroff
+				fi
+	    %>
+
+      </td>
+    </tr>
+    <tr><td><INPUT TYPE="SUBMIT" name="BUTTON" VALUE="SHUTDOWN"></td></tr>
+
+  </table>
+
+</form>
+</div>
+</body>
+</html>
+
+
