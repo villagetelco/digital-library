@@ -104,12 +104,7 @@
 		uci set wireless.$sta.ssid="$FORM_HOST_SSID"
 		uci set wireless.$sta.encryption="$FORM_HOST_ENCRYPTION"
 		uci set wireless.$sta.key="$FORM_HOST_KEY"
-
-		# Set channel only if wwan sta mode not in use, and channel is not null
-		sta_chk=$(uci -q get wireless.$sta.disabled)
-		if [ "$sta_chk" == "1" ] && [ ! -z "$FORM_CHANNEL" ]; then
-			uci set wireless.radio0.channel="$FORM_CHANNEL"
-		fi
+		uci set wireless.radio0.channel="$FORM_CHANNEL"
 
 		# Process 5GHz parameters if required
 		if [ $hi_band  == "1" ]; then
@@ -213,7 +208,6 @@
   if [ "$sta_disabled" == "0" ]; then
   	wifi_wan_enable="1"
 	  wan_str="<span id="wan_str" style="color:green">WiFi WAN is <strong>ENABLED</strong></span>"
-  	channel=$(iw dev |grep -A 1 managed | grep channel | cut -d " " -f2)
   fi
 
 	# Get 5GHz parameters if required
@@ -243,6 +237,12 @@
 	else
 		primary_radio="checked"; secondary_radio=""
 	fi
+
+# Display STA channel if it exists
+  	sta_channel=$(iw dev |grep -A 1 managed | grep channel | cut -d " " -f2)
+		if [ $sta_channel != "" ]; then
+			sta_channel_str="WiFi WAN Channel &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  $sta_channel"     
+		fi
 
 %>
 
@@ -300,6 +300,12 @@
 	<script>document.getElementById("channel_5g").value="<% echo -n $channel_5g %>";</script>
 	
 	<% fi %>
+
+	<tr>
+		<td colspan="1"></td>
+		<td colspan="8"><label> <% echo -n $sta_channel_str %>  </label></td>
+  </tr>
+
 	
 	<tr><td colspan="20"><h3>WiFi Access Point Settings</h3></td></tr>
 	<tr>
