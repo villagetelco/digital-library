@@ -29,3 +29,21 @@ config led 'led_wan'
 	option trigger 'netdev' 
 	option dev 'eth0.2'      
 	option mode 'link tx rx'
+	
+	# Halt system 1 - 3 sec button press
+config button
+	option button   reset
+	option action   released
+	option handler  "sync && exec /sbin/poweroff"
+	option min      1
+	option max      3
+
+# Restore firmware 10 - 20 sec button press
+config button
+	option button   reset
+	option action   released
+	option handler  "/bin/firmware-restore.sh && reboot"
+	option min      10
+	option max      20
+
+

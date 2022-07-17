@@ -20,4 +20,22 @@ config led 'led_wlan5g'
 	option name 'WLAN5G'
 	option sysfs 'gl-ar750:white:wlan5g'
 	option trigger 'phy0tpt'
+	
+# Halt system 1 - 3 sec button press
+config button
+	option button   reset
+	option action   released
+	option handler  "sync && exec /sbin/poweroff"
+	option min      1
+	option max      3
+
+# Restore firmware 10 - 20 sec button press
+config button
+	option button   reset
+	option action   released
+	option handler  "/bin/firmware-restore.sh && reboot"
+	option min      10
+	option max      20
+
+
 
