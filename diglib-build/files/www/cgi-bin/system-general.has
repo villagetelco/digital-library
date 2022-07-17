@@ -18,17 +18,13 @@
 	fi
 
 	if [ "$FORM_BUTTON" == "Purge" ]; then  # Purge the cache
-		polipo-pid=$(cat /var/run/polipo.pid)
-		kill -USR1 polipo-pid
-		sleep 1
-		polipo -c /tmp/etc/polipo.conf -x > /dev/null
-		kill -USR2 polipo-pid
+		/bin/purge_cache.sh
 	fi
 
-	if [ "$FORM_BUTTON" == "Empty" ]; then  # Remove all cache files
+	if [ "$FORM_BUTTON" == "Empty" ]; then  # Remove all cache files and run purge
 		rm -r /www/library/cache/*
+		/bin/purge_cache.sh
 	fi
-
 	
 	if [ "$FORM_BUTTON" == "Save" ] || [ "$FORM_BUTTON" == "Save&Apply" ]; then
 		echo $FORM_TIMEZONE > /etc/TZ
