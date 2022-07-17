@@ -29,6 +29,7 @@
 
 		echo "WiFi WAN IP Address:"               		>> /tmp/net_wifi_status.txt
 		ifconfig | grep -A2 wlan0-2|grep "inet addr:"	>> /tmp/net_wifi_status.txt
+		ifconfig | grep -A2 wlan1-2|grep "inet addr:"	>> /tmp/net_wifi_status.txt
 		echo ""                                   		>> /tmp/net_wifi_status.txt
 
 #		echo "Cellular:"                    					>> /tmp/net_wifi_status.txt
