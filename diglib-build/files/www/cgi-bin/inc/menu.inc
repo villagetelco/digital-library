@@ -44,7 +44,14 @@
  	  </div>
  	</div> 
 
-  <a href="/cgi-bin/logout.has">Logout</a>
+	<div class="dropdown"> <!-- Logout -->
+		<button class="dropbtn"><strong>Logout</strong></button>
+	  <div class="dropdown-content">
+			<a href="/cgi-bin/system-logout.has">Logout</a>
+			<a href="/cgi-bin/system-shutdown.has">Shutdown</a>
+			<a href="/cgi-bin/system-reboot.has">Reboot</a>
+ 	  </div>
+ 	</div> 
 
   <div id="refreshIndicate" style="display: none;">AUTO<br>REFRESH</div>
 
