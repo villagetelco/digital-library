@@ -58,17 +58,23 @@ hostname=$(uci get system.@[0].hostname)
 	<tr><td colspan="3">Memory:</td><td colspan="17"><% echo $MEMSTR %></td></tr>
 	<tr class="rowSpacer"></tr>
 	<tr><td colspan="3">Storage:</td><td colspan="17"><% df -hmT | grep "Filesystem" %></td></tr> <br>
+	
 	<% if [ -e "/dev/sda1" ]; then %>
 	<tr><td colspan="3"></td><td colspan="17"><% df -hmT | grep "/dev/sda1"  %><br>
-	       Cache:  <% du -h /mnt/sda1/cache/ | sed '$!d' | cut -d "/" -f 1 %> </td></tr> <br>
+<!--	       Cache:  <% du -h /mnt/sda1/cache/ | sed '$!d' | cut -d "/" -f 1 %>   -->
+	</td></tr> <br>
 	<% fi %>
+	
 	<% if [ -e "/dev/sdb1" ]; then %>
 	<tr><td colspan="3"></td><td colspan="17"><% df -hmT | grep "/dev/sdb1"  %><br>
-	       Cache:  <% du -h /mnt/sdb1/cache/ | sed '$!d' | cut -d "/" -f 1 %> </td></tr> <br>
+<!--	       Cache:  <% du -h /mnt/sdb1/cache/ | sed '$!d' | cut -d "/" -f 1 %>   -->
+	</td></tr> <br>
 	<% fi %>
+	
 	<% if [ -e "/dev/mmcblk0p3" ]; then %>
 	<tr><td colspan="3"></td><td colspan="17"><% df -hmT | grep "/dev/mmcblk0p3"  %><br>
-	       Cache:  <% du -h /mnt/mmcblk0p3/cache/ | sed '$!d' | cut -d "/" -f 1 %> </td></tr> <br>
+<!--	       Cache:  <% du -h /mnt/mmcblk0p3/cache/ | sed '$!d' | cut -d "/" -f 1 %>   -->
+	</td></tr> <br>
 	<% fi %>
 	
 	<tr class="rowSpacer"></tr>

@@ -1,6 +1,6 @@
 
 config board 'eth'
-	option wanport 'eth0'
-	option lanport 'eth1'	
+	option wanport 'eth1'
+	option lanport 'eth0'	
 	option ethports '2'
 

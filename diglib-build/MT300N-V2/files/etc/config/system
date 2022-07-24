@@ -11,26 +11,27 @@ config timeserver 'ntp'
 	option enable_server '0'
 
 # Configure LEDs
-config led 'led_wlan'
-	option name 'WLAN'
-	option sysfs 'gl-mt300n-v2:red:wlan'
-	option trigger 'phy0tpt'
-
 config led 'led_lan'
-	option name 'LAN'
-	option sysfs 'gl-mt300n-v2:green:power'
+	option name 'lan'
+	option sysfs 'green:power'
 	option trigger 'netdev'
-	option dev 'eth0.1'
 	option mode 'link tx rx'
+	option dev 'eth0'
 
-config led 'led_wan' 
-	option name 'WAN' 
-	option sysfs 'gl-mt300n-v2:green:wan' 
-	option trigger 'netdev' 
-	option dev 'eth0.2'      
+config led 'led_wan'
+	option name 'wan'
+	option sysfs 'green:wan'
+	option trigger 'switch0'
+	option port_mask '0x1'
+
+config led 'led_wlan'
+	option name 'wifi'
+	option sysfs 'red:wlan'
+	option trigger 'netdev'
 	option mode 'link tx rx'
-	
-	# Halt system 1 - 3 sec button press
+	option dev 'wlan0'
+
+# Halt system 1 - 3 sec button press
 config button
 	option button   reset
 	option action   released

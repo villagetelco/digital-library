@@ -11,24 +11,25 @@ config timeserver 'ntp'
 	option enable_server '0'
 
 # Configure LEDs
-config led 'led_wlan'
-    option name 'WLAN'
-    option sysfs 'gl-ar300m:green:wlan'
-    option trigger 'phy0tpt'
-
-config led 'led_wan'
-    option name 'WAN'
-    option sysfs 'gl-ar300m:green:lan'
+config led 'led_lan'
+    option name 'LAN'
+    option sysfs 'green:lan'
     option trigger 'netdev'
     option dev 'eth0'     
     option mode 'link tx rx'
 
-config led 'led_lan'
-    option name 'LAN'
-    option sysfs 'gl-ar300m:green:wan'
+config led 'led_wan'
+    option name 'WAN'
+    option sysfs 'green:status'
     option trigger 'netdev'
     option dev 'eth1'     
     option mode 'link tx rx'
+
+config led 'led_wlan'
+    option name 'WLAN'
+    option sysfs 'red:wlan'
+    option trigger 'phy0tpt'
+
     
 # Halt system 1 - 3 sec button press
 config button
