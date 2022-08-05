@@ -8,7 +8,7 @@
 #REPO="digital-library"
 #BRANCH= ???
 #DIRVER= ???
-source ./Build.txt
+source ./Rel.txt
 
 echo "Set up version strings"
 VER="Digital-Library-WDR4300-"$DIRVER
