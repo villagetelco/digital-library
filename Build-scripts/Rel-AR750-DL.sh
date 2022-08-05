@@ -6,16 +6,16 @@
 
 # Select the repo to use
 #REPO="digital-library"
-REPO="digital-library-dev"
-BRANCH="Ver-2"
+#BRANCH= ???
+#DIRVER= ???
+source ./Rel.txt
 
 echo "Set up version strings"
-DIRVER="VER-2.0-RC1.6"
-VER="Digital-Library-SYUN-"$DIRVER
+VER="Digital-Library-AR750-"$DIRVER
 
 echo "************************************"
 echo ""
-echo "Build script for Digital library SEEED YUN device"
+echo "Build script for Digital library GLiNet AR750 device"
 
 echo "Git directory: "$GITREPO
 echo "Repo: "$REPO
@@ -51,8 +51,8 @@ if [ ! -f ./already_configured ]; then
   touch ./already_configured  
   echo "Make builds directory"
   mkdir -p ./Builds/
-  mkdir -p ./Builds/ar71xx/
-  mkdir -p ./Builds/ar71xx/builds
+  mkdir -p ./Builds/ath79/
+  mkdir -p ./Builds/ath79/builds
   echo "Initial set up completed. Continuing with build"
   echo ""
 else
@@ -64,8 +64,8 @@ fi
 
 echo "Start build process"
 
-BINDIR="./bin/targets/ar71xx/generic"
-BUILDDIR="./Builds/ar71xx"
+BINDIR="./bin/targets/ath79/generic"
+BUILDDIR="./Builds/ath79"
 
 ###########################
 echo "Copy files from Git repo into build folder"
@@ -79,7 +79,7 @@ cp -fp $GITREPO/$REPO/Build-scripts/FactoryRestore.sh  .
 
 ###########################
 
-BUILDPWD=`pwd`
+BUILDPWD=$(pwd)
 cd  $GITREPO/$REPO
 echo "Get repo ID string"
 REPOID=`git describe --long --dirty --abbrev=10 --tags`
@@ -90,7 +90,7 @@ echo "Source repo details: "$REPO $REPOID
 
 # Set up new directory name with date and version
 DATE=`date +%Y-%m-%d-%H:%M`
-DIR=$DATE"-SYUN-Digital-Library-"$DIRVER
+DIR=$DATE"-AR750-Digital-Library-"$DIRVER
 
 ###########################
 # Set up build directory
@@ -134,9 +134,6 @@ rm -r ./files
 echo "Copy base files"
 cp -rf ./diglib-build/files     .  
 
-#echo "Copy additional files"
-#cp -rf ./diglib-build/files-2/* ./files  
-
 echo "Overlay device specific files"
 cp -rf ./diglib-build/$1/files  .  
 echo ""
@@ -168,8 +165,6 @@ echo ""
 
 echo "Run make for "$1 $2
 make -j1
-#make -j3
-#make -j1 V=s 2>&1 | tee ~/build.txt
 echo ""
 
 echo  "Rename files to add version info"
@@ -206,10 +201,10 @@ echo "Start Device builds"
 echo " "
 echo '----------------------------'
 
-build SYUN 
+build AR750
 
 echo " "
-echo " Build script SYUN Digital Library complete"
+echo " Build script AR750 Digital Library complete"
 echo " "
 echo '----------------------------'
 

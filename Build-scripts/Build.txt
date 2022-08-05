@@ -1,4 +1,6 @@
 REPO="digital-library-dev"
-BRANCH="Ver-2"
-DIRVER="VER-2.0-RC1.10"
+
+
+BRANCH="Ver-3"
+DIRVER="VER-3.0-RC3"
 

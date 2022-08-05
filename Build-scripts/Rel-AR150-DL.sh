@@ -8,14 +8,14 @@
 #REPO="digital-library"
 #BRANCH= ???
 #DIRVER= ???
-source ./Build.txt
+source ./Rel.txt
 
 echo "Set up version strings"
-VER="Digital-Library-MS14-Duo-"$DIRVER
+VER="Digital-Library-AR150-"$DIRVER
 
 echo "************************************"
 echo ""
-echo "Build script for Digital library MS14-Duo device"
+echo "Build script for Digital library GLiNet AR150 device"
 
 echo "Git directory: "$GITREPO
 echo "Repo: "$REPO
@@ -51,8 +51,8 @@ if [ ! -f ./already_configured ]; then
   touch ./already_configured  
   echo "Make builds directory"
   mkdir -p ./Builds/
-  mkdir -p ./Builds/ar71xx/
-  mkdir -p ./Builds/ar71xx/builds
+  mkdir -p ./Builds/ath79/
+  mkdir -p ./Builds/ath79/builds
   echo "Initial set up completed. Continuing with build"
   echo ""
 else
@@ -64,8 +64,8 @@ fi
 
 echo "Start build process"
 
-BINDIR="./bin/targets/ar71xx/generic"
-BUILDDIR="./Builds/ar71xx"
+BINDIR="./bin/targets/ath79/generic"
+BUILDDIR="./Builds/ath79"
 
 ###########################
 echo "Copy files from Git repo into build folder"
@@ -90,7 +90,7 @@ echo "Source repo details: "$REPO $REPOID
 
 # Set up new directory name with date and version
 DATE=`date +%Y-%m-%d-%H:%M`
-DIR=$DATE"-MS14-Duo-Digital-Library-"$DIRVER
+DIR=$DATE"-AR150-Digital-Library-"$DIRVER
 
 ###########################
 # Set up build directory
@@ -104,7 +104,7 @@ echo $DIR > $BUILDDIR/builds/build-$DIR/md5sums-$VER.txt
 
 # Build function
 
-function build_ms14() {
+function build() {
 
 echo "Set up .config for "$1 $2
 rm -f ./.config
@@ -165,8 +165,6 @@ echo ""
 
 echo "Run make for "$1 $2
 make -j1
-#make -j3
-#make -j1 V=s 2>&1 | tee ~/build.txt
 echo ""
 
 echo  "Rename files to add version info"
@@ -203,10 +201,10 @@ echo "Start Device builds"
 echo " "
 echo '----------------------------'
 
-build_ms14 MS14-Duo 
+build AR150 
 
 echo " "
-echo " Build script MS14-Duo Digital Library complete"
+echo " Build script AR150 Digital Library complete"
 echo " "
 echo '----------------------------'
 

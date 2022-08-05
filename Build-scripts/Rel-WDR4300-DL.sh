@@ -11,11 +11,11 @@
 source ./Build.txt
 
 echo "Set up version strings"
-VER="Digital-Library-AR750-"$DIRVER
+VER="Digital-Library-WDR4300-"$DIRVER
 
 echo "************************************"
 echo ""
-echo "Build script for Digital library GLiNet AR750 device"
+echo "Build script for Digital library GLiNet WDR4300 device"
 
 echo "Git directory: "$GITREPO
 echo "Repo: "$REPO
@@ -90,7 +90,7 @@ echo "Source repo details: "$REPO $REPOID
 
 # Set up new directory name with date and version
 DATE=`date +%Y-%m-%d-%H:%M`
-DIR=$DATE"-AR750-Digital-Library-"$DIRVER
+DIR=$DATE"-WDR4300-Digital-Library-"$DIRVER
 
 ###########################
 # Set up build directory
@@ -201,10 +201,10 @@ echo "Start Device builds"
 echo " "
 echo '----------------------------'
 
-build AR750
+build WDR4300
 
 echo " "
-echo " Build script AR750 Digital Library complete"
+echo " Build script WDR4300 Digital Library complete"
 echo " "
 echo '----------------------------'
 

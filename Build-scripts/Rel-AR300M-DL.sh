@@ -8,14 +8,14 @@
 #REPO="digital-library"
 #BRANCH= ???
 #DIRVER= ???
-source ./Build.txt
+source ./Rel.txt
 
 echo "Set up version strings"
-VER="Digital-Library-AR750-"$DIRVER
+VER="Digital-Library-AR300M-"$DIRVER
 
 echo "************************************"
 echo ""
-echo "Build script for Digital library GLiNet AR750 device"
+echo "Build script for Digital library GLiNet AR300M device"
 
 echo "Git directory: "$GITREPO
 echo "Repo: "$REPO
@@ -79,7 +79,7 @@ cp -fp $GITREPO/$REPO/Build-scripts/FactoryRestore.sh  .
 
 ###########################
 
-BUILDPWD=$(pwd)
+BUILDPWD=`pwd`
 cd  $GITREPO/$REPO
 echo "Get repo ID string"
 REPOID=`git describe --long --dirty --abbrev=10 --tags`
@@ -90,7 +90,7 @@ echo "Source repo details: "$REPO $REPOID
 
 # Set up new directory name with date and version
 DATE=`date +%Y-%m-%d-%H:%M`
-DIR=$DATE"-AR750-Digital-Library-"$DIRVER
+DIR=$DATE"-AR300M-Digital-Library-"$DIRVER
 
 ###########################
 # Set up build directory
@@ -201,10 +201,10 @@ echo "Start Device builds"
 echo " "
 echo '----------------------------'
 
-build AR750
+build AR300M 
 
 echo " "
-echo " Build script AR750 Digital Library complete"
+echo " Build script AR300M Digital Library complete"
 echo " "
 echo '----------------------------'
 

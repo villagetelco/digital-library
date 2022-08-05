@@ -35,7 +35,7 @@ CHK_BR=`git branch | grep "*" | cut -d " " -f2`
 if [ $CHK_BR != $BRANCH ]; then
 	echo "Branch checkout failed"
 	echo "*****"
-	exit
+exit
 else
 	echo "Branch checkout successful"
 fi

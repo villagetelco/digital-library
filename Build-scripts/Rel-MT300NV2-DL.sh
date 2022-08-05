@@ -8,14 +8,14 @@
 #REPO="digital-library"
 #BRANCH= ???
 #DIRVER= ???
-source ./Build.txt
+source ./Rel.txt
 
 echo "Set up version strings"
-VER="Digital-Library-AR750-"$DIRVER
+VER="Digital-Library-MT300N-V2-"$DIRVER
 
 echo "************************************"
 echo ""
-echo "Build script for Digital library GLiNet AR750 device"
+echo "Build script for Digital library GLiNet MT300N-V2 device"
 
 echo "Git directory: "$GITREPO
 echo "Repo: "$REPO
@@ -30,42 +30,36 @@ fi
 BUILD_DIR=$(pwd)
 cd $GITREPO"/"$REPO
 git checkout $BRANCH > /dev/null
+
 # Make sure checkout worked
 CHK_BR=`git branch | grep "*" | cut -d " " -f2`
 if [ $CHK_BR != $BRANCH ]; then
 	echo "Branch checkout failed"
 	echo "*****"
-	exit
+exit
 else
 	echo "Branch checkout successful"
 fi
 git branch | grep "*"
+
 cd $BUILD_DIR
 pwd
 
 ##############################
 
-# Check to see if setup has already run
-if [ ! -f ./already_configured ]; then 
-  # make sure it only executes once
-  touch ./already_configured  
-  echo "Make builds directory"
-  mkdir -p ./Builds/
-  mkdir -p ./Builds/ath79/
-  mkdir -p ./Builds/ath79/builds
-  echo "Initial set up completed. Continuing with build"
-  echo ""
-else
-  echo "Build environment is configured. Continuing with build"
-  echo ""
-fi
+echo "Make builds directory"
+mkdir -p ./Builds/
+mkdir -p ./Builds/ramips/
+mkdir -p ./Builds/ramips/builds
+echo "Initial set up completed. Continuing with build"
+echo ""
 
 #########################
 
 echo "Start build process"
 
-BINDIR="./bin/targets/ath79/generic"
-BUILDDIR="./Builds/ath79"
+BINDIR="./bin/targets/ramips/mt76x8"
+BUILDDIR="./Builds/ramips"
 
 ###########################
 echo "Copy files from Git repo into build folder"
@@ -79,7 +73,7 @@ cp -fp $GITREPO/$REPO/Build-scripts/FactoryRestore.sh  .
 
 ###########################
 
-BUILDPWD=$(pwd)
+BUILDPWD=`pwd`
 cd  $GITREPO/$REPO
 echo "Get repo ID string"
 REPOID=`git describe --long --dirty --abbrev=10 --tags`
@@ -90,7 +84,7 @@ echo "Source repo details: "$REPO $REPOID
 
 # Set up new directory name with date and version
 DATE=`date +%Y-%m-%d-%H:%M`
-DIR=$DATE"-AR750-Digital-Library-"$DIRVER
+DIR=$DATE"-MT300N-V2-Digital-Library-"$DIRVER
 
 ###########################
 # Set up build directory
@@ -201,10 +195,10 @@ echo "Start Device builds"
 echo " "
 echo '----------------------------'
 
-build AR750
+build MT300N-V2 
 
 echo " "
-echo " Build script AR750 Digital Library complete"
+echo " Build script MT300N-V2 Digital Library complete"
 echo " "
 echo '----------------------------'
 

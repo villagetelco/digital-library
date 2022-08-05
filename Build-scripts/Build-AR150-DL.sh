@@ -51,8 +51,8 @@ if [ ! -f ./already_configured ]; then
   touch ./already_configured  
   echo "Make builds directory"
   mkdir -p ./Builds/
-  mkdir -p ./Builds/ar71xx/
-  mkdir -p ./Builds/ar71xx/builds
+  mkdir -p ./Builds/ath79/
+  mkdir -p ./Builds/ath79/builds
   echo "Initial set up completed. Continuing with build"
   echo ""
 else
@@ -64,8 +64,8 @@ fi
 
 echo "Start build process"
 
-BINDIR="./bin/targets/ar71xx/generic"
-BUILDDIR="./Builds/ar71xx"
+BINDIR="./bin/targets/ath79/generic"
+BUILDDIR="./Builds/ath79"
 
 ###########################
 echo "Copy files from Git repo into build folder"

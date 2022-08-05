@@ -1,0 +1,3 @@
+REPO="digital-library"
+BRANCH="Ver-3"
+DIRVER="VER-3.0"

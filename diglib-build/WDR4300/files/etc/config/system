@@ -1,0 +1,33 @@
+
+config system
+	option timezone 'UTC'
+	option hostname 'WDR4300'
+
+config timeserver 'ntp'
+	list server '0.openwrt.pool.ntp.org'
+	list server '1.openwrt.pool.ntp.org'
+	list server '2.openwrt.pool.ntp.org'
+	list server '3.openwrt.pool.ntp.org'
+	option enable_server '0'
+
+# Configure LEDs
+
+	
+# Halt system 1 - 3 sec button press
+config button
+	option button   reset
+	option action   released
+	option handler  "sync && exec /sbin/poweroff"
+	option min      1
+	option max      3
+
+# Restore firmware 10 - 20 sec button press
+config button
+	option button   reset
+	option action   released
+	option handler  "/bin/firmware-restore.sh && reboot"
+	option min      10
+	option max      20
+
+
+

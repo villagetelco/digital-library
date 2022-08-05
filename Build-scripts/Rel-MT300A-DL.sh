@@ -8,14 +8,14 @@
 #REPO="digital-library"
 #BRANCH= ???
 #DIRVER= ???
-source ./Build.txt
+source ./Rel.txt
 
 echo "Set up version strings"
-VER="Digital-Library-MS14-"$DIRVER
+VER="Digital-Library-MT300A-"$DIRVER
 
 echo "************************************"
 echo ""
-echo "Build script for Digital library MS14 device"
+echo "Build script for Digital library GLiNet MT300A device"
 
 echo "Git directory: "$GITREPO
 echo "Repo: "$REPO
@@ -46,26 +46,26 @@ pwd
 ##############################
 
 # Check to see if setup has already run
-if [ ! -f ./already_configured ]; then 
+#if [ ! -f ./already_configured ]; then 
   # make sure it only executes once
-  touch ./already_configured  
+#  touch ./already_configured  
   echo "Make builds directory"
-  mkdir -p ./Builds/
-  mkdir -p ./Builds/ar71xx/
-  mkdir -p ./Builds/ar71xx/builds
+  mkdir ./Builds/
+  mkdir ./Builds/ramips/
+  mkdir ./Builds/ramips/builds
   echo "Initial set up completed. Continuing with build"
   echo ""
-else
-  echo "Build environment is configured. Continuing with build"
-  echo ""
-fi
+#else
+#  echo "Build environment is configured. Continuing with build"
+#  echo ""
+#fi
 
 #########################
 
 echo "Start build process"
 
-BINDIR="./bin/targets/ar71xx/generic"
-BUILDDIR="./Builds/ar71xx"
+BINDIR="./bin/targets/ramips/mt7620"
+BUILDDIR="./Builds/ramips"
 
 ###########################
 echo "Copy files from Git repo into build folder"
@@ -90,7 +90,7 @@ echo "Source repo details: "$REPO $REPOID
 
 # Set up new directory name with date and version
 DATE=`date +%Y-%m-%d-%H:%M`
-DIR=$DATE"-MS14-Digital-Library-"$DIRVER
+DIR=$DATE"-MT300A-Digital-Library-"$DIRVER
 
 ###########################
 # Set up build directory
@@ -104,7 +104,7 @@ echo $DIR > $BUILDDIR/builds/build-$DIR/md5sums-$VER.txt
 
 # Build function
 
-function build_ms14() {
+function build() {
 
 echo "Set up .config for "$1 $2
 rm -f ./.config
@@ -203,10 +203,10 @@ echo "Start Device builds"
 echo " "
 echo '----------------------------'
 
-build_ms14 MS14 
+build MT300A 
 
 echo " "
-echo " Build script MS14 Digital Library complete"
+echo " Build script MT300A Digital Library complete"
 echo " "
 echo '----------------------------'
 
