@@ -5,12 +5,13 @@
 : ${GITREPO="../../Git"}
 
 # Select the repo to use
-REPO="digital-library"
-BRANCH="Ver-1"
+#REPO="digital-library"
+#BRANCH= ???
+#DIRVER= ???
+source ./Build-Ver1.txt
 
 echo "Set up version strings"
-DIRVER="VER-1.6"
-VER="Digital-Library-"$DIRVER
+VER="Digital-Library-MR3020-"$DIRVER
 
 echo "************************************"
 echo ""
@@ -61,7 +62,11 @@ rm -rf ./diglib-build/
 
 cp -rp $GITREPO/$REPO/diglib-build/ .
 
+# Include factory restore script
 cp -fp $GITREPO/$REPO/Build-scripts/FactoryRestore.sh  .
+
+echo "Update mimetypes definitions"
+cp -f diglib-build/files/www/mimetypes.h  ./build_dir/target-mips_24kc_musl/uhttpd*/mimetypes.h
 
 ###########################
 

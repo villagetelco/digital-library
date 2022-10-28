@@ -5,12 +5,13 @@
 : ${GITREPO="../../Git"}
 
 # Select the repo to use
-REPO="digital-library"
-BRANCH="Ver-1"
+#REPO="digital-library"
+#BRANCH= ???
+#DIRVER= ???
+source ./Rel-Ver1.txt
 
 echo "Set up version strings"
-DIRVER="VER-1.6"
-VER="Digital-Library-01-WR703-"$DIRVER
+VER="Digital-Library-WR703-"$DIRVER
 
 echo "************************************"
 echo ""
@@ -61,7 +62,11 @@ rm -rf ./diglib-build/
 
 cp -rp $GITREPO/$REPO/diglib-build/ .
 
+# Include factory restore script
 cp -fp $GITREPO/$REPO/Build-scripts/FactoryRestore.sh  .
+
+echo "Update mimetypes definitions"
+cp -f diglib-build/files/www/mimetypes.h  ./build_dir/target-mips_24kc_musl/uhttpd*/mimetypes.h
 
 ###########################
 
@@ -120,9 +125,6 @@ rm -r ./files
 echo "Copy base files"
 cp -rf ./diglib-build/files     .  
 
-#echo "Copy additional files"
-#cp -rf ./diglib-build/files-2/* ./files  
-
 echo "Overlay device specific files"
 cp -rf ./diglib-build/$1/files  .  
 echo ""
@@ -154,8 +156,6 @@ echo ""
 
 echo "Run make for "$1 $2
 make -j1
-#make -j3
-#make -j1 V=s 2>&1 | tee ~/build.txt
 echo ""
 
 echo  "Rename files to add version info"

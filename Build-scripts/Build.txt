@@ -1,0 +1,9 @@
+REPO="digital-library-dev"
+
+#BRANCH="Ver-2"
+#DIRVER="VER-2.1-RC1"
+
+
+BRANCH="Ver-2"
+DIRVER="VER-2.5-RC5.3"
+
