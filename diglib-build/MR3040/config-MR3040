@@ -82,8 +82,8 @@ CONFIG_TARGET_ar71xx_tiny=y
 # CONFIG_TARGET_ar71xx_tiny_DEVICE_tl-mr12u-v1 is not set
 # CONFIG_TARGET_ar71xx_tiny_DEVICE_tl-mr13u-v1 is not set
 # CONFIG_TARGET_ar71xx_tiny_DEVICE_tl-mr3020-v1 is not set
-CONFIG_TARGET_ar71xx_tiny_DEVICE_tl-mr3040-v1=y
-# CONFIG_TARGET_ar71xx_tiny_DEVICE_tl-mr3040-v2 is not set
+# CONFIG_TARGET_ar71xx_tiny_DEVICE_tl-mr3040-v1 is not set
+CONFIG_TARGET_ar71xx_tiny_DEVICE_tl-mr3040-v2=y
 # CONFIG_TARGET_ar71xx_tiny_DEVICE_tl-mr3220-v1 is not set
 # CONFIG_TARGET_ar71xx_tiny_DEVICE_tl-mr3220-v2 is not set
 # CONFIG_TARGET_ar71xx_tiny_DEVICE_tl-mr3420-v1 is not set
@@ -158,7 +158,7 @@ CONFIG_HAS_SUBTARGETS=y
 CONFIG_HAS_DEVICES=y
 CONFIG_TARGET_BOARD="ar71xx"
 CONFIG_TARGET_SUBTARGET="tiny"
-CONFIG_TARGET_PROFILE="DEVICE_tl-mr3040-v1"
+CONFIG_TARGET_PROFILE="DEVICE_tl-mr3040-v2"
 CONFIG_TARGET_ARCH_PACKAGES="mips_24kc"
 CONFIG_DEFAULT_TARGET_OPTIMIZATION="-Os -pipe -mno-branch-likely -mips32r2 -mtune=24kc"
 CONFIG_CPU_TYPE="24kc"
