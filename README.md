@@ -1,5 +1,5 @@
 
-Digital Library Project
+Digital Library Project 
 -----------------------
 
 The Digital Library project is intended to provide a low cost WiFi device hosting a library of digital documents, browser based applications and other materials suitable for use in a classroom or similar environment, with around 40 PCs, tablets and mobile smart phones as client devices. 
@@ -18,33 +18,19 @@ Additional applications such as Sugarizer (which provides the interactive Sugar 
 The basic library image includes:
 
     • Wikipedia for Schools
-    
     • Khan Academy Maths and Science Videos 
-    
     • Phet Interactive Simulations for Science and Maths
-    
-    • Siyavula / CK-12 Textbooks
-
+    • Siyavula / CK-12 Textbook
     • African Story Books / Book Dash / Cat and Dog Books / Mustard Seed Books / English Storybooks
-
     • Gutenberg Project – Great Books of the World 
-
     • Blockly Games
-
     • OLE Nepal Collection of Digital Learning Materials
-
     • Women in African History
-
     • Maps of the World
-
     • MedlinePlus / Hesperian / Khan Academy Health and Medicine
-
     • InfoNet-Biovision Articles on Agriculture, Environment and  Health subjects.
-
     • Practical Action Knowledge Bank of Technologies
-
     • Sugarizer  Interactive Sugar graphical learning environment from XO laptops.
-
     
 Users can add local content to the main library memory device or to a second memory device, either by uploading files via the web interface, or by preparing files for the memory devices on a separate PC.
 
@@ -53,6 +39,13 @@ The Digital Library can connect to an upstream network via Ethernet or WiFi in o
 Firmware for various devices is available to download here:
 
     http://download.villagetelco.org/firmware/digital-library/
+
+
+Quadra-Kolibri Project
+-----------------------------
+An associated project has been developed to provide a classroom micro-server for the Kolibri application developed by Learning Equality (learningequality.org)
+This project uses low cost Android TV boxes running Armbian/Debian as the hardware platform. These may be used in conjunction with Digital Library devices to provide WiFi access for a classroom.  Firmware and documents are available here:
+    https://download.villagetelco.org/firmware/digital-library/Quadra-Kolibri-KALite/
     
 
 
