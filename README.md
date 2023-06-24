@@ -41,13 +41,15 @@ Firmware for various devices is available to download here:
     http://download.villagetelco.org/firmware/digital-library/
 
 
-Quadra-Kolibri Project
+Learning Platform Project
 -----------------------------
 An associated project has been developed to provide a classroom micro-server for the Kolibri application developed by Learning Equality (learningequality.org)
 This project uses low cost Android TV boxes running Armbian/Debian as the hardware platform, originally developed by Inovato (inovato.com) as the Quadra device. 
 These may be used in conjunction with Digital Library devices to provide WiFi access for a classroom.  
 Firmware and documents are available here:
-    https://download.villagetelco.org/firmware/digital-library/Quadra-Kolibri-KALite/
+    https://terabox.com/s/1se4fp28Ajb73V1qcQ_nAzg
+
+    
     
 
 
